@@ -27,6 +27,10 @@
     @apply text-xl;
   }
 
+  h4 {
+    @apply text-lg;
+  }
+
   th {
     @apply px-2 py-3;
   }
