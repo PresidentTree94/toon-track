@@ -1,6 +1,7 @@
 "use client";
+import IconStat from "@/components/IconStat";
 import Webtoon from "@/components/Webtoon";
-import { LayoutDashboard, Compass, BookOpen, Search, Plus, ChartNoAxesCombined, TrendingUp, ArrowUpRight } from "lucide-react";
+import { LayoutDashboard, Compass, BookOpen, Search, Plus, ChartNoAxesCombined, TrendingUp, ChevronsUp, ArrowUpRight } from "lucide-react";
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
 
 export default function Home() {
@@ -35,58 +36,41 @@ export default function Home() {
         <div className="justify-self-center md:justify-self-end">profile</div>
       </header>
       <main className="max-w-7xl px-4 py-8 sm:px-8 mx-auto mb-16 md:mt-16 md:mb-0 space-y-8">
-        <section className="flex flex-col md:flex-row md:items-center gap-4 @container">
+        <section className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1>Overview</h1>
             <h4 className="mt-1">Overall trends for the series you follow.</h4>
           </div>
-          <div className="flex-1 flex flex-col @md:flex-row @md:items-center justify-end gap-4">
-            <div className="grid grid-cols-2 bg-slate-100 p-1 rounded-2xl text-xs font-bold max-w-[222px] w-full">
-              <button className="py-1 rounded-xl uppercase hover:bg-background hover:shadow-sm hover:text-emph">Weekly</button>
-              <button className="py-1 rounded-xl uppercase hover:bg-background hover:shadow-sm hover:text-emph">Monthly</button>
-            </div>
-            <button className="flex-1 md:flex-none md:shrink-0 bg-primary text-white flex items-center justify-center gap-4 px-6 py-2 text-sm font-bold rounded-full shadow-lg shadow-primary/20"><Plus className="h-4 w-auto" />Add Webtoon</button>
-          </div>
+          <button className="bg-primary text-white flex items-center justify-center gap-4 px-6 py-2 text-sm font-bold rounded-full shadow-lg shadow-primary/20"><Plus className="h-4 w-auto" />Add Webtoon</button>
         </section>
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="bg-primary p-6 rounded-2xl text-white relative shadow-lg shadow-primary/20">
-            <p className="text-white/80 font-medium">Avg. Weekly Growth</p>
-            <h2 className="text-white mt-1 mb-4">4.2%</h2>
-            <p className="text-sm bg-white/20 rounded-full max-w-fit px-3 py-1 font-medium">based on latest weekly snapshot</p>
-            <ChartNoAxesCombined className="h-30 w-auto text-white/10 absolute top-4 right-4" />
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 @container">
+          <div className="bg-primary p-7 rounded-2xl text-white relative shadow-lg shadow-primary/20">
+            <p className="text-white/80 font-medium">Avg. Monthly Growth</p>
+            <h2 className="text-white mt-1 mb-2">4.2%</h2>
+            <p className="text-sm text-white/60 font-medium">Across 80 Webtoons</p>
+            <ChartNoAxesCombined className="h-32 w-auto text-white/10 absolute top-4 right-4" />
           </div>
-          <div className="bg-card p-6 shadow-sm rounded-2xl flex flex-col justify-center">
+          <div className="bg-card p-7 shadow-sm rounded-2xl">
             <p className="font-medium">Active Series</p>
             <h2 className="mt-1 mb-2">3</h2>
             <p className="text-sm">2 Ongoing, 1 Hiatus, 1 Completed</p>
           </div>
-          <div className="bg-card p-6 shadow-sm rounded-2xl flex flex-col justify-center">
-            <p className="font-medium">Top Genre</p>
-            <h2 className="mt-1 mb-2">Fantasy</h2>
-            <p className="text-sm">3 Webtoons share</p>
-          </div>
-          <div className="bg-card p-6 shadow-sm rounded-2xl flex flex-col justify-center">
-            <p className="font-medium">Busiest Day</p>
-            <h2 className="mt-1 mb-2">Saturday</h2>
-            <p className="text-sm">3 Webtoons update</p>
-          </div>
-          <div className="md:col-span-2 bg-green-50/50 p-6 shadow-sm rounded-2xl flex items-center justify-between gap-4 min-h-[160px]">
-            <div className="flex gap-4">
-              <div className="bg-primary/10 h-12 w-12 rounded-full flex items-center justify-center">
-                <TrendingUp className="h-6 w-auto text-primary" />
-              </div>
-              <div className="flex-1">
-                <p className="text-sm">Top Performer</p>
-                <h3 className="line-clamp-2">The Price is Your Everything</h3>
-              </div>
-            </div>
-            <div>
-              <p className="font-bold text-green-600">+12.5%</p>
-              <p className="text-xs">this week</p>
-            </div>
-          </div>
+          <IconStat
+            topClass="md:row-start-1 md:col-start-2 lg:col-start-3 md:row-span-2 md:flex-col! justify-center"
+            middleClass="md:flex-none md:text-center! md:space-y-4!"
+            bottomClass="md:text-center!"
+            icon={ChevronsUp}
+            topic="Biggest Leap"
+            number="+1,200"
+          />
+          <IconStat
+            topClass="bg-green-50/50 md:col-span-2"
+            icon={TrendingUp}
+            topic="Top Percent"
+            number="+12.5%"
+          />
         </section>
-        <section className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-8">
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div>
             <h3>Portfolio Growth</h3>
             <div className="bg-card shadow-sm rounded-2xl p-6 mt-6">
