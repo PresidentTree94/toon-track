@@ -21,7 +21,7 @@ export default function Home() {
 
   return (
     <>
-      <header className="bg-card/80 backdrop-blur-xl border-t md:border-b md:border-t-0 border-slate-200 grid grid-cols-[1fr_4fr_1fr] md:grid-cols-[auto_auto_1fr] md:items-center justify-between md:gap-8 h-16 md:px-8 fixed w-full bottom-0 md:top-0 md:bottom-auto z-1">
+      <header className="bg-card/80 backdrop-blur-xl border-t md:border-b md:border-t-0 border-slate-200 grid grid-cols-[1fr_4fr_1fr] md:grid-cols-[auto_auto_1fr] md:items-center justify-between md:gap-8 h-16 md:px-8 fixed w-full bottom-0 md:top-0 md:bottom-auto z-1 pb-[env(safe-area-inset-bottom)]">
         <div className="flex items-center justify-center gap-3">
           <span>icon</span>
           <h3 className="hidden md:inline">ToonTrack</h3>
