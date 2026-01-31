@@ -38,8 +38,16 @@
   th, td {
     @apply p-4;
   }
-}
 
-@layer components {
+  fieldset {
+    @apply flex flex-col;
+  }
 
+  legend {
+    @apply font-semibold mb-1;
+  }
+
+  fieldset label {
+    @apply p-2 hover:text-primary hover:bg-primary/10 rounded-lg flex items-center gap-2 cursor-pointer;
+  }
 }
