@@ -1,4 +1,5 @@
-import { Users, BookOpen, TrendingDown, TrendingUp } from "lucide-react";
+import { Users, BookOpen, HeartHandshake, TrendingDown, TrendingUp } from "lucide-react";
+import Link from "next/link";
 
 export type Toon = {
   title: string;
@@ -11,6 +12,8 @@ export type Toon = {
 
 export default function Webtoon({ data }:Readonly<{ data: Toon; }>) {
 
+  const link = data.title.toLowerCase().split(" ").join("-");
+
   let statusColor;
   switch (data.status) {
     case "Ongoing":
@@ -22,7 +25,7 @@ export default function Webtoon({ data }:Readonly<{ data: Toon; }>) {
   }
 
   return (
-    <div className="bg-card shadow-sm rounded-2xl overflow-hidden hover:-translate-y-1 hover:shadow-xl transition-all duration-300 group">
+    <Link href={link} className="bg-card shadow-sm rounded-2xl overflow-hidden hover:-translate-y-1 hover:shadow-xl transition-all duration-300 group">
       <div className="relative overflow-hidden aspect-143/200">
         <img src={data.cover} className="object-cover h-full w-full group-hover:scale-105 transition-transform duration-500" />
         <div className="absolute inset-0 bg-linear-to-t from-black/85 to-transparent p-4 flex flex-col justify-end items-start gap-2">
@@ -39,12 +42,16 @@ export default function Webtoon({ data }:Readonly<{ data: Toon; }>) {
           <div className="flex items-center gap-2"><BookOpen className="h-4 w-auto" />Status</div>
           <span className={`font-semibold ${statusColor}`}>{data.status}</span>
         </div>
+        <div className="flex justify-between">
+          <div className="flex items-center gap-2"><HeartHandshake className="h-4 w-auto" />Owner</div>
+          <span className="font-semibold">Shared</span>
+        </div>
         <div className="border border-slate-200 p-2 rounded-xl flex items-center gap-2">
           <TrendingUp className="h-4 w-auto text-green-500" />
           <span className="font-bold text-green-500">{data.growth}%</span>
           growth this week
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
