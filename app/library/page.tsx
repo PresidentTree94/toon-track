@@ -41,7 +41,7 @@ export default function Library() {
       <section className="flex flex-col md:flex-row justify-between md:items-center gap-4">
         <div className="text-center md:text-left flex-1">
           <h1>Library</h1>
-          <h4 className="mt-1">Manage and browse your 8 tracked series</h4>
+          <h4 className="mt-1">Manage and browse your <span className="font-bold">{filtered.length === data.length ? data.length : filtered.length + "/" + data.length}</span> tracked series</h4>
         </div>
         <div className="flex gap-3 text-sm">
           <div className="flex items-center gap-2 bg-card px-3 py-2 shadow-sm rounded-full flex-1 md:flex-none md:w-64 border border-transparent focus-within:border-primary">
