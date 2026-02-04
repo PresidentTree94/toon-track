@@ -17,7 +17,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="bg-card/80 backdrop-blur-xl border-t md:border-b md:border-t-0 border-slate-200 grid grid-cols-[1fr_3fr_2fr] md:grid-cols-[auto_auto_1fr] md:items-center justify-between md:gap-8 h-16 md:px-8 fixed w-full bottom-0 md:top-0 md:bottom-auto z-2 pb-[env(safe-area-inset-bottom)]">
+      <header className="bg-card/80 backdrop-blur-xl border-t md:border-b md:border-t-0 border-slate-200 grid grid-cols-[1fr_3fr_2fr] md:grid-cols-[auto_auto_1fr] md:items-center justify-between md:gap-8 h-16 md:px-8 fixed w-full bottom-0 md:top-0 md:bottom-auto z-2 pb-0 pb-[env(safe-area-inset-bottom)]">
         <div className="flex items-center justify-center gap-3">
           <BookHeart className="text-primary" />
           <h3 className="hidden md:inline">ToonTrack</h3>
@@ -27,14 +27,14 @@ export default function Navbar() {
             <Link key={index} href={l.link} className={`md:py-2 md:px-4 md:rounded-full ${pathname === l.link ? "bg-primary text-white" : "hover:bg-slate-100"} flex justify-center items-center`}><l.icon className="md:hidden" /><span className="hidden md:inline">{l.label}</span></Link>
           )}
         </nav>
-        <div className="grid grid-cols-[repeat(2,auto)] gap-8 md:justify-end md:items-center">
+        <div className="grid grid-cols-[repeat(2,auto)] md:gap-8 md:justify-end md:items-center">
           <button className="md:bg-primary text-white md:px-6 md:py-2 md:rounded-full text-sm font-bold gap-2 md:shadow-lg shadow-primary/20 cursor-pointer flex items-center justify-center" onClick={() => setOpen(true)}><Plus className="bg-primary p-1 h-8 w-auto rounded-full md:hidden" /><span className="hidden md:inline">Add Webtoon</span></button>
           <div className="flex items-center justify-center">
             <Settings />
           </div>
         </div>
       </header>
-      <div className={`fixed absolute inset-0 bg-black/50 z-3 ${open ? "flex" : "hidden"} justify-center items-center`}>
+      <div className={`fixed inset-0 bg-black/50 z-3 ${open ? "flex" : "hidden"} justify-center items-center`}>
         <div className="card m-8">
           <h2 className="text-center">Add Webtoon to Tracker</h2>
           <form className="grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-4 mt-6 items-center">
