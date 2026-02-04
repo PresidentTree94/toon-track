@@ -1,62 +1,83 @@
 "use client";
 import Graph from "@/components/Graph";
-import { HeartHandshake, Plus, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Toon } from "@/types/toon";
+import { supabase } from "@/lib/supabaseClient";
+import { median, condenseValue, calcMedianGrowth, calcMedianGrowthTimeline } from "@/utils/calculations";
+import { ICONS, STATUS_COLORS, STATUS_BADGE_COLORS } from "@/utils/constants";
 
-const toons = [
-  {title: "Duchess in Ruins", genre: "Romance", cover: "https://image-comic.pstatic.net/webtoon/833243/thumbnail/thumbnail_IMAG21_ea781ae5-07d1-478b-b9d0-86ebbfc4d9ea.jpg", status: "Ongoing", subs: 1000, lubs: 500, growth: 2, day: <><HeartHandshake className="h-4 w-auto" />Shared</>},
-  {title: "The Count's Secret Maid", genre: "Drama", cover: "https://image-comic.pstatic.net/webtoon/830106/thumbnail/thumbnail_IMAG21_c2616743-6c0a-47d9-af22-bc8dfe5c7b5b.jpg", status: "Hiatus", subs: 2000, lubs: 1500, growth: 1.75, day: <><HeartHandshake className="h-4 w-auto" />Shared</>},
-  {title: "The Price is Your Everything", genre: "Drama", cover: "https://image-comic.pstatic.net/webtoon/817998/thumbnail/thumbnail_IMAG21_070dfac2-b3d0-47ac-a3a6-e28e62342119.jpg", status: "Ongoing", subs: 3000, lubs: 2500, growth: 1.5, day: <><HeartHandshake className="h-4 w-auto" />Shared</>},
-  {title: "Noble in Name, Vulgar at Heart", genre: "Romance", cover: "https://image-comic.pstatic.net/webtoon/839386/thumbnail/thumbnail_IMAG21_5525eed5-542b-433f-b6d5-02861139d9b9.jpg", status: "Ongoing", subs: 4000, lubs: 3500, growth: 1.25, day: <><HeartHandshake className="h-4 w-auto" />Shared</>},
-  {title: "Life of a Quack Healer", genre: "Fantasy", cover: "https://image-comic.pstatic.net/webtoon/808757/thumbnail/thumbnail_IMAG21_334dccd8-0a91-4063-84b0-77f0fcb85245.jpg", status: "Ongoing", subs: 5000, lubs: 4500, growth: 1, day: <><HeartHandshake className="h-4 w-auto" />Shared</>},
-  {title: "For My Derelict Favorite", genre: "Romance", cover: "https://image-comic.pstatic.net/webtoon/794155/thumbnail/thumbnail_IMAG21_02e36070-2f60-49c1-849a-ceae6e2d1847.jpg", status: "Ongoing", subs: 6000, lubs: 5500, growth: 0.75, day: <><HeartHandshake className="h-4 w-auto" />Shared</>},
-  {title: "Your Ryan", genre: "Romance", cover: "https://image-comic.pstatic.net/webtoon/841490/thumbnail/thumbnail_IMAG21_83cf1102-b8b4-44e0-8ccf-44a585821ddc.jpg", status: "Ongoing", subs: 7000, lubs: 6500, growth: 0.5, day: <><HeartHandshake className="h-4 w-auto" />Shared</>},
-  {title: "The Age of Arrogance", genre: "Fantasy", cover: "https://image-comic.pstatic.net/webtoon/814538/thumbnail/thumbnail_IMAG21_37b888c5-d7d7-4722-95b2-2be5687efdda.jpg", status: "Completed", subs: 8000, lubs: 7500, growth: 0.25, day: <><HeartHandshake className="h-4 w-auto" />Shared</>}
-]
+function calcSubChange(pastSubscribers: number, latestSubscribers: number) {
+  return latestSubscribers - pastSubscribers;
+}
 
-function median(values: number[]) {
-  const sorted = values.sort((a, b) => a - b);
-  const mid = Math.floor(sorted.length / 2);
-  return sorted.length % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+function calcMedianSubsTimeline(database: Toon[]) {
+  const monthlyMediaSubs: Record<string, number[]> = {};
+  for (const toon of database) {
+    for (let i = 0; i < toon.data.length; i++) {
+      (monthlyMediaSubs[toon.data[i].month] ??= []).push(toon.data[i].value);
+    }
+  }
+  return Object.entries(monthlyMediaSubs).map(([month, values]) => ({month, value: median(values)}));
+}
+
+function calcSubChangeTimeline(database: Toon[]) {
+  const monthlySubChanges: Record<string, number[]> = {};
+  for (const toon of database) {
+    for (let i = 1; i < toon.data.length; i++) {
+      const past = toon.data[i - 1], latest = toon.data[i];
+      (monthlySubChanges[toon.data[i].month] ??= []).push(latest.value - past.value);
+    }
+  }
+  return Object.entries(monthlySubChanges).map(([month, values]) => ({month, value: median(values)}));
 }
 
 export default function Home() {
 
-  const [open, setOpen] = useState(false);
+  const [webtoons, setWebtoons] = useState<Toon[]>([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data } = await supabase.from("webtoons").select("*");
+      setWebtoons(data ?? []);
+    };
+    fetchData();
+  }, []);
 
-  const medianGrowth = median(toons.map(item => item.growth));
-  const medianSubs = median(toons.map(item => item.subs));
-  const medianSubChange = median(toons.map(item => item.subs - item.lubs));
+  const growthThreshold = webtoons.filter(item => item.data.length > 1);
+  const subThreshold = webtoons.filter(item => item.data.length > 0);
 
-  const graphs = [
-    {title: "Median Growth Timeline", tagline: "How much a typical series is growing", data: [{month: "Jan 25", value: medianGrowth}, {month: "Feb 25", value: medianGrowth}]},
-    {title: "Median Subs Timeline", tagline: "What a typical series following looks like", data: [{month: "Jan 25", value: medianSubs}, {month: "Feb 25", value: medianSubs}]},
-    {title: "Median Sub Change Timeline", tagline: "How much a typical series gained/lost", data: [{month: "Jan 25", value: medianSubChange}, {month: "Feb 25", value: medianSubChange}]}
-  ];
+  const medianGrowth = median(growthThreshold.map(item =>
+    calcMedianGrowth(item.data[item.data.length - 2].value, item.data[item.data.length - 1].value)));
+  const medianSubs = median(subThreshold.map(item => item.data[item.data.length - 1].value));
+  const medianSubChange = median(growthThreshold.map(item =>
+    calcSubChange(item.data[item.data.length - 2].value, item.data[item.data.length - 1].value)));
 
-  const completed = toons.filter(item => item.status === "Completed").length;
-  const hiatus = toons.filter(item => item.status === "Hiatus").length;
-  const ongoing = toons.length - hiatus - completed;
+  const completed = webtoons.filter(item => item.status === "Completed").length;
+  const hiatus = webtoons.filter(item => item.status === "Hiatus").length;
+  const ongoing = webtoons.length - hiatus - completed;
 
   const cards = [
-    {heading: "Median Growth", number: medianGrowth.toFixed(2) + "%", subheading: "0% from last month"},
+    {heading: "Median Growth", number: growthThreshold.length > 0 ? medianGrowth.toFixed(0) + "%" : "N/E", subheading: `from ${growthThreshold.length}/${webtoons.length} Webtoons`},
     {heading: "Active Series", number: ongoing.toString(), subheading: `${hiatus} Hiatus, ${completed} Completed`},
-    {heading: "Median Subs", number: (medianSubs / 1000) + "k", subheading: "0% from last month"},
-    {heading: "Sub Change", number: medianSubChange > 0 ? "+" + medianSubChange : "-" + medianSubChange, subheading: "0% from last month"}
+    {heading: "Median Subs", number: subThreshold.length > 0 ? condenseValue(medianSubs) : "N/E", subheading: `from ${subThreshold.length}/${webtoons.length} Webtoons`},
+    {heading: "Sub Change", number: growthThreshold.length > 0 ? condenseValue(medianSubChange) : "N/E", subheading: `from ${growthThreshold.length}/${webtoons.length} Webtoons`}
   ];
 
-  const [sortKey, setSortKey] = useState<keyof typeof toons[number]>("subs");
-  const [sortedToons, setSortedToons] = useState(() => [...toons].sort((a, b) => b.subs - a.subs));
+  const graphs = [
+    {title: "Median Growth Timeline", tagline: "How much a typical series is growing", data: calcMedianGrowthTimeline(webtoons)},
+    {title: "Median Subs Timeline", tagline: "What a typical series following looks like", data: calcMedianSubsTimeline(webtoons)},
+    {title: "Median Sub Change Timeline", tagline: "How much a typical series gained/lost", data: calcSubChangeTimeline(webtoons)}
+  ];
 
-  function sortBy(key: keyof typeof toons[number]) {
-    setSortKey(key);
-    const sorted = [...sortedToons].sort((a, b) => {
-      const valA = Number(a[key]);
-      const valB = Number(b[key]);
-      return valB - valA;
-    });
-    setSortedToons(sorted);
-  }
+  const [sortKey, setSortKey] = useState<"subs" | "growth">("subs");
+  const sortedWebtoons = [...webtoons].sort((a, b) => {
+    const aSubs = a.data[a.data.length - 1] ? a.data[a.data.length - 1].value : 0;
+    const bSubs = b.data[b.data.length - 1] ? b.data[b.data.length - 1].value : 0;
+    const aGrowth = a.data[a.data.length - 2] ? calcMedianGrowth(a.data[a.data.length - 2].value, aSubs) : -Infinity;
+    const bGrowth = b.data[b.data.length - 2] ? calcMedianGrowth(b.data[b.data.length - 2].value, bSubs) : -Infinity;
+    if (sortKey === "subs") return bSubs - aSubs;
+    if (sortKey === "growth") return bGrowth - aGrowth;
+    return 0;
+  });
 
   return (
     <>
@@ -65,7 +86,7 @@ export default function Home() {
           <h1>Dashboard</h1>
           <h4 className="mt-1">Your Webtoons analytics overview</h4>
         </div>
-        <button className="bg-primary text-white px-6 py-2 flex items-center rounded-full text-sm font-bold gap-2 shadow-lg shadow-primary/20 cursor-pointer" onClick={() => setOpen(true)}><Plus className="h-4 w-auto" />Add Webtoon</button>
+        <button className="bg-primary text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg shadow-primary/20 cursor-pointer">Generate Report</button>
       </section>
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {cards.map((c, index) =>
@@ -88,33 +109,24 @@ export default function Home() {
                 <th className="text-left">Genre</th>
                 <th className="text-left">Status</th>
                 <th className="text-left">Owner</th>
-                <th className={`text-right cursor-pointer ${sortKey === "subs" ? "text-primary" : "underline"}`} onClick={() => sortBy("subs")}>Subs</th>
-                <th className={`text-right cursor-pointer ${sortKey === "growth" ? "text-primary" : "underline"}`} onClick={() => sortBy("growth")}>Growth</th>
+                <th className={`text-right cursor-pointer ${sortKey === "subs" ? "text-primary" : "underline"}`} onClick={() => setSortKey("subs")}>Subs</th>
+                <th className={`text-right cursor-pointer ${sortKey === "growth" ? "text-primary" : "underline"}`} onClick={() => setSortKey("growth")}>Growth</th>
               </tr>
             </thead>
             <tbody className="text-emph">
-              {sortedToons.map((t, index) => {
-                let statusColor;
-                switch (t.status) {
-                  case "Ongoing":
-                    statusColor = "text-green-500 bg-green-500/15";
-                    break;
-                  case "Hiatus":
-                    statusColor = "text-orange-500 bg-orange-500/15";
-                    break;
-                  case "Completed":
-                    statusColor = "text-blue-500 bg-blue-500/15"
-                    break;
-                }
+              {sortedWebtoons.map((w, index) => {
+                const Icon = ICONS[w.owner];
+                const latestSubs = w.data.length > 0 ? w.data[w.data.length - 1].value : -1;
+                const latestGrowth = w.data.length > 1 ? calcMedianGrowth(w.data[w.data.length - 2].value, latestSubs) : -1;
                 return (
-                  <tr key={index} className="border-t border-slate-200">
+                  <tr key={w.id} className="border-t border-slate-200">
                     <td className="text-center font-bold font-mono">{index + 1}</td>
-                    <td className="text-left font-semibold"><div className="line-clamp-2">{t.title}</div></td>
-                    <td className="text-left text-xs font-semibold"><span className="border px-2.5 py-0.5 rounded-xl inline-block">{t.genre}</span></td>
-                    <td className="text-left"><span className={`text-xs font-bold px-2 py-1 rounded-full ${statusColor}`}>{t.status.toUpperCase()}</span></td>
-                    <td className="text-left font-semibold flex items-center gap-1">{t.day}</td>
-                    <td className="text-right font-mono font-bold">{new Intl.NumberFormat().format(t.subs)}</td>
-                    <td className="text-right text-green-500 font-bold">{t.growth}%</td>
+                    <td className="text-left font-semibold"><div className="line-clamp-2">{w.title}</div></td>
+                    <td className="text-left text-xs font-semibold"><span className="border px-2.5 py-0.5 rounded-xl inline-block">{w.genre}</span></td>
+                    <td className="text-left"><span className={`text-xs font-bold px-2 py-1 rounded-full ${STATUS_COLORS[w.status]} ${STATUS_BADGE_COLORS[w.status]}`}>{w.status.toUpperCase()}</span></td>
+                    <td className="text-left font-semibold flex items-center gap-1"><Icon className="h-4 w-auto" />{w.owner}</td>
+                    <td className="text-right font-mono font-bold">{latestSubs !== -1 ? condenseValue(latestSubs) : ""}</td>
+                    <td className="text-right text-green-500 font-bold">{latestGrowth !== -1 ? latestGrowth.toFixed(0) : ""}%</td>
                   </tr>
                 );
               })}
@@ -126,26 +138,11 @@ export default function Home() {
         <section key={index}>
           <h2>{g.title}</h2>
           <i>{g.tagline}</i>
-          <div className="mt-4">
-            <Graph data={g.data} xValues="month" yValues="value" />
+          <div className="mt-4 h-75">
+            {g.data.length > 0 ? <Graph data={g.data} /> : <div className="border border-dashed h-full rounded-2xl flex items-center justify-center"><p>Not enough data to generate graph.</p></div>}
           </div>
         </section>
       )}
-      <div className={`fixed absolute inset-0 bg-black/50 z-3 ${open ? "flex" : "hidden"} justify-center items-center`}>
-        <div className="card m-8">
-          <h2 className="text-center">Add Webtoon to Tracker</h2>
-          <form className="grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-4 mt-6 items-center">
-            <label>Webtoon Link:</label>
-            <input type="url" className="border bg-slate-50 border-slate-200 shadow-sm px-3 py-1 text-emph rounded-full outline-none focus:border-primary" />
-            <label>Thumbnail Link:</label>
-            <input type="url" className="border bg-slate-50 border-slate-200 shadow-sm px-3 py-1 text-emph rounded-full outline-none outline-none focus:border-primary" />
-            <div className="col-span-full grid grid-cols-2 gap-4 mt-6">
-              <button className="text-sm bg-primary text-white shadow-lg shadow-primary/20 py-2 rounded-2xl font-semibold">Submit</button>
-              <button className="text-sm border text-emph py-2 rounded-2xl font-semibold cursor-pointer" onClick={() => setOpen(false)}>Close</button>
-            </div>
-          </form>
-        </div>
-      </div>
     </>
   );
 }
