@@ -1,7 +1,7 @@
 "use client";
 import { User, SwatchBook, BookOpen, Calendar, Users, TrendingUp, X, SquarePen } from "lucide-react";
 import Graph from "@/components/Graph";
-import { redirect, useParams, useRouter } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import { useEffect, useState } from "react";
 import { Toon } from "@/types/toon";
@@ -14,7 +14,6 @@ export default function Detail() {
   const { slug } = useParams();
   const [open, setOpen] = useState(false);
   const [deleteCheck, setDeleteCheck] = useState(false);
-  const router = useRouter();
 
   const [thumbnail, setThumbnail] = useState("");
   const [authors, setAuthors] = useState("");
@@ -42,13 +41,11 @@ export default function Detail() {
     setProtagonists("");
     setDeleteCheck(false);
     setOpen(false);
-    router.refresh();
   }
 
   const updateOwner = async (owner: string) => {
     const { data } = await supabase.from("webtoons").update({ owner }).eq("id", webtoon?.id).select().single();
     setWebtoon(data ?? undefined);
-    router.refresh();
   }
 
   const deleteWebtoon = async () => {

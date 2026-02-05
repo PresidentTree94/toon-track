@@ -4,30 +4,27 @@ import { Comp } from "@/types/comp";
 import { ICONS } from "@/utils/constants";
 import Modal from "./Modal";
 import { supabase } from "@/lib/supabaseClient";
-import { useRouter } from "next/navigation";
 
 export default function Completed({ data }:Readonly<{ data: Comp; }>) {
 
-  const router = useRouter();
   const temp = data.title.split(" ").join("+");
   const Icon = ICONS[data.owner];
   const [open, setOpen] = useState(false);
-  const [thumbnail, setThumbnail] = useState("");
-  const [authors, setAuthors] = useState("");
-  const [protagonists, setProtagonists] = useState("");
+  const [thumbnail, setThumbnail] = useState(data.thumbnail);
+  const [authors, setAuthors] = useState(data.authors);
+  const [protagonists, setProtagonists] = useState(data.protagonists);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await supabase.from("webtoons").update({
-      thumbnail: thumbnail ? thumbnail : null,
+    await supabase.from("completed").update({
+      thumbnail: thumbnail ? thumbnail : data.thumbnail,
       authors: authors ? authors : data.authors,
       protagonists: protagonists ? protagonists : data.protagonists
     }).eq("id", data.id).select().single();
-    setThumbnail("");
-    setAuthors("");
-    setProtagonists("");
+    setThumbnail(data.thumbnail);
+    setAuthors(data.authors);
+    setProtagonists(data.protagonists);
     setOpen(false);
-    router.refresh();
   }
 
   return (

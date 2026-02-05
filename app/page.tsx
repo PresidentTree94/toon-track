@@ -2,6 +2,7 @@
 import Graph from "@/components/Graph";
 import { useState, useEffect } from "react";
 import { Toon } from "@/types/toon";
+import { Comp } from "@/types/comp";
 import { supabase } from "@/lib/supabaseClient";
 import { median, condenseValue, calcMedianGrowth, calcMedianGrowthTimeline } from "@/utils/calculations";
 import { ICONS, STATUS_COLORS, STATUS_BADGE_COLORS } from "@/utils/constants";
@@ -34,10 +35,13 @@ function calcSubChangeTimeline(database: Toon[]) {
 export default function Home() {
 
   const [webtoons, setWebtoons] = useState<Toon[]>([]);
+  const [completed, setCompleted] = useState<Comp[]>([]);
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await supabase.from("webtoons").select("*");
-      setWebtoons(data ?? []);
+      const { data: webtoons } = await supabase.from("webtoons").select("*");
+      setWebtoons(webtoons ?? []);
+      const { data: completed } = await supabase.from("completed").select("*");
+      setCompleted(completed ?? []);
     };
     fetchData();
   }, []);
@@ -51,13 +55,12 @@ export default function Home() {
   const medianSubChange = median(growthThreshold.map(item =>
     calcSubChange(item.data[item.data.length - 2].value, item.data[item.data.length - 1].value)));
 
-  const completed = webtoons.filter(item => item.status === "Completed").length;
   const hiatus = webtoons.filter(item => item.status === "Hiatus").length;
-  const ongoing = webtoons.length - hiatus - completed;
+  const ongoing = webtoons.length - hiatus;
 
   const cards = [
     {heading: "Median Growth", number: growthThreshold.length > 0 ? medianGrowth.toFixed(0) + "%" : "N/E", subheading: `from ${growthThreshold.length}/${webtoons.length} Webtoons`},
-    {heading: "Active Series", number: ongoing.toString(), subheading: `${hiatus} Hiatus, ${completed} Completed`},
+    {heading: "Active Series", number: ongoing.toString(), subheading: `${hiatus} Hiatus, ${completed.length} Completed`},
     {heading: "Median Subs", number: subThreshold.length > 0 ? condenseValue(medianSubs) : "N/E", subheading: `from ${subThreshold.length}/${webtoons.length} Webtoons`},
     {heading: "Sub Change", number: growthThreshold.length > 0 ? condenseValue(medianSubChange) : "N/E", subheading: `from ${growthThreshold.length}/${webtoons.length} Webtoons`}
   ];
