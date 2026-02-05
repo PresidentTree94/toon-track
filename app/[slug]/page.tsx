@@ -15,10 +15,6 @@ export default function Detail() {
   const [open, setOpen] = useState(false);
   const [deleteCheck, setDeleteCheck] = useState(false);
 
-  const [thumbnail, setThumbnail] = useState("");
-  const [authors, setAuthors] = useState("");
-  const [protagonists, setProtagonists] = useState("");
-
   const [webtoon, setWebtoon] = useState<Toon>();
   useEffect(() => {
     const fetchData = async () => {
@@ -28,6 +24,10 @@ export default function Detail() {
     fetchData();
   }, [slug]);
 
+  const [thumbnail, setThumbnail] = useState(webtoon?.thumbnail);
+  const [authors, setAuthors] = useState(webtoon?.authors);
+  const [protagonists, setProtagonists] = useState(webtoon?.protagonists);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const { data } = await supabase.from("webtoons").update({
@@ -36,9 +36,9 @@ export default function Detail() {
       protagonists: protagonists ? protagonists : webtoon?.protagonists
     }).eq("id", webtoon?.id).select().single();
     setWebtoon(data ?? undefined);
-    setThumbnail("");
-    setAuthors("");
-    setProtagonists("");
+    setThumbnail(data?.thumbnail);
+    setAuthors(data.authors);
+    setProtagonists(data.protagonists);
     setDeleteCheck(false);
     setOpen(false);
   }
