@@ -13,7 +13,7 @@ def run_initial_scraper(webtoon_id):
   original = soup.select_one("h1.subj").get_text(separator=" ").strip()
   canvas = soup.select_one("h3.subj").get_text(separator=" ").strip()
 
-  title_element = original if original is not None else canvas
+  title_element = original if original else canvas
   genre_element = soup.select_one("h2.genre").text.strip()
   days_element = soup.select_one("p.day_info").text.replace("UPEVERY ", "").strip()
 
