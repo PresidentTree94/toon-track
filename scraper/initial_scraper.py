@@ -24,7 +24,7 @@ def run_initial_scraper(webtoon_id):
 
   if status_element == "Completed":
     completed_data = {
-      "title": title_element.replace(":", ""),
+      "title": title_element,
       "genre": genre_element,
       "owner": row.data["owner"],
       "thumbnail": row.data["thumbnail"],
@@ -37,7 +37,7 @@ def run_initial_scraper(webtoon_id):
     return
 
   webtoon_data = {
-    "title": title_element,
+    "title": title_element.replace(":", ""),
     "genre": genre_element,
     "days": ", ".join(d.strip().capitalize() for d in days_element.split(",")) if "," in days_element else days_element.capitalize(),
     "status": status_element,
