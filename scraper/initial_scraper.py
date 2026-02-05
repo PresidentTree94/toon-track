@@ -10,10 +10,12 @@ def run_initial_scraper(webtoon_id):
   response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"})
   soup = BeautifulSoup(response.text, "html.parser")
 
-  original = soup.select_one("h1.subj").get_text(separator=" ").strip()
-  canvas = soup.select_one("h3.subj").get_text(separator=" ").strip()
+  h1 = soup.select_one("h1.subj")
+  h3 = soup.select_one("h3.subj")
+  original = h1.text.strip() if h1 else None
+  canvas = h3.text.strip() if h3 else None
 
-  title_element = original if original else canvas
+  title_element = original or canvas
   genre_element = soup.select_one("h2.genre").text.strip()
   days_element = soup.select_one("p.day_info").text.replace("UPEVERY ", "").strip()
 
