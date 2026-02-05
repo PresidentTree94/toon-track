@@ -1,3 +1,0 @@
-from initial_scraper import run_initial_scraper
-
-run_initial_scraper(5)

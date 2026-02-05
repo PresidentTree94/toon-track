@@ -1,5 +1,5 @@
 "use client";
-import { User, SwatchBook, BookOpen, Calendar, Users, TrendingUp, X } from "lucide-react";
+import { User, SwatchBook, BookOpen, Calendar, Users, TrendingUp, X, SquarePen } from "lucide-react";
 import Graph from "@/components/Graph";
 import { redirect, useParams } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
@@ -7,11 +7,18 @@ import { useEffect, useState } from "react";
 import { Toon } from "@/types/toon";
 import { condenseValue, calcMedianGrowth, calcMedianGrowthTimeline } from "@/utils/calculations";
 import { ICONS, STATUS_COLORS, STATUS_BADGE_COLORS } from "@/utils/constants";
+import Modal from "@/components/Modal";
 
 export default function Detail() {
 
   const { slug } = useParams();
+  const [open, setOpen] = useState(false);
   const [deleteCheck, setDeleteCheck] = useState(false);
+
+  const [thumbnail, setThumbnail] = useState("");
+  const [authors, setAuthors] = useState("");
+  const [protagonists, setProtagonists] = useState("");
+
   const [webtoon, setWebtoon] = useState<Toon>();
   useEffect(() => {
     const fetchData = async () => {
@@ -20,6 +27,19 @@ export default function Detail() {
     };
     fetchData();
   }, [slug]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const { data } = await supabase.from("webtoons").update({
+      thumbnail: thumbnail || null, authors: authors || webtoon?.authors, protagonists: protagonists || webtoon?.protagonists
+    }).eq("id", webtoon?.id).select().single();
+    setWebtoon(data ?? undefined);
+    setThumbnail("");
+    setAuthors("");
+    setProtagonists("");
+    setDeleteCheck(false);
+    setOpen(false);
+  }
 
   const updateOwner = async (owner: string) => {
     const { data } = await supabase.from("webtoons").update({ owner }).eq("id", webtoon?.id).select().single();
@@ -35,7 +55,7 @@ export default function Detail() {
     redirect("/library");
   }
 
-  const protagonists = webtoon?.protagonists ? webtoon.protagonists.split(", ") : [];
+  const mcs = webtoon?.protagonists ? webtoon.protagonists.split(", ") : [];
 
   return (
     <>
@@ -51,7 +71,7 @@ export default function Detail() {
               <div className="flex flex-col @2xs:flex-row items-center justify-between gap-1 @2xs:gap-4">
                 <div className="flex items-center gap-2"><User className="h-4 w-auto" />MC(s)</div>
                 <div className="@2xs:text-right">
-                  {protagonists?.map((p, index) =>
+                  {mcs?.map((p, index) =>
                     <span key={index} className="font-semibold block">{p}</span>
                   )}
                 </div>
@@ -72,10 +92,10 @@ export default function Detail() {
                 {Object.keys(ICONS).map(key => {
                   const Icon = ICONS[key];
                   return (
-                    <button key={key} className={`rounded-2xl  py-2 flex items-center justify-center ${webtoon?.owner === key ? "bg-primary text-white shadow-lg shadow-primary/20" : "border text-emph hover:bg-slate-100"}`} onClick={() => updateOwner(key)}><Icon className="h-4.5 w-auto" /></button>
+                    <button key={key} className={`rounded-2xl  py-2 flex items-center justify-center cursor-pointer ${webtoon?.owner === key ? "bg-primary text-white shadow-lg shadow-primary/20" : "border text-emph hover:bg-slate-100"}`} onClick={() => updateOwner(key)}><Icon className="h-4.5 w-auto" /></button>
                   )
                 })}
-                <button className={`border text-emph rounded-2xl py-2 flex items-center justify-center cursor-pointer ${deleteCheck ? `${STATUS_COLORS["Hiatus"]} ${STATUS_BADGE_COLORS["Hiatus"]}` : "hover:bg-slate-100"}`} onClick={deleteWebtoon}><X className="h-4.5 w-auto" /></button>
+                <button className="rounded-2xl  py-2 flex items-center justify-center border text-emph hover:bg-slate-100 cursor-pointer" onClick={() => { setOpen(true); setDeleteCheck(false); }}><SquarePen className="h-4.5 w-auto" /></button>
               </div>
             </div>
           </div>
@@ -107,6 +127,15 @@ export default function Detail() {
           </div>
         </section>
       </article>
+      <Modal heading="Edit Webtoon Details" open={open} setOpen={setOpen} handleSubmit={handleSubmit}>
+        <label>Thumbnail Link:</label>
+        <input type="url" className="border bg-slate-50 border-slate-200 shadow-sm px-3 py-1 text-emph rounded-full outline-none focus:border-primary" value={thumbnail} onChange={(e) => setThumbnail(e.target.value)} />
+        <label>Author(s):</label>
+        <input type="text" className="border bg-slate-50 border-slate-200 shadow-sm px-3 py-1 text-emph rounded-full outline-none focus:border-primary" value={authors} onChange={(e) => setAuthors(e.target.value)} />
+        <label>Protagonist(s):</label>
+        <input type="text" className="border bg-slate-50 border-slate-200 shadow-sm px-3 py-1 text-emph rounded-full outline-none focus:border-primary" value={protagonists} onChange={(e) => setProtagonists(e.target.value)} />
+        <button type="button" className={`col-span-full border text-emph rounded-2xl py-2 flex items-center justify-center cursor-pointer ${deleteCheck ? `${STATUS_COLORS["Hiatus"]} ${STATUS_BADGE_COLORS["Hiatus"]}` : "hover:bg-slate-100"}`} onClick={deleteWebtoon}><X className="h-4.5 w-auto" /></button>
+      </Modal>
     </>
   );
 }

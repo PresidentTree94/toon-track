@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
+import Modal from "./Modal";
 
 export default function Navbar() {
 
@@ -23,7 +24,7 @@ export default function Navbar() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await supabase.from("webtoons").insert({ toon: toon, thumbnail: thumbnail, authors: authors, protagonists: protagonists, owner: owner });
+    await supabase.from("webtoons").insert({ toon: toon, thumbnail: thumbnail || null, authors: authors, protagonists: protagonists, owner: owner });
     setToon("");
     setThumbnail("");
     setAuthors("");
@@ -51,32 +52,23 @@ export default function Navbar() {
           </div>
         </div>
       </header>
-      <div className={`fixed inset-0 bg-black/50 z-3 ${open ? "flex" : "hidden"} justify-center items-center`}>
-        <div className="card m-8">
-          <h2 className="text-center">Add Webtoon to Tracker</h2>
-          <form className="grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-4 mt-6 items-center" onSubmit={handleSubmit}>
-            <label>Webtoon Link:</label>
-            <input required type="url" className="border bg-slate-50 border-slate-200 shadow-sm px-3 py-1 text-emph rounded-full outline-none focus:border-primary" value={toon} onChange={(e) => setToon(e.target.value)} />
-            <label>Thumbnail Link:</label>
-            <input type="url" className="border bg-slate-50 border-slate-200 shadow-sm px-3 py-1 text-emph rounded-full outline-none focus:border-primary" value={thumbnail} onChange={(e) => setThumbnail(e.target.value)} />
-            <label>Author(s):</label>
-            <input required type="text" className="border bg-slate-50 border-slate-200 shadow-sm px-3 py-1 text-emph rounded-full outline-none focus:border-primary" value={authors} onChange={(e) => setAuthors(e.target.value)} />
-            <label>Protagonist(s):</label>
-            <input required type="text" className="border bg-slate-50 border-slate-200 shadow-sm px-3 py-1 text-emph rounded-full outline-none focus:border-primary" value={protagonists} onChange={(e) => setProtagonists(e.target.value)} />
-            <label>Owner:</label>
-            <select required className="border bg-slate-50 border-slate-200 shadow-sm px-3 py-1 text-emph rounded-full outline-none focus:border-primary appearance-none" value={owner} onChange={(e) => setOwner(e.target.value)}>
-              <option value="" disabled>Select owner</option>
-              <option value="Karly">Karly</option>
-              <option value="Rachelle">Rachelle</option>
-              <option value="Shared">Shared</option>
-            </select>
-            <div className="col-span-full grid grid-cols-2 gap-4 mt-6">
-              <button className="text-sm bg-primary text-white shadow-lg shadow-primary/20 py-2 rounded-2xl font-semibold cursor-pointer">Submit</button>
-              <button className="text-sm border text-emph py-2 rounded-2xl font-semibold cursor-pointer" onClick={() => setOpen(false)}>Close</button>
-            </div>
-          </form>
-        </div>
-      </div>
+      <Modal heading="Add Webtoon to Tracker" open={open} setOpen={setOpen} handleSubmit={handleSubmit}>
+        <label>Webtoon Link:</label>
+        <input required type="url" className="border bg-slate-50 border-slate-200 shadow-sm px-3 py-1 text-emph rounded-full outline-none focus:border-primary" value={toon} onChange={(e) => setToon(e.target.value)} />
+        <label>Thumbnail Link:</label>
+        <input type="url" className="border bg-slate-50 border-slate-200 shadow-sm px-3 py-1 text-emph rounded-full outline-none focus:border-primary" value={thumbnail} onChange={(e) => setThumbnail(e.target.value)} />
+        <label>Author(s):</label>
+        <input required type="text" className="border bg-slate-50 border-slate-200 shadow-sm px-3 py-1 text-emph rounded-full outline-none focus:border-primary" value={authors} onChange={(e) => setAuthors(e.target.value)} />
+        <label>Protagonist(s):</label>
+        <input required type="text" className="border bg-slate-50 border-slate-200 shadow-sm px-3 py-1 text-emph rounded-full outline-none focus:border-primary" value={protagonists} onChange={(e) => setProtagonists(e.target.value)} />
+        <label>Owner:</label>
+        <select required className="border bg-slate-50 border-slate-200 shadow-sm px-3 py-1 text-emph rounded-full outline-none focus:border-primary appearance-none" value={owner} onChange={(e) => setOwner(e.target.value)}>
+          <option value="" disabled>Select owner</option>
+          <option value="Karly">Karly</option>
+          <option value="Rachelle">Rachelle</option>
+          <option value="Shared">Shared</option>
+        </select>
+      </Modal>
     </>
   );
 }
