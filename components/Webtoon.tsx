@@ -6,7 +6,7 @@ import { STATUS_COLORS } from "@/utils/constants";
 
 export default function Webtoon({ data }:Readonly<{ data: Toon; }>) {
 
-  const link = data.title.toLowerCase().split(" ").join("-");
+  const link = data.title.toLowerCase().replace(":", "").split(" ").join("-");
   const temp = data.title.split(" ").join("+");
 
   return (

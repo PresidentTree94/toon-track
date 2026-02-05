@@ -26,6 +26,7 @@ export default function Detail() {
     };
     fetchData();
   }, [search]);
+  
   const [thumbnail, setThumbnail] = useState(webtoon?.thumbnail);
   const [authors, setAuthors] = useState(webtoon?.authors);
   const [protagonists, setProtagonists] = useState(webtoon?.protagonists);
