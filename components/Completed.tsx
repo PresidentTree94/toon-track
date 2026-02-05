@@ -4,9 +4,11 @@ import { Comp } from "@/types/comp";
 import { ICONS } from "@/utils/constants";
 import Modal from "./Modal";
 import { supabase } from "@/lib/supabaseClient";
+import { useRouter } from "next/navigation";
 
 export default function Completed({ data }:Readonly<{ data: Comp; }>) {
 
+  const router = useRouter();
   const temp = data.title.split(" ").join("+");
   const Icon = ICONS[data.owner];
   const [open, setOpen] = useState(false);
@@ -17,12 +19,15 @@ export default function Completed({ data }:Readonly<{ data: Comp; }>) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await supabase.from("webtoons").update({
-      thumbnail: thumbnail || null, authors: authors || data.authors, protagonists: protagonists || data.protagonists
+      thumbnail: thumbnail ? thumbnail : null,
+      authors: authors ? authors : data.authors,
+      protagonists: protagonists ? protagonists : data.protagonists
     }).eq("id", data.id).select().single();
     setThumbnail("");
     setAuthors("");
     setProtagonists("");
     setOpen(false);
+    router.refresh();
   }
 
   return (

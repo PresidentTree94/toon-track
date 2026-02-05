@@ -1,6 +1,6 @@
 "use client";
 import { BookHeart, LayoutDashboard, Library, Archive, Settings, Plus } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
@@ -15,6 +15,7 @@ export default function Navbar() {
   const [authors, setAuthors] = useState("");
   const [protagonists, setProtagonists] = useState("");
   const [owner, setOwner] = useState("");
+  const router = useRouter();
 
   const links = [
     {label: "Dashboard", icon: LayoutDashboard, link: "/"},
@@ -31,6 +32,7 @@ export default function Navbar() {
     setProtagonists("");
     setOwner("");
     setOpen(false);
+    router.refresh();
   }
 
   return (
