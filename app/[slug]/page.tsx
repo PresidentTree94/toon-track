@@ -1,16 +1,17 @@
 "use client";
 import { User, SwatchBook, BookOpen, Calendar, Users, TrendingUp, X } from "lucide-react";
 import Graph from "@/components/Graph";
-import { useParams } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import { useEffect, useState } from "react";
 import { Toon } from "@/types/toon";
 import { condenseValue, calcMedianGrowth, calcMedianGrowthTimeline } from "@/utils/calculations";
-import { ICONS, STATUS_COLORS } from "@/utils/constants";
+import { ICONS, STATUS_COLORS, STATUS_BADGE_COLORS } from "@/utils/constants";
 
 export default function Detail() {
 
   const { slug } = useParams();
+  const [deleteCheck, setDeleteCheck] = useState(false);
   const [webtoon, setWebtoon] = useState<Toon>();
   useEffect(() => {
     const fetchData = async () => {
@@ -23,6 +24,15 @@ export default function Detail() {
   const updateOwner = async (owner: string) => {
     const { data } = await supabase.from("webtoons").update({ owner }).eq("id", webtoon?.id).select().single();
     setWebtoon(data ?? undefined);
+  }
+
+  const deleteWebtoon = async () => {
+    if (!deleteCheck) {
+      setDeleteCheck(true);
+      return;
+    }
+    await supabase.from("webtoons").delete().eq("id", webtoon?.id);
+    redirect("/library");
   }
 
   const protagonists = webtoon?.protagonists ? webtoon.protagonists.split(", ") : [];
@@ -65,7 +75,7 @@ export default function Detail() {
                     <button key={key} className={`rounded-2xl  py-2 flex items-center justify-center ${webtoon?.owner === key ? "bg-primary text-white shadow-lg shadow-primary/20" : "border text-emph hover:bg-slate-100"}`} onClick={() => updateOwner(key)}><Icon className="h-4.5 w-auto" /></button>
                   )
                 })}
-                <button className="border text-emph rounded-2xl py-2 flex items-center justify-center hover:bg-slate-100"><X className="h-4.5 w-auto" /></button>
+                <button className={`border text-emph rounded-2xl py-2 flex items-center justify-center cursor-pointer ${deleteCheck ? `${STATUS_COLORS["Hiatus"]} ${STATUS_BADGE_COLORS["Hiatus"]}` : "hover:bg-slate-100"}`} onClick={deleteWebtoon}><X className="h-4.5 w-auto" /></button>
               </div>
             </div>
           </div>
