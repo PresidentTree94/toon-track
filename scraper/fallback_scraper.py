@@ -6,7 +6,6 @@ def run_fallback_scraper():
 
     for row in response.data:
         webtoon_id = row["id"]
-        print(f"Running fallback scraper for ID {webtoon_id}")
         run_initial_scraper(webtoon_id)
 
 if __name__ == "__main__":

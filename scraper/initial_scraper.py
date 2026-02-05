@@ -19,7 +19,8 @@ def run_initial_scraper(webtoon_id):
     status_element = "Completed"
   elif detail and "return" in detail.text.strip():
     status_element = "Hiatus"
-  else: status_element = "Ongoing"
+  else:
+    status_element = "Ongoing"
 
   if status_element == "Completed":
     completed_data = {

@@ -1,14 +1,13 @@
-name: Fallback Scraper
+name: Daily Scraper
 
 on:
   schedule:
-    - cron: "0 * * * *"   # every hour
-  workflow_dispatch:         
+    - cron: "5 6 * * *"   # every day at 1:05 AM
+  workflow_dispatch:
 
 jobs:
-  run-fallback:
+  run-daily:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
 
@@ -22,10 +21,10 @@ jobs:
           cd scraper
           pip install -r requirements.txt
 
-      - name: Run fallback scraper
+      - name: Run daily scraper
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: |
           cd scraper
-          python fallback_scraper.py
+          python daily_scraper.py
