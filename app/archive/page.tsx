@@ -16,16 +16,18 @@ export default function Archive() {
     fetchData();
   }, []);
 
-  const owners = ["All", "Karly", "Rachelle", "Shared"];
-  const genres = ["All", ...new Set(webtoons.map(item => item.genre))].sort();
-
   const [search, setSearch] = useState("");
   const [owner, setOwner] = useState("All");
   const [genre, setGenre] = useState("All");
 
-  const filtered = webtoons
-    .filter(item => item.title.toLowerCase().includes(search.toLowerCase()))
-    .filter(item => owner === "All" ? true : item.owner === owner)
+  const preFiltered = webtoons
+  .filter(item => item.title.toLowerCase().includes(search.toLowerCase()))
+  .filter(item => owner === "All" ? true : item.owner === owner)
+
+  const owners = ["All", "Karly", "Rachelle", "Shared"];
+  const genres = ["All", ...new Set(preFiltered.map(item => item.genre))].sort();
+
+  const filtered = preFiltered
     .filter(item => genre === "All" ? true : item.genre === genre)
     .sort((a, b) => { return a.title.localeCompare(b.title); });
 

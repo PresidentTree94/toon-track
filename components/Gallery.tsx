@@ -45,7 +45,7 @@ export default function Gallery({
           </details>
         </div>
       </section>
-      <section className="grid grid-cols-1 @min-[525px]:grid-cols-2 @min-[775px]:grid-cols-3 @min-[1050px]:grid-cols-4 gap-6">
+      <section className="grid grid-cols-1 @min-[33rem]:grid-cols-2 @min-[50rem]:grid-cols-3 @min-[67rem]:grid-cols-4 gap-6">
         {filtered.map(w =>
           ItemComponent && <ItemComponent key={w.id} data={w} />
         )}

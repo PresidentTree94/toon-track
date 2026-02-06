@@ -34,7 +34,7 @@ export default function Webtoon({ data }:Readonly<{ data: Toon; }>) {
         <div className="border border-slate-200 p-2 rounded-xl flex items-center gap-2">
           <TrendingUp className="h-4 w-auto text-green-500" />
           <span className="font-bold text-green-500">{data.data.length > 1 ? calcMedianGrowth(data.data[data.data.length - 2].value, data.data[data.data.length - 1].value).toFixed(0) : 0}%</span>
-          growth this week
+          growth this month
         </div>
       </div>
     </Link>

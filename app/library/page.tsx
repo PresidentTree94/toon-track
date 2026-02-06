@@ -20,21 +20,23 @@ export default function Library() {
     fetchData();
   }, []);
 
-  const sorts = ["Title", "Subscribers", "Growth"];
-  const owners = ["All", "Karly", "Rachelle", "Shared"];
-  const statuses = ["All", "Ongoing", "Hiatus"];
-  const genres = ["All", ...new Set(webtoons.map(item => item.genre))].sort();
-
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("Title");
   const [owner, setOwner] = useState("All");
   const [status, setStatus] = useState("All");
   const [genre, setGenre] = useState("All");
 
-  const filtered = webtoons
-    .filter(item => item.title.toLowerCase().includes(search.toLowerCase()))
-    .filter(item => owner === "All" ? true : item.owner === owner)
-    .filter(item => status === "All" ? true : item.status === status)
+  const preFiltered = webtoons
+  .filter(item => item.title.toLowerCase().includes(search.toLowerCase()))
+  .filter(item => owner === "All" ? true : item.owner === owner)
+  .filter(item => status === "All" ? true : item.status === status);
+
+  const sorts = ["Title", "Subscribers", "Growth"];
+  const owners = ["All", "Karly", "Rachelle", "Shared"];
+  const statuses = ["All", "Ongoing", "Hiatus"];
+  const genres = ["All", ...new Set(preFiltered.map(item => item.genre))].sort();
+
+  const filtered = preFiltered
     .filter(item => genre === "All" ? true : item.genre === genre)
     .sort((a, b) => {
       const aSubs = a.data[a.data.length - 1] ? a.data[a.data.length - 1].value : 0;
