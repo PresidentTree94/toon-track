@@ -1,8 +1,8 @@
-import { TreeDeciduous, Bot, HeartHandshake, LucideIcon } from "lucide-react";
+import { TreeDeciduous, Snail, HeartHandshake, LucideIcon } from "lucide-react";
 
 export const ICONS: Record<string, LucideIcon> = {
   "Karly": TreeDeciduous,
-  "Rachelle": Bot,
+  "Rachelle": Snail,
   "Shared": HeartHandshake
 };
 
