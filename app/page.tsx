@@ -125,7 +125,7 @@ export default function Home() {
                   <tr key={w.id} className="border-t border-slate-200">
                     <td className="text-center font-bold font-mono">{index + 1}</td>
                     <td className="text-left font-semibold"><div className="line-clamp-2">{w.title}</div></td>
-                    <td className="text-left text-xs font-semibold"><span className="border px-2.5 py-0.5 rounded-xl inline-block">{w.genre}</span></td>
+                    <td className="text-left text-xs font-semibold whitespace-nowrap"><span className="border px-2.5 py-0.5 rounded-xl inline-block">{w.genre}</span></td>
                     <td className="text-left"><span className={`text-xs font-bold px-2 py-1 rounded-full ${STATUS_COLORS[w.status]} ${STATUS_BADGE_COLORS[w.status]}`}>{w.status && w.status.toUpperCase()}</span></td>
                     <td className="text-left font-semibold flex items-center gap-1"><Icon className="h-4 w-auto" />{w.owner}</td>
                     <td className="text-right font-mono font-bold">{latestSubs !== -1 ? condenseValue(latestSubs) : ""}</td>
