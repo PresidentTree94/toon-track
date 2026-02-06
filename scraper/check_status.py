@@ -1,7 +1,7 @@
 from supabase_client import supabase
 
 def run_check_status(soup, row, url):
-  status_element = None
+  status_element = "Ongoing"
   days_element = soup.select_one("p.day_info")
   if days_element:
     days_text = days_element.text.replace("UPEVERY ", "").strip()
