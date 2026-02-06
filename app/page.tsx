@@ -127,7 +127,7 @@ export default function Home() {
                     <td className="text-left font-semibold"><div className="line-clamp-2">{w.title}</div></td>
                     <td className="text-left text-xs font-semibold whitespace-nowrap"><span className="border px-2.5 py-0.5 rounded-xl inline-block">{w.genre}</span></td>
                     <td className="text-left"><span className={`text-xs font-bold px-2 py-1 rounded-full ${STATUS_COLORS[w.status]} ${STATUS_BADGE_COLORS[w.status]}`}>{w.status && w.status.toUpperCase()}</span></td>
-                    <td className="text-left font-semibold flex items-center gap-1"><Icon className="h-4 w-auto" />{w.owner}</td>
+                    <td className="text-left font-semibold"><div className="flex items-center gap-1"><Icon className="h-4 w-auto" />{w.owner}</div></td>
                     <td className="text-right font-mono font-bold">{latestSubs !== -1 ? condenseValue(latestSubs) : ""}</td>
                     <td className="text-right text-green-500 font-bold">{latestGrowth !== -1 ? latestGrowth.toFixed(0) : ""}%</td>
                   </tr>

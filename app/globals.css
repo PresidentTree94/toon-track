@@ -36,7 +36,7 @@
   }
 
   th, td {
-    @apply p-4 align-middle;
+    @apply p-4;
   }
 
   fieldset {
