@@ -15,9 +15,10 @@ def run_initial_scraper(webtoon_id):
   h3 = soup.select_one("h3.subj")
   original = h1.text.strip() if h1 else None
   canvas = h3.text.strip() if h3 else None
-
   title_element = original or canvas
-  genre_element = soup.select_one("h2.genre").text.strip()
+
+  h2 = soup.select_one("h2.genre")
+  genre_element = h2.text.strip() if h2 else None
 
   status_element, days_element = run_check_status(soup, row.data, url)
   if status_element != "Completed":

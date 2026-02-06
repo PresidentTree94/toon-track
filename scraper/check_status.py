@@ -9,10 +9,12 @@ def run_check_status(soup, row, url):
       status_element = "Completed"
     elif detail and "return" in detail.text.strip():
       status_element = "Hiatus"
+      days_element = days_text
     else:
       status_element = "Ongoing"
+      days_element = days_text
   else:
-    status_element = "Random"
+    days_element = "Random"
 
   if status_element == "Completed":
     completed_data = {
