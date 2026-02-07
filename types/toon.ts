@@ -16,4 +16,6 @@ export type Toon = {
   thumbnail: string;
   data: Update[];
   timestamp: string;
+  owner_time: string;
+  status_time: string;
 };

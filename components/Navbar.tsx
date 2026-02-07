@@ -24,7 +24,7 @@ export default function Navbar() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await supabase.from("webtoons").insert({ toon: toon, thumbnail: thumbnail ? thumbnail : null, authors: authors, protagonists: protagonists, owner: owner });
+    await supabase.from("webtoons").insert({ toon: toon.trim(), thumbnail: thumbnail.trim() || null, authors: authors.trim(), protagonists: protagonists.trim(), owner: owner });
     setToon("");
     setThumbnail("");
     setAuthors("");

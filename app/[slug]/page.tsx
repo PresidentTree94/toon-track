@@ -27,16 +27,16 @@ export default function Detail() {
     fetchData();
   }, [search]);
   
-  const [thumbnail, setThumbnail] = useState(webtoon?.thumbnail);
-  const [authors, setAuthors] = useState(webtoon?.authors);
-  const [protagonists, setProtagonists] = useState(webtoon?.protagonists);
+  const [thumbnail, setThumbnail] = useState("");
+  const [authors, setAuthors] = useState("");
+  const [protagonists, setProtagonists] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const { data } = await supabase.from("webtoons").update({
-      thumbnail: thumbnail ? thumbnail : null,
-      authors: authors ? authors : webtoon?.authors,
-      protagonists: protagonists ? protagonists : webtoon?.protagonists
+      thumbnail: thumbnail.trim() || webtoon?.thumbnail,
+      authors: authors.trim() || webtoon?.authors,
+      protagonists: protagonists.trim() || webtoon?.protagonists
     }).eq("id", webtoon?.id).select().single();
     setWebtoon(data ?? undefined);
     setThumbnail(data?.thumbnail);
@@ -47,7 +47,8 @@ export default function Detail() {
   }
 
   const updateOwner = async (owner: string) => {
-    const { data } = await supabase.from("webtoons").update({ owner }).eq("id", webtoon?.id).select().single();
+    const { data, error } = await supabase.from("webtoons").update({ owner, owner_time: new Date().toISOString() }).eq("id", webtoon?.id).select().single();
+    console.log("Update result: ", data, error);
     setWebtoon(data ?? undefined);
   }
 

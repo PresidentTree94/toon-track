@@ -84,10 +84,15 @@ export default function Home() {
   });
 
   const firstOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' });
+
   const MS_PER_DAY = 1000 * 60 * 60 * 24;
-  const KarlyWebtoons = webtoons.filter(w => w.owner === "Karly" && ((Date.now() - new Date(w.timestamp).getTime()) / MS_PER_DAY <= 7));
-  const RachelleWebtoons = webtoons.filter(w => w.owner === "Rachelle" && ((Date.now() - new Date(w.timestamp).getTime()) / MS_PER_DAY <= 7));
-  const missingData = webtoons.filter(w => !w.genre || !w.thumbnail).length;
+  const DAY_LIMIT = 5;
+  const KarlyWebtoons = webtoons.filter(w => w.owner === "Karly" && ((Date.now() - new Date(w.timestamp).getTime()) / MS_PER_DAY <= DAY_LIMIT));
+  const RachelleWebtoons = webtoons.filter(w => w.owner === "Rachelle" && ((Date.now() - new Date(w.timestamp).getTime()) / MS_PER_DAY <= DAY_LIMIT));
+  const changeOwnership = webtoons.filter(w => (Date.now() - new Date(w.owner_time).getTime()) / MS_PER_DAY <= DAY_LIMIT);
+  const changeStatus = webtoons.filter(w => w.status_time && (Date.now() - new Date(w.status_time).getTime()) / MS_PER_DAY <= DAY_LIMIT);
+  const completedRecently = completed.filter(c => (Date.now() - new Date(c.timestamp).getTime()) / MS_PER_DAY <= DAY_LIMIT);
+  const missingData = webtoons.filter(w => !w.genre || !w.thumbnail)
 
   return (
     <>
@@ -98,12 +103,15 @@ export default function Home() {
         </div>
         <button className="bg-primary text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg shadow-primary/20 cursor-pointer">Generate Report</button>
       </section>
-      {KarlyWebtoons.length + RachelleWebtoons.length + missingData > 0 && <section className="bg-primary/5 border border-primary/10 rounded-2xl p-8">
+      {KarlyWebtoons.length + RachelleWebtoons.length + missingData.length > 0 && <section className="bg-primary/5 border border-primary/10 rounded-2xl p-8">
         <h2>Notices</h2>
         <ul className="space-y-1 mt-4">
-          {KarlyWebtoons.length > 0 && <li>Karly added {KarlyWebtoons.length === 1 ? <Link href={KarlyWebtoons[0].title.toLowerCase().split(" ").join("-")}>1 Webtoon</Link> : KarlyWebtoons.length + " Webtoons"} within the last week.</li>}
-          {RachelleWebtoons.length > 0 && <li>Rachelle added {RachelleWebtoons.length === 1 ? <Link href={RachelleWebtoons[0].title.toLowerCase().split(" ").join("-")}>1 Webtoon</Link> : RachelleWebtoons.length + " Webtoons"} within the last week.</li>}
-          {missingData > 0 && <li>{missingData} Webtoons are missing data.</li>}
+          {KarlyWebtoons.length > 0 && <li>Karly added {KarlyWebtoons.length === 1 ? <Link href={KarlyWebtoons[0].title.toLowerCase().split(" ").join("-")} className="underline">1 Webtoon</Link> : KarlyWebtoons.length + " Webtoons"}.</li>}
+          {RachelleWebtoons.length > 0 && <li>Rachelle added {RachelleWebtoons.length === 1 ? <Link href={RachelleWebtoons[0].title.toLowerCase().split(" ").join("-")} className="underline">1 Webtoon</Link> : RachelleWebtoons.length + " Webtoons"}.</li>}
+          {changeOwnership.length > 0 && <li>{changeOwnership.length === 1 ? <Link href={changeOwnership[0].title.toLowerCase().split(" ").join("-")} className="underline">1 Webtoon</Link> : changeOwnership.length + " Webtoons"} changed ownership.</li>}
+          {changeStatus.length > 0 && <li>{changeStatus.length === 1 ? <Link href={changeStatus[0].title.toLowerCase().split(" ").join("-")} className="underline">1 Webtoon</Link> : changeStatus.length + " Webtoons"} changed status.</li>}
+          {completedRecently.length > 0 && <li>{completedRecently.length === 1 ? <Link href={completedRecently[0].title.toLowerCase().split(" ").join("-")} className="underline">1 Webtoon</Link> + " was" : completedRecently.length + " Webtoons were"} archived.</li>}
+          {missingData.length > 0 && <li>{missingData.length === 1 ? <Link href={missingData[0].title.toLowerCase().split(" ").join("-")} className="underline">1 Webtoon</Link> : missingData.length + " Webtoons"} are missing data.</li>}
         </ul>
       </section>}
       <section>

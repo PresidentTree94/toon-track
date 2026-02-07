@@ -17,9 +17,9 @@ export default function Completed({ data }:Readonly<{ data: Comp; }>) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const { data: completed } = await supabase.from("completed").update({
-      thumbnail: thumbnail ? thumbnail : data.thumbnail,
-      authors: authors ? authors : data.authors,
-      protagonists: protagonists ? protagonists : data.protagonists
+      thumbnail: thumbnail.trim() || data.thumbnail,
+      authors: authors.trim() || data.authors,
+      protagonists: protagonists.trim() || data.protagonists
     }).eq("id", data.id).select().single();
     setThumbnail(completed?.thumbnail);
     setAuthors(completed?.authors);

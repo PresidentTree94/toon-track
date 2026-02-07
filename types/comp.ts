@@ -7,4 +7,5 @@ export type Comp = {
   protagonists: string;
   toon: string;
   thumbnail: string;
+  timestamp: string;
 }

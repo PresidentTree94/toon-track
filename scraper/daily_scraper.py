@@ -2,6 +2,7 @@ from supabase_client import supabase
 import requests
 from bs4 import BeautifulSoup
 from check_status import run_check_status
+from datetime import datetime, timezone
 
 def run_daily_scraper():
   database = supabase.table("webtoons").select("*").execute()
@@ -12,8 +13,15 @@ def run_daily_scraper():
     soup = BeautifulSoup(response.text, "html.parser")
 
     status_element, _ = run_check_status(soup, row, url)
+
     if status_element != "Completed":
-      supabase.table("webtoons").update({"status": status_element}).eq("id", row["id"]).execute()
+      if row["status"] != status_element:
+        supabase.table("webtoons").update({
+          "status": status_element,
+          "status_time": datetime.now(timezone.utc)
+        }).eq("id", row["id"]).execute()
+      else:
+        supabase.table("webtoons").update({"status": status_element}).eq("id", row["id"]).execute()
   
 if __name__ == "__main__":
   run_daily_scraper()
