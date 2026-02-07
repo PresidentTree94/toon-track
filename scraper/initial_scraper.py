@@ -2,6 +2,7 @@ from supabase_client import supabase
 import requests
 from bs4 import BeautifulSoup
 from check_status import run_check_status
+from datetime import datetime, timezone
 
 def run_initial_scraper(webtoon_id):
   
@@ -27,6 +28,6 @@ def run_initial_scraper(webtoon_id):
       "genre": genre_element,
       "days": ", ".join(d.strip().capitalize() for d in days_element.split(",")) if "," in days_element else days_element.capitalize(),
       "status": status_element,
-      "initial": True
+      "initial": True,
     }
     supabase.table("webtoons").update(webtoon_data).eq("id", webtoon_id).execute()

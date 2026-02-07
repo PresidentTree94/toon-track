@@ -6,6 +6,7 @@ import { Comp } from "@/types/comp";
 import { supabase } from "@/lib/supabaseClient";
 import { median, condenseValue, calcMedianGrowth, calcMedianGrowthTimeline } from "@/utils/calculations";
 import { ICONS, STATUS_COLORS, STATUS_BADGE_COLORS } from "@/utils/constants";
+import Link from "next/link";
 
 function calcSubChange(pastSubscribers: number, latestSubscribers: number) {
   return latestSubscribers - pastSubscribers;
@@ -82,6 +83,12 @@ export default function Home() {
     return 0;
   });
 
+  const firstOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' });
+  const MS_PER_DAY = 1000 * 60 * 60 * 24;
+  const KarlyWebtoons = webtoons.filter(w => w.owner === "Karly" && ((Date.now() - new Date(w.timestamp).getTime()) / MS_PER_DAY <= 7));
+  const RachelleWebtoons = webtoons.filter(w => w.owner === "Rachelle" && ((Date.now() - new Date(w.timestamp).getTime()) / MS_PER_DAY <= 7));
+  const missingData = webtoons.filter(w => !w.genre || !w.thumbnail).length;
+
   return (
     <>
       <section className="flex flex-col sm:flex-row text-center sm:text-left justify-between items-center gap-4">
@@ -91,18 +98,29 @@ export default function Home() {
         </div>
         <button className="bg-primary text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg shadow-primary/20 cursor-pointer">Generate Report</button>
       </section>
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {cards.map((c, index) =>
-          <div key={index} className="card">
-            <p className="font-medium">{c.heading}</p>
-            <h2 className="mt-1 mb-2">{c.number}</h2>
-            <p className="text-sm">{c.subheading}</p>
-          </div>
-        )}
+      {KarlyWebtoons.length + RachelleWebtoons.length + missingData > 0 && <section className="bg-primary/5 border border-primary/10 rounded-2xl p-8">
+        <h2>Notices</h2>
+        <ul className="space-y-1 mt-4">
+          {KarlyWebtoons.length > 0 && <li>Karly added {KarlyWebtoons.length === 1 ? <Link href={KarlyWebtoons[0].title.toLowerCase().split(" ").join("-")}>1 Webtoon</Link> : KarlyWebtoons.length + " Webtoons"} within the last week.</li>}
+          {RachelleWebtoons.length > 0 && <li>Rachelle added {RachelleWebtoons.length === 1 ? <Link href={RachelleWebtoons[0].title.toLowerCase().split(" ").join("-")}>1 Webtoon</Link> : RachelleWebtoons.length + " Webtoons"} within the last week.</li>}
+          {missingData > 0 && <li>{missingData} Webtoons are missing data.</li>}
+        </ul>
+      </section>}
+      <section>
+        <h2>Statistics</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-4">
+          {cards.map((c, index) =>
+            <div key={index} className="card">
+              <p className="font-medium">{c.heading}</p>
+              <h2 className="mt-1 mb-2">{c.number}</h2>
+              <p className="text-sm">{c.subheading}</p>
+            </div>
+          )}
+        </div>
       </section>
       <section>
         <h2>Series Ranking</h2>
-        <p>As of January 1, 2025</p>
+        <p>As of {firstOfMonth}</p>
         <div className="relative w-full overflow-auto rounded-xl mt-4 shadow border border-slate-200">
           <table className="text-sm w-full bg-card/50">
             <thead className="bg-slate-100 uppercase">
