@@ -34,7 +34,7 @@ export default function Library() {
   const sorts = ["Title", "Subscribers", "Growth"];
   const owners = ["All", "Karly", "Rachelle", "Shared"];
   const statuses = ["All", "Ongoing", "Hiatus"];
-  const genres = ["All", ...new Set(preFiltered.map(item => item.genre))].sort();
+  const genres = ["All", ...[...new Set(preFiltered.map(item => item.genre))].sort()];
 
   const filtered = preFiltered
     .filter(item => genre === "All" ? true : item.genre === genre)

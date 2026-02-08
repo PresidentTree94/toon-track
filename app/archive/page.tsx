@@ -25,7 +25,7 @@ export default function Archive() {
   .filter(item => owner === "All" ? true : item.owner === owner)
 
   const owners = ["All", "Karly", "Rachelle", "Shared"];
-  const genres = ["All", ...new Set(preFiltered.map(item => item.genre))].sort();
+  const genres = ["All", ...[...new Set(preFiltered.map(item => item.genre))].sort()];
 
   const filtered = preFiltered
     .filter(item => genre === "All" ? true : item.genre === genre)

@@ -18,6 +18,10 @@ export default function Detail() {
   const decoded = decodeURIComponent(slug?.toString() ?? "");
   const search = decoded.split("-").join(" ");
 
+  const [thumbnail, setThumbnail] = useState("");
+  const [authors, setAuthors] = useState("");
+  const [protagonists, setProtagonists] = useState("");
+
   const [webtoon, setWebtoon] = useState<Toon>();
   useEffect(() => {
     const fetchData = async () => {
@@ -26,10 +30,13 @@ export default function Detail() {
     };
     fetchData();
   }, [search]);
-  
-  const [thumbnail, setThumbnail] = useState("");
-  const [authors, setAuthors] = useState("");
-  const [protagonists, setProtagonists] = useState("");
+  useEffect(() => {
+  if (webtoon) {
+    setThumbnail(webtoon.thumbnail ?? "");
+    setAuthors(webtoon.authors ?? "");
+    setProtagonists(webtoon.protagonists ?? "");
+  }
+}, [webtoon]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -72,12 +72,13 @@ export default function Home() {
     {title: "Median Sub Change Timeline", tagline: "How much a typical series gained/lost", data: calcSubChangeTimeline(webtoons)}
   ];
 
-  const [sortKey, setSortKey] = useState<"subs" | "growth">("subs");
+  const [sortKey, setSortKey] = useState<"series" |"subs" | "growth">("subs");
   const sortedWebtoons = [...webtoons].sort((a, b) => {
     const aSubs = a.data[a.data.length - 1] ? a.data[a.data.length - 1].value : 0;
     const bSubs = b.data[b.data.length - 1] ? b.data[b.data.length - 1].value : 0;
     const aGrowth = a.data[a.data.length - 2] ? calcMedianGrowth(a.data[a.data.length - 2].value, aSubs) : -Infinity;
     const bGrowth = b.data[b.data.length - 2] ? calcMedianGrowth(b.data[b.data.length - 2].value, bSubs) : -Infinity;
+    if (sortKey === "series") return a.title.localeCompare(b.title);
     if (sortKey === "subs") return bSubs - aSubs;
     if (sortKey === "growth") return bGrowth - aGrowth;
     return 0;
@@ -92,7 +93,8 @@ export default function Home() {
   const changeOwnership = webtoons.filter(w => (Date.now() - new Date(w.owner_time).getTime()) / MS_PER_DAY <= DAY_LIMIT);
   const changeStatus = webtoons.filter(w => w.status_time && (Date.now() - new Date(w.status_time).getTime()) / MS_PER_DAY <= DAY_LIMIT);
   const completedRecently = completed.filter(c => (Date.now() - new Date(c.timestamp).getTime()) / MS_PER_DAY <= DAY_LIMIT);
-  const missingData = webtoons.filter(w => !w.genre || !w.thumbnail)
+  const missingData = webtoons.filter(w => !w.genre || !w.thumbnail);
+  const anyNotices = KarlyWebtoons.length + RachelleWebtoons.length + changeOwnership.length + changeStatus.length + completedRecently.length + missingData.length > 0;
 
   return (
     <>
@@ -103,7 +105,7 @@ export default function Home() {
         </div>
         <button className="bg-primary text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg shadow-primary/20 cursor-pointer">Generate Report</button>
       </section>
-      {KarlyWebtoons.length + RachelleWebtoons.length + missingData.length > 0 && <section className="bg-primary/5 border border-primary/10 rounded-2xl p-8">
+      {anyNotices && <section className="bg-primary/5 border border-primary/10 rounded-2xl p-8">
         <h2>Notices</h2>
         <ul className="space-y-1 mt-4">
           {KarlyWebtoons.length > 0 && <li>Karly added {KarlyWebtoons.length === 1 ? <Link href={KarlyWebtoons[0].title.toLowerCase().split(" ").join("-")} className="underline">1 Webtoon</Link> : KarlyWebtoons.length + " Webtoons"}.</li>}
@@ -115,8 +117,8 @@ export default function Home() {
         </ul>
       </section>}
       <section>
-        <h2>Statistics</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-4">
+        <h2 className={`mb-4 ${anyNotices ? "block" : "hidden"}`}>Statistics</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {cards.map((c, index) =>
             <div key={index} className="card">
               <p className="font-medium">{c.heading}</p>
@@ -134,7 +136,7 @@ export default function Home() {
             <thead className="bg-slate-100 uppercase">
               <tr>
                 <th className="w-15.5">#</th>
-                <th className="text-left">Series</th>
+                <th className={`text-left cursor-pointer ${sortKey === "series" ? "text-primary" : "underline"}`} onClick={() => setSortKey("series")}>Series</th>
                 <th className="text-left">Genre</th>
                 <th className="text-left">Status</th>
                 <th className="text-left">Owner</th>
