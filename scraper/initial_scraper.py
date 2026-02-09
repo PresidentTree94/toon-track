@@ -2,7 +2,6 @@ from supabase_client import supabase
 import requests
 from bs4 import BeautifulSoup
 from check_status import run_check_status
-from datetime import datetime, timezone
 
 def run_initial_scraper(webtoon_id):
   

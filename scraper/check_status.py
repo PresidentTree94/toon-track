@@ -1,7 +1,7 @@
 from supabase_client import supabase
 
 def run_check_status(soup, row, url):
-  status_element = "Ongoing"
+  status_element = "Ongoing" # Canvas status
   days_element = soup.select_one("p.day_info")
   if days_element:
     days_text = days_element.text.replace("UPEVERY ", "").strip()

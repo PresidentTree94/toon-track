@@ -5,7 +5,8 @@ from check_status import run_check_status
 from datetime import datetime, timezone
 
 def run_daily_scraper():
-  database = supabase.table("webtoons").select("*").execute()
+  today = datetime.now().strftime("%a")
+  database = supabase.table("webtoons").select("*").ilike("days", f"%{today}%").execute()
 
   for row in database.data:
     url = row["toon"]
@@ -14,14 +15,11 @@ def run_daily_scraper():
 
     status_element, _ = run_check_status(soup, row, url)
 
-    if status_element != "Completed":
-      if row["status"] != status_element:
-        supabase.table("webtoons").update({
-          "status": status_element,
-          "status_time": datetime.now(timezone.utc)
-        }).eq("id", row["id"]).execute()
-      else:
-        supabase.table("webtoons").update({"status": status_element}).eq("id", row["id"]).execute()
+    if status_element != "Completed" and row["status"] != status_element:
+      supabase.table("webtoons").update({
+        "status": status_element,
+        "status_time": datetime.now(timezone.utc)
+      }).eq("id", row["id"]).execute()
   
 if __name__ == "__main__":
   run_daily_scraper()
