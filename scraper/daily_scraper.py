@@ -18,7 +18,7 @@ def run_daily_scraper():
     if status_element != "Completed" and row["status"] != status_element:
       supabase.table("webtoons").update({
         "status": status_element,
-        "status_time": datetime.now(timezone.utc)
+        "status_time": datetime.now(timezone.utc).isoformat()
       }).eq("id", row["id"]).execute()
   
 if __name__ == "__main__":
