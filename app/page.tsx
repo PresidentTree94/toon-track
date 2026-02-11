@@ -88,11 +88,11 @@ export default function Home() {
 
   const MS_PER_DAY = 1000 * 60 * 60 * 24;
   const DAY_LIMIT = 5;
-  const KarlyWebtoons = webtoons.filter(w => w.owner === "Karly" && ((Date.now() - new Date(w.timestamp).getTime()) / MS_PER_DAY <= DAY_LIMIT));
-  const RachelleWebtoons = webtoons.filter(w => w.owner === "Rachelle" && ((Date.now() - new Date(w.timestamp).getTime()) / MS_PER_DAY <= DAY_LIMIT));
-  const changeOwnership = webtoons.filter(w => (Date.now() - new Date(w.owner_time).getTime()) / MS_PER_DAY <= DAY_LIMIT);
-  const changeStatus = webtoons.filter(w => w.status_time && (Date.now() - new Date(w.status_time).getTime()) / MS_PER_DAY <= DAY_LIMIT);
-  const completedRecently = completed.filter(c => (Date.now() - new Date(c.timestamp).getTime()) / MS_PER_DAY <= DAY_LIMIT);
+  const KarlyWebtoons = webtoons.filter(w => w.owner === "Karly" && Math.floor((Date.now() - new Date(w.timestamp).getTime()) / MS_PER_DAY) <= DAY_LIMIT);
+  const RachelleWebtoons = webtoons.filter(w => w.owner === "Rachelle" && Math.floor((Date.now() - new Date(w.timestamp).getTime()) / MS_PER_DAY) <= DAY_LIMIT);
+  const changeOwnership = webtoons.filter(w => Math.floor((Date.now() - new Date(w.owner_time).getTime()) / MS_PER_DAY) <= DAY_LIMIT);
+  const changeStatus = webtoons.filter(w => w.status_time && Math.floor((Date.now() - new Date(w.status_time).getTime()) / MS_PER_DAY) <= DAY_LIMIT);
+  const completedRecently = completed.filter(c => Math.floor((Date.now() - new Date(c.timestamp).getTime()) / MS_PER_DAY) <= DAY_LIMIT);
   const missingData = webtoons.filter(w => !w.genre || !w.thumbnail);
   const anyNotices = KarlyWebtoons.length + RachelleWebtoons.length + changeOwnership.length + changeStatus.length + completedRecently.length + missingData.length > 0;
 
