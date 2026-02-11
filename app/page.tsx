@@ -96,6 +96,15 @@ export default function Home() {
   const missingData = webtoons.filter(w => !w.genre || !w.thumbnail);
   const anyNotices = KarlyWebtoons.length + RachelleWebtoons.length + changeOwnership.length + changeStatus.length + completedRecently.length + missingData.length > 0;
 
+  const notices = [
+    {notice: KarlyWebtoons, prefix: "Karly added ", suffix: "."},
+    {notice: RachelleWebtoons, prefix: "Rachelle added ", suffix: "."},
+    {notice: changeOwnership, prefix: "", suffix: " changed ownership."},
+    {notice: changeStatus, prefix: "", suffix: " changed status."},
+    {notice: completedRecently, prefix: "", suffix: " was archived."},
+    {notice: missingData, prefix: "", suffix: " are missing data."}
+  ];
+
   return (
     <>
       <section className="flex flex-col sm:flex-row text-center sm:text-left justify-between items-center gap-4">
@@ -108,12 +117,9 @@ export default function Home() {
       {anyNotices && <section className="bg-primary/5 border border-primary/10 rounded-2xl p-8">
         <h2>Notices</h2>
         <ul className="space-y-1 mt-4">
-          {KarlyWebtoons.length > 0 && <li>Karly added {KarlyWebtoons.length === 1 ? <Link href={KarlyWebtoons[0].title.toLowerCase().split(" ").join("-")} className="underline">1 Webtoon</Link> : KarlyWebtoons.length + " Webtoons"}.</li>}
-          {RachelleWebtoons.length > 0 && <li>Rachelle added {RachelleWebtoons.length === 1 ? <Link href={RachelleWebtoons[0].title.toLowerCase().split(" ").join("-")} className="underline">1 Webtoon</Link> : RachelleWebtoons.length + " Webtoons"}.</li>}
-          {changeOwnership.length > 0 && <li>{changeOwnership.length === 1 ? <Link href={changeOwnership[0].title.toLowerCase().split(" ").join("-")} className="underline">1 Webtoon</Link> : changeOwnership.length + " Webtoons"} changed ownership.</li>}
-          {changeStatus.length > 0 && <li>{changeStatus.length === 1 ? <Link href={changeStatus[0].title.toLowerCase().split(" ").join("-")} className="underline">1 Webtoon</Link> : changeStatus.length + " Webtoons"} changed status.</li>}
-          {completedRecently.length > 0 && <li>{completedRecently.length === 1 ? <Link href={completedRecently[0].title.toLowerCase().split(" ").join("-")} className="underline">1 Webtoon</Link> + " was" : completedRecently.length + " Webtoons were"} archived.</li>}
-          {missingData.length > 0 && <li>{missingData.length === 1 ? <Link href={missingData[0].title.toLowerCase().split(" ").join("-")} className="underline">1 Webtoon</Link> : missingData.length + " Webtoons"} are missing data.</li>}
+          {notices.map((n, index) => (
+            n.notice.length > 0 && <li key={index}>{n.prefix}{n.notice.length === 1 ? <Link href={n.notice[0].title.toLowerCase().split(" ").join("-")} className="underline">1 Webtoon</Link> : n.notice.length + " Webtoons"}{n.suffix}</li>
+          ))}
         </ul>
       </section>}
       <section>

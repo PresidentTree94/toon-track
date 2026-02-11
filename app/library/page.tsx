@@ -27,7 +27,7 @@ export default function Library() {
   const [genre, setGenre] = useState("All");
 
   const preFiltered = webtoons
-  .filter(item => item.title.toLowerCase().includes(search.toLowerCase()))
+  .filter(item => item.title.toLowerCase().includes(search.toLowerCase()) || item.protagonists.toLowerCase().includes(search.toLowerCase()))
   .filter(item => owner === "All" ? true : item.owner === owner)
   .filter(item => status === "All" ? true : item.status === status);
 
