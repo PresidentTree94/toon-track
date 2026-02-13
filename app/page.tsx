@@ -101,8 +101,8 @@ export default function Home() {
     {notice: RachelleWebtoons, prefix: "Rachelle added ", suffix: "."},
     {notice: changeOwnership, prefix: "", suffix: " changed ownership."},
     {notice: changeStatus, prefix: "", suffix: " changed status."},
-    {notice: completedRecently, prefix: "", suffix: " was archived."},
-    {notice: missingData, prefix: "", suffix: " are missing data."}
+    {notice: completedRecently, prefix: "", suffix: `${completedRecently.length === 1 ? " was" : " were"} archived.`},
+    {notice: missingData, prefix: "", suffix: `${missingData.length === 1 ? " is" : " are"} missing data.`}
   ];
 
   return (
