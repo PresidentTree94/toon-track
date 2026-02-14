@@ -13,17 +13,20 @@ export default function Completed({ data }:Readonly<{ data: Comp; }>) {
   const [thumbnail, setThumbnail] = useState(data.thumbnail);
   const [authors, setAuthors] = useState(data.authors);
   const [protagonists, setProtagonists] = useState(data.protagonists);
+  const [reminder, setReminder] = useState<string>(data.reminder);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const { data: completed } = await supabase.from("completed").update({
       thumbnail: thumbnail.trim() || data.thumbnail,
       authors: authors.trim() || data.authors,
-      protagonists: protagonists.trim() || data.protagonists
+      protagonists: protagonists.trim() || data.protagonists,
+      reminder: reminder
     }).eq("id", data.id).select().single();
     setThumbnail(completed?.thumbnail);
     setAuthors(completed?.authors);
     setProtagonists(completed?.protagonists);
+    setReminder(completed?.reminder);
     setOpen(false);
   }
 
@@ -55,6 +58,17 @@ export default function Completed({ data }:Readonly<{ data: Comp; }>) {
         <input type="text" className="border bg-slate-50 border-slate-200 shadow-sm px-3 py-1 text-emph rounded-full outline-none focus:border-primary" value={authors} onChange={(e) => setAuthors(e.target.value)} />
         <label>Protagonist(s):</label>
         <input type="text" className="border bg-slate-50 border-slate-200 shadow-sm px-3 py-1 text-emph rounded-full outline-none focus:border-primary" value={protagonists} onChange={(e) => setProtagonists(e.target.value)} />
+        <label>Reminder:</label>
+        <select className="border bg-slate-50 border-slate-200 shadow-sm px-3 py-1 text-emph rounded-full outline-none focus:border-primary appearance-none" value={reminder} onChange={(e) => setReminder(e.target.value)}>
+          <option value=""></option>
+          <option value="Sunday">Sunday</option>
+          <option value="Monday">Monday</option>
+          <option value="Tuesday">Tuesday</option>
+          <option value="Wednesday">Wednesday</option>
+          <option value="Thursday">Thursday</option>
+          <option value="Friday">Friday</option>
+          <option value="Saturday">Saturday</option>
+        </select>
       </Modal>
     </>
   );

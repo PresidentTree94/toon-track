@@ -8,4 +8,5 @@ export type Comp = {
   toon: string;
   thumbnail: string;
   timestamp: string;
+  reminder: ("" | "Sunday" | "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday");
 }

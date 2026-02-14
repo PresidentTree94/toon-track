@@ -47,9 +47,9 @@ export default function Navbar() {
         </nav>
         <div className="grid grid-cols-[repeat(2,auto)] md:gap-8 md:justify-end md:items-center">
           <button className="md:bg-primary text-white md:px-6 md:py-2 md:rounded-full text-sm font-bold gap-2 md:shadow-lg shadow-primary/20 cursor-pointer flex items-center justify-center" onClick={() => setOpen(true)}><Plus className="bg-primary p-1 h-8 w-auto rounded-full md:hidden" /><span className="hidden md:inline">Add Webtoon</span></button>
-          <div className="flex items-center justify-center">
+          <Link href="/settings" className="flex items-center justify-center">
             <Settings />
-          </div>
+          </Link>
         </div>
       </header>
       <Modal heading="Add Webtoon to Tracker" open={open} setOpen={setOpen} handleSubmit={handleSubmit}>
