@@ -7,8 +7,8 @@ export default function Gallery({
 }:Readonly<{
   title: string;
   sub: string;
-  data: Toon[];
-  filtered: Toon[];
+  data: Toon[] | Comp[];
+  filtered: Toon[] | Comp[];
   searchFilters: Record<string, any>;
   otherFilters: Record<string, any>;
   itemComponent?: React.ComponentType<{data: Toon | Comp}>;
