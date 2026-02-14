@@ -1,13 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { Toon } from "@/types/toon";
+import { Comp } from "@/types/comp";
 import Gallery from "@/components/Gallery";
 import Completed from "@/components/Completed";
 
 export default function Archive() {
 
-  const [webtoons, setWebtoons] = useState<Toon[]>([]);
+  const [webtoons, setWebtoons] = useState<Comp[]>([]);
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await supabase.from("completed").select("*");

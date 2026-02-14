@@ -2,16 +2,16 @@ import { Toon } from "@/types/toon";
 import { Comp } from "@/types/comp";
 import { Search, Funnel } from "lucide-react";
 
-export default function Gallery({
+export default function Gallery<T extends Toon | Comp>({
   title, sub, data, filtered, searchFilters, otherFilters, itemComponent: ItemComponent
 }:Readonly<{
   title: string;
   sub: string;
-  data: Toon[] | Comp[];
-  filtered: Toon[] | Comp[];
+  data: T[];
+  filtered: T[];
   searchFilters: Record<string, any>;
   otherFilters: Record<string, any>;
-  itemComponent?: React.ComponentType<{data: Toon | Comp}>;
+  itemComponent?: React.ComponentType<{data: T}>;
 }>) {
 
   const { search, setSearch } = searchFilters;
