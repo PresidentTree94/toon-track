@@ -3,7 +3,7 @@ self.addEventListener("push", event => {
   event.waitUntil(
     self.registration.showNotification(data.title || "New update!", {
       body: data.body || "",
-      icon: "/vercel.svg"
+      icon: "/book-heart.svg"
     })
   );
 });

@@ -31,7 +31,7 @@ def run_send_notifications():
     subscription = row["subs"]
     if device == "Karly":
       count = count_completed("Rachelle")
-      send_push(subscription, "Your Webtoon Reminder", f"You have {count} completed Webtoons to read today!")
+      send_push(subscription, "Your Webtoon Reminder", f"You have {count} completed Webtoon{'' if count == 1 else 's'} to read today!")
     elif device == "Rachelle":
       count = count_completed("Karly")
-      send_push(subscription, "Your Webtoon Reminder", f"You have {count} completed Webtoons to read today!")
+      send_push(subscription, "Your Webtoon Reminder", f"You have {count} completed Webtoon{'' if count == 1 else 's'} to read today!")
