@@ -15,6 +15,9 @@ export default function SubscribeButton({ deviceName }: { deviceName: string }) 
 
       const registration = await navigator.serviceWorker.ready;
 
+      const existing = await registration.pushManager.getSubscription();
+      if (existing) await existing.unsubscribe();
+
       const subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY
