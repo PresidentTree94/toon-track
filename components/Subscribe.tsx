@@ -17,7 +17,7 @@ export default function SubscribeButton({ deviceName }: { deviceName: string }) 
 
       const subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: "BEULt2VKV1NpA-W0HcI4r4HzE9r6Odz6-FA7Vzt2ZpJHuOm565zB6_5h6qK-9NDzRwD4h9xx5_NhcFKULsjBT8I"
+        applicationServerKey: process.env.VAPID_PUBLIC_KEY
       });
 
       const { error } = await supabase

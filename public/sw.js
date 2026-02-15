@@ -7,7 +7,3 @@ self.addEventListener("push", event => {
     })
   );
 });
-
-//Public Key: BEULt2VKV1NpA-W0HcI4r4HzE9r6Odz6-FA7Vzt2ZpJHuOm565zB6_5h6qK-9NDzRwD4h9xx5_NhcFKULsjBT8I
-
-//Private Key: pTfCbLt8MLuTHaHmcg76kPwtfJ0jBMpaFZ6QJy6FHY4
