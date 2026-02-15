@@ -14,7 +14,7 @@ export default function Library() {
   const [webtoons, setWebtoons] = useState<Toon[]>([]);
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await supabase.from("webtoons").select("*").neq("status", "Completed");
+      const { data } = await supabase.from("webtoons").select("*");
       setWebtoons(data ?? []);
     };
     fetchData();

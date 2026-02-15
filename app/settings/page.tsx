@@ -5,8 +5,8 @@ export default function Settings() {
     <>
       <h1>Settings</h1>
       <article className="flex flex-col items-start gap-4">
-        <SubscribeButton deviceName="Karly's Device" />
-        <SubscribeButton deviceName="Rachelle's Device" />
+        <SubscribeButton deviceName="Karly" />
+        <SubscribeButton deviceName="Rachelle" />
       </article>
     </>
   );

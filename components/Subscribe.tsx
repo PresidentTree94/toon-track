@@ -23,10 +23,10 @@ export default function SubscribeButton({ deviceName }: { deviceName: string }) 
       const { error } = await supabase
         .from("subscriptions")
         .upsert({
-          device_name: deviceName,
-          subscription,
-          updated_at: new Date()
-        });
+          device: deviceName,
+          subs: subscription,
+          timestamp: new Date()
+        }, { onConflict: "device" });
 
       if (error) {
         console.error(error);
