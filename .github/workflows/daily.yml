@@ -26,6 +26,11 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+          SMTP_EMAIL: ${{ secrets.SMTP_EMAIL }}
+          SMTP_APP_PASSWORD: ${{ secrets.SMTP_APP_PASSWORD }}
+          KARLY_NUMBER: ${{ secrets.KARLY_NUMBER }}
+          RACHELLE_NUMBER: ${{ secrets.RACHELLE_NUMBER }}
         run: |
           cd scraper
+          echo "SMTP_APP_PASSWORD is: $SMTP_APP_PASSWORD"
           python daily_scraper.py
