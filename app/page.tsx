@@ -118,7 +118,19 @@ export default function Home() {
         <h2>Notices</h2>
         <ul className="space-y-1 mt-4">
           {notices.map((n, index) => (
-            n.notice.length > 0 && <li key={index}>{n.prefix}{n.notice.length === 1 ? <Link href={n.notice[0].title.toLowerCase().split(" ").join("-")} className="underline">1 Webtoon</Link> : n.notice.length + " Webtoons"}{n.suffix}</li>
+            n.notice.length > 0 && <li key={index}>
+              {n.notice.length === 1 ? <>
+                {n.prefix}
+                {n.notice.length === 1 ? <Link href={n.notice[0].title.toLowerCase().split(" ").join("-")} className="underline">1 Webtoon</Link> : `${n.notice.length} Webtoons`}
+                {n.suffix}
+              </> :
+              <details className="space-y-1">
+                <summary className="cursor-pointer">{n.prefix}{n.notice.length} Webtoons{n.suffix}</summary>
+                {n.notice.map((w, index) => (
+                  <p key={index} className="ml-4"><Link href={w.title.toLowerCase().split(" ").join("-")} className="underline">{w.title}</Link></p>
+                ))}
+              </details>}
+            </li>
           ))}
         </ul>
       </section>}
