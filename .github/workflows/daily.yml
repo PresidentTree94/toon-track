@@ -32,5 +32,4 @@ jobs:
           RACHELLE_NUMBER: ${{ secrets.RACHELLE_NUMBER }}
         run: |
           cd scraper
-          echo "SMTP_APP_PASSWORD is: $SMTP_APP_PASSWORD"
           python daily_scraper.py
