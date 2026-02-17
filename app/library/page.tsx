@@ -25,15 +25,18 @@ export default function Library() {
   const [owner, setOwner] = useState("All");
   const [status, setStatus] = useState("All");
   const [genre, setGenre] = useState("All");
+  const [day, setDay] = useState("All");
 
   const preFiltered = webtoons
   .filter(item => item.title.toLowerCase().includes(search.toLowerCase()) || item.protagonists.toLowerCase().includes(search.toLowerCase()))
   .filter(item => owner === "All" ? true : item.owner === owner)
-  .filter(item => status === "All" ? true : item.status === status);
+  .filter(item => status === "All" ? true : item.status === status)
+  .filter(item => day === "All" ? true : item.days.includes(day));
 
   const sorts = ["Title", "Subscribers", "Growth"];
   const owners = ["All", "Karly", "Rachelle", "Shared"];
   const statuses = ["All", "Ongoing", "Hiatus"];
+  const days = ["All", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const genres = ["All", ...[...new Set(preFiltered.map(item => item.genre))].sort()];
 
   const filtered = preFiltered
@@ -73,6 +76,12 @@ export default function Library() {
       value: genre,
       setValue: setGenre,
       options: genres
+    },
+    day: {
+      label: "Day",
+      value: day,
+      setValue: setDay,
+      options: days
     }
   };
 

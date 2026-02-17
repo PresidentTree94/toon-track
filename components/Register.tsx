@@ -15,7 +15,9 @@ export default function RegisterNotifications({ device }:Readonly<{ device: stri
       if (!messaging) return;
       
       const token = await getToken(messaging, { vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY!, });
-      if (!token) return; await supabase.from("subscriptions").upsert({ device, token, });
+      if (!token) return;
+      
+      await supabase.from("subscriptions").upsert({ device, token });
       console.log(`Registered device: ${device}`);
     } catch (err) {
       console.error("FCM registration failed:", err);

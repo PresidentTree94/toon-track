@@ -30,7 +30,7 @@ export default function Gallery<T extends Toon | Comp>({
           </div>
           <details className="relative group">
             <summary className="flex items-center gap-2 px-4 py-2 bg-card font-medium text-emph rounded-full shadow-sm cursor-pointer border border-transparent group-open:border-primary"><Funnel className="h-4 w-auto" /><span className="hidden sm:inline">Filter & Sort</span></summary>
-            <div className="absolute right-0 top-12 bg-card p-4 shadow-md border border-slate-200 w-64 rounded-2xl space-y-4 text-sm text-emph z-1">
+            <div className="absolute right-0 top-12 bg-card p-4 shadow-md border border-slate-200 w-60 rounded-2xl space-y-4 text-sm text-emph z-1">
               {Object.entries(otherFilters).map(([key, f]) => (
                 <fieldset key={key}>
                   <legend>{f.label}</legend>
