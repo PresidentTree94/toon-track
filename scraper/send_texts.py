@@ -29,5 +29,5 @@ def run_send_sms():
   with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
     server.login(SMTP_EMAIL, SMTP_APP_PASSWORD)
 
-    send_to(karly_count, KARLY_NUMBER, server)
     send_to(rachelle_count, RACHELLE_NUMBER, server)
+    send_to(karly_count, KARLY_NUMBER, server)
