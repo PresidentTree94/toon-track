@@ -12,8 +12,8 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
-  self.registration.showNotification(payload.notification.title, {
-    body: payload.notification.body,
-    icon: "/book-heart.svg",
+  self.registration.showNotification(payload.data.title, {
+    body: payload.data.body,
+    icon: payload.data.icon
   });
 });

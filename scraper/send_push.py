@@ -17,10 +17,11 @@ def send_to_device(device, count):
   token = result.data[0]["token"]
 
   message = messaging.Message(
-    notification=messaging.Notification(
-      title="Your Webtoons Reminder",
-      body=f"You have {count} completed Webtoons to catch up on today!"
-    ),
+    data={
+      "title": "Your Webtoons Reminder",
+      "body": f"You have {count} completed Webtoons to catch up on today!",
+      "icon": "/book-heart.svg"
+    },
     token=token
   )
   response = messaging.send(message)
@@ -31,4 +32,3 @@ def send_push():
   rachelle_count = get_count("Karly")
   send_to_device("Karly", karly_count)
   send_to_device("Rachelle", rachelle_count)
-  
