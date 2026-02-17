@@ -2,11 +2,11 @@ importScripts("https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"
 importScripts("https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging-compat.js");
 
 firebase.initializeApp({
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
+  apiKey: "AIzaSyBBLF_gafrkZj4g48plkDPf5qQXdIBHJic",
+  authDomain: "toon-tracker-7db76.firebaseapp.com",
+  projectId: "toon-tracker-7db76",
+  messagingSenderId: "520010817645",
+  appId: "1:520010817645:web:63692ef8c585f8b2559f64",
 });
 
 const messaging = firebase.messaging();
