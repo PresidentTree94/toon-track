@@ -17,6 +17,7 @@ def count_completed(reject):
   return len(database.data)
 
 def send_to(count, number, server):
+  print(f"Preparing to send SMS to {number} with count {count}")
   msg = MIMEText(f"You have {count} completed Webtoon{'s' if count != 1 else ''} to read today!")
   msg["From"] = SMTP_EMAIL
   msg["To"] = number
