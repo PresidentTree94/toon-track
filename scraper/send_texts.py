@@ -21,6 +21,7 @@ def send_to(count, number, server):
   msg["From"] = SMTP_EMAIL
   msg["To"] = number
   server.sendmail(SMTP_EMAIL, [number], msg.as_string())
+  print(f"Sent SMS to {number} with count {count}")
 
 def run_send_sms():
   karly_count = count_completed("Rachelle")
