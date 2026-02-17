@@ -1,3 +1,4 @@
+"use client";
 import RegisterNotifications from "@/components/Register";
 
 export default function Settings() {
