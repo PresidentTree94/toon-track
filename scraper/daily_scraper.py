@@ -3,7 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 from check_status import run_check_status
 from datetime import datetime, timezone
-from send_texts import run_send_sms
+from send_push import send_push
 
 def run_daily_scraper():
   today = datetime.now().strftime("%a")
@@ -22,7 +22,7 @@ def run_daily_scraper():
         "status_time": datetime.now(timezone.utc).isoformat()
       }).eq("id", row["id"]).execute()
 
-  run_send_sms()
+  send_push()
   
 if __name__ == "__main__":
   run_daily_scraper()
