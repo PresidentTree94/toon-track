@@ -4,7 +4,7 @@ from datetime import datetime
 
 def get_count(reject):
   today = datetime.now().strftime("%a")
-  database = supabase.table("completed").select("*").neq("owner", reject).ilike("days", f"%{today}%").execute()
+  database = supabase.table("completed").select("*").neq("owner", reject).ilike("reminder", f"%{today}%").execute()
   return len(database.data)
 
 def send_to_device(device, count):
