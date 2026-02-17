@@ -36,7 +36,7 @@ export default function Library() {
   const sorts = ["Title", "Subscribers", "Growth"];
   const owners = ["All", "Karly", "Rachelle", "Shared"];
   const statuses = ["All", "Ongoing", "Hiatus"];
-  const days = ["All", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const days = ["All", "Sun","Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const genres = ["All", ...[...new Set(preFiltered.map(item => item.genre))].sort()];
 
   const filtered = preFiltered
