@@ -1,6 +1,6 @@
 "use client";
 import { useEffect } from "react";
-import { messaging } from "@/lib/firebaseConfig";
+import { getMessagingInstance } from "@/lib/firebaseClient";
 import { getToken } from "firebase/messaging";
 import { supabase } from "@/lib/supabaseClient";
 
@@ -11,6 +11,9 @@ export default function RegisterNotifications({ device }:Readonly<{ device: stri
       try {
         const permission = await Notification.requestPermission();
         if (permission !== "granted") return;
+
+        const messaging = await getMessagingInstance();
+        if (!messaging) return;
 
         const token = await getToken(messaging, {
           vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
