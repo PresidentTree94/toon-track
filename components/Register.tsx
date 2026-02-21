@@ -1,5 +1,4 @@
 "use client";
-import { useEffect } from "react";
 import { getMessagingInstance } from "@/lib/firebaseClient";
 import { getToken } from "firebase/messaging";
 import { supabase } from "@/lib/supabaseClient";
@@ -14,8 +13,16 @@ export default function RegisterNotifications({ device }:Readonly<{ device: stri
       const messaging = await getMessagingInstance();
       if (!messaging) return;
       
-      const token = await getToken(messaging, { vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY!, });
-      if (!token) return;
+      const token = await getToken(messaging, { vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY! })
+        .then((token) => {
+          console.log("Token:", token);
+          alert("Token: " + token);
+        })
+        .catch((err) => {
+          console.error("Token error:", err);
+          alert("Token error: " + err.message);
+        });
+      //if (!token) return;
       
       await supabase.from("subscriptions").upsert({ device, token });
       console.log(`Registered device: ${device}`);
