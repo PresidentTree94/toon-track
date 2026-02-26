@@ -2,7 +2,7 @@ name: Monthly Scraper
 
 on:
   schedule:
-    - cron: "5 6 1 * *"   # 1:05 AM on the 1st of every month
+    - cron: "5 7 1 * *"   # 2:05 AM on the 1st of every month
   workflow_dispatch:
 
 jobs:

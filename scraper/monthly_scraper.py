@@ -4,7 +4,9 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 
 def run_monthly_scraper():
+  formatted = datetime.now().strftime("%b %y")
   database = supabase.table("webtoons").select("*").execute()
+  snapshot = []
 
   for row in database.data:
     url = row["toon"]
@@ -18,9 +20,6 @@ def run_monthly_scraper():
     else:
       subscriber_count = int(subscriber_element.replace(",", ""))
 
-    now = datetime.now()
-    formatted = now.strftime("%b %y")
-
     new_entry = {
       "month": formatted,
       "value": subscriber_count
@@ -29,6 +28,9 @@ def run_monthly_scraper():
     existing_data = row["data"]
     existing_data.append(new_entry)
     supabase.table("webtoons").update({"data": existing_data}).eq("id", row["id"]).execute()
+    snapshot.append({"title": row["title"], "value": subscriber_count})
+  
+  supabase.table("reports").insert({"timestamp": formatted, "snapshot": snapshot}).execute()
     
 if __name__ == "__main__":
   run_monthly_scraper()
