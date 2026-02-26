@@ -18,7 +18,7 @@ export default function Login() {
 
   return (
     <>
-      <article className="flex flex-col items-center justify-center gap-6 min-h-screen p-8">
+      <article className="flex flex-col items-center justify-center gap-6 min-h-dvh p-8">
         <div className="card">
           <BookHeart className="h-16 w-auto text-primary" />
         </div>
