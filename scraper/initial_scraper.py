@@ -20,13 +20,22 @@ def run_initial_scraper(webtoon_id):
   h2 = soup.select_one("h2.genre")
   genre_element = h2.text.strip() if h2 else None
 
-  status_element, days_element = run_check_status(soup, row.data, url)
+  webtoon_data = {
+    "title": title_element.replace(":", ""),
+    "genre": genre_element,
+    "owner": row.data["owner"],
+    "thumbnail": row.data["thumbnail"],
+    "authors": row.data["authors"],
+    "protagonists": row.data["protagonists"],
+    "days": None,
+    "status": None,
+    "initial:": True,
+  }
+  supabase.table("webtoons").update(webtoon_data).eq("id", webtoon_id).execute()
+
+  status_element, days_element = run_check_status(soup, webtoon_data, url)
   if status_element != "Completed":
-    webtoon_data = {
-      "title": title_element.replace(":", ""),
-      "genre": genre_element,
+    supabase.table("webtoons").update({
       "days": ", ".join(d.strip().capitalize() for d in days_element.split(",")) if "," in days_element else days_element.capitalize(),
       "status": status_element,
-      "initial": True,
-    }
-    supabase.table("webtoons").update(webtoon_data).eq("id", webtoon_id).execute()
+    }).eq("id", webtoon_id).execute()
