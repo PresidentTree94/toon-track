@@ -7,7 +7,6 @@ import { supabase } from "@/lib/supabaseClient";
 
 export default function Completed({ data }:Readonly<{ data: Comp; }>) {
 
-  const temp = data.title.split(" ").join("+");
   const Icon = ICONS[data.owner];
   const [open, setOpen] = useState(false);
   const [thumbnail, setThumbnail] = useState(data.thumbnail);
@@ -34,7 +33,7 @@ export default function Completed({ data }:Readonly<{ data: Comp; }>) {
     <>
       <div className="bg-card shadow-sm rounded-2xl overflow-hidden hover:-translate-y-1 hover:shadow-xl transition-all duration-300 group cursor-pointer flex flex-col" onClick={() => setOpen(true)}>
         <div className="relative overflow-hidden aspect-143/200">
-          <img src={data.thumbnail ?? `https://placehold.co/143x200?text=${temp}`} className="object-cover h-full w-full group-hover:scale-105 transition-transform duration-500" />
+          <img src={data.thumbnail ?? `https://placehold.co/143x200?text=${data.id}`} className="object-cover h-full w-full group-hover:scale-105 transition-transform duration-500" />
           <div className="absolute inset-0 bg-linear-to-t from-black/85 to-transparent p-4 flex flex-col justify-end items-start gap-2">
             <span className="text-primary bg-primary/20 text-xs font-semibold uppercase px-2.5 py-0.5 backdrop-blur-md tracking-wider rounded-full border-primary/25">{data.genre}</span>
             <h2 className="text-white">{data.title}</h2>
