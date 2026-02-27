@@ -93,7 +93,7 @@ export default function Home() {
   const changeOwnership = webtoons.filter(w => Math.floor((Date.now() - new Date(w.owner_time).getTime()) / MS_PER_DAY) <= DAY_LIMIT);
   const changeStatus = webtoons.filter(w => w.status_time && Math.floor((Date.now() - new Date(w.status_time).getTime()) / MS_PER_DAY) <= DAY_LIMIT);
   const completedRecently = completed.filter(c => Math.floor((Date.now() - new Date(c.timestamp).getTime()) / MS_PER_DAY) <= DAY_LIMIT);
-  const missingData = webtoons.filter(w => !w.genre || !w.thumbnail);
+  const missingData = [...webtoons.filter(w => !w.genre || !w.thumbnail), ...completed.filter(c => !c.genre || !c.thumbnail)];
   const anyNotices = KarlyWebtoons.length + RachelleWebtoons.length + changeOwnership.length + changeStatus.length + completedRecently.length + missingData.length > 0;
 
   const notices = [
