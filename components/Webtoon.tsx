@@ -6,7 +6,7 @@ import { STATUS_COLORS } from "@/utils/constants";
 
 export default function Webtoon({ data }:Readonly<{ data: Toon; }>) {
   return (
-    <Link href={`/webtoons/${data.id}`} className="bg-card shadow-sm rounded-2xl overflow-hidden hover:-translate-y-1 hover:shadow-xl transition-all duration-300 group">
+    <Link href={`${data.id}`} className="bg-card shadow-sm rounded-2xl overflow-hidden hover:-translate-y-1 hover:shadow-xl transition-all duration-300 group">
       <div className="relative overflow-hidden aspect-143/200">
         <img src={data.thumbnail ?? `https://placehold.co/143x200?text=${data.id}`} className="object-cover h-full w-full group-hover:scale-105 transition-transform duration-500" />
         <div className="absolute inset-0 bg-linear-to-t from-black/85 to-transparent p-4 flex flex-col justify-end items-start gap-2">
