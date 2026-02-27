@@ -17,6 +17,7 @@ export default function Archive() {
   }, []);
 
   const [search, setSearch] = useState("");
+  const [sortBy, setSortBy] = useState("Timestamp");
   const [owner, setOwner] = useState("All");
   const [genre, setGenre] = useState("All");
 
@@ -24,14 +25,25 @@ export default function Archive() {
   .filter(item => item.title.toLowerCase().includes(search.toLowerCase()) || item.protagonists.toLowerCase().includes(search.toLowerCase()))
   .filter(item => owner === "All" ? true : item.owner === owner)
 
+  const sorts = ["Timestamp", "Title"];
   const owners = ["All", "Karly", "Rachelle", "Shared"];
   const genres = ["All", ...[...new Set(preFiltered.map(item => item.genre))].sort()];
 
   const filtered = preFiltered
     .filter(item => genre === "All" ? true : item.genre === genre)
-    .sort((a, b) => { return a.title.localeCompare(b.title); });
+    .sort((a, b) => { 
+      if (sortBy === "Title") return a.title.localeCompare(b.title);
+      if (sortBy === "Timestamp") return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+      return 0;
+    });
 
   const filters = {
+    sortBy: {
+      label: "Sort By",
+      value: sortBy,
+      setValue: setSortBy,
+      options: sorts
+    },
     owner: {
       label: "Owner",
       value: owner,

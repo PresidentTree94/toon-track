@@ -46,9 +46,9 @@ export default function Library() {
       const bSubs = b.data[b.data.length - 1] ? b.data[b.data.length - 1].value : 0;
       const aGrowth = a.data[a.data.length - 2] ? calcMedianGrowth(a.data[a.data.length - 2].value, aSubs) : -Infinity;
       const bGrowth = b.data[b.data.length - 2] ? calcMedianGrowth(b.data[b.data.length - 2].value, bSubs) : -Infinity;
-      if (sortBy === sorts[0]) return a.title.localeCompare(b.title);
-      if (sortBy === sorts[1]) return bSubs - aSubs;
-      if (sortBy === sorts[2]) return bGrowth - aGrowth;
+      if (sortBy === "Title") return a.title.localeCompare(b.title);
+      if (sortBy === "Subscribers") return bSubs - aSubs;
+      if (sortBy === "Growth") return bGrowth - aGrowth;
       return 0;
     });
 
