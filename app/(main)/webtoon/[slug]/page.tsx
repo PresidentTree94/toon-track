@@ -12,6 +12,7 @@ import Modal from "@/components/Modal";
 export default function Detail() {
 
   const { slug } = useParams();
+  console.log("Slug: ", slug);
   const [open, setOpen] = useState(false);
   const [deleteCheck, setDeleteCheck] = useState(false);
 
