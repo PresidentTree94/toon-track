@@ -121,13 +121,13 @@ export default function Home() {
             n.notice.length > 0 && <li key={index}>
               {n.notice.length === 1 ? <>
                 {n.prefix}
-                {n.notice.length === 1 ? n.suffix.includes("archived") ? <Link href="/archive" className="underline">1 Webtoon</Link> : <Link href={`/library/${n.notice[0].id}`} className="underline">1 Webtoon</Link> : `${n.notice.length} Webtoons`}
+                {n.notice.length === 1 ? completed.some(c => c.title === n.notice[0].title) ? <Link href="/archive" className="underline">1 Webtoon</Link> : <Link href={`/library/${n.notice[0].id}`} className="underline">1 Webtoon</Link> : `${n.notice.length} Webtoons`}
                 {n.suffix}
               </> :
               <details className="space-y-1">
                 <summary className="cursor-pointer">{n.prefix}{n.notice.length} Webtoons{n.suffix}</summary>
                 {n.notice.map((w, index) => (
-                  <p key={index} className="ml-4">{n.suffix.includes("archived") ? <Link href="/archive" className="underline">{w.title}</Link> : <Link href={`/library/${w.id}`} className="underline">{w.title}</Link>}</p>
+                  <p key={index} className="ml-4">{completed.some(c => c.title === w.title) ? <Link href="/archive" className="underline">{w.title}</Link> : <Link href={`/library/${w.id}`} className="underline">{w.title}</Link>}</p>
                 ))}
               </details>}
             </li>
