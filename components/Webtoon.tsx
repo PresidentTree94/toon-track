@@ -5,14 +5,10 @@ import { calcMedianGrowth, condenseValue } from "@/utils/calculations";
 import { STATUS_COLORS } from "@/utils/constants";
 
 export default function Webtoon({ data }:Readonly<{ data: Toon; }>) {
-
-  const link = data.title.toLowerCase().split(" ").join("-");
-  const temp = data.title.split(" ").join("+");
-
   return (
-    <Link href={link} className="bg-card shadow-sm rounded-2xl overflow-hidden hover:-translate-y-1 hover:shadow-xl transition-all duration-300 group">
+    <Link href={`/webtoons/${data.id}`} className="bg-card shadow-sm rounded-2xl overflow-hidden hover:-translate-y-1 hover:shadow-xl transition-all duration-300 group">
       <div className="relative overflow-hidden aspect-143/200">
-        <img src={data.thumbnail ?? `https://placehold.co/143x200?text=${temp}`} className="object-cover h-full w-full group-hover:scale-105 transition-transform duration-500" />
+        <img src={data.thumbnail ?? `https://placehold.co/143x200?text=${data.id}`} className="object-cover h-full w-full group-hover:scale-105 transition-transform duration-500" />
         <div className="absolute inset-0 bg-linear-to-t from-black/85 to-transparent p-4 flex flex-col justify-end items-start gap-2">
           <span className="text-primary bg-primary/20 text-xs font-semibold uppercase px-2.5 py-0.5 backdrop-blur-md tracking-wider rounded-full border-primary/25">{data.genre}</span>
           <h2 className="text-white">{data.title}</h2>

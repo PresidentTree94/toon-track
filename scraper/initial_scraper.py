@@ -22,7 +22,7 @@ def run_initial_scraper(webtoon_id):
 
   webtoon_data = {
     "id": webtoon_id,
-    "title": title_element.replace(":", ""),
+    "title": title_element,
     "genre": genre_element,
     "owner": row.data["owner"],
     "thumbnail": row.data["thumbnail"],

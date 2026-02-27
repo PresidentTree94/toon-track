@@ -15,9 +15,6 @@ export default function Detail() {
   const [open, setOpen] = useState(false);
   const [deleteCheck, setDeleteCheck] = useState(false);
 
-  const decoded = decodeURIComponent(slug?.toString() ?? "");
-  const search = decoded.split("-").join(" ");
-
   const [thumbnail, setThumbnail] = useState("");
   const [authors, setAuthors] = useState("");
   const [protagonists, setProtagonists] = useState("");
@@ -25,11 +22,11 @@ export default function Detail() {
   const [webtoon, setWebtoon] = useState<Toon>();
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await supabase .from("webtoons").select("*").ilike("title", `%${search}%`).single();
+      const { data } = await supabase .from("webtoons").select("*").eq("id", slug).single();
       setWebtoon(data);
     };
     fetchData();
-  }, [search]);
+  }, [slug]);
   useEffect(() => {
   if (webtoon) {
     setThumbnail(webtoon.thumbnail ?? "");
