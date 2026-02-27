@@ -21,6 +21,7 @@ def run_initial_scraper(webtoon_id):
   genre_element = h2.text.strip() if h2 else None
 
   webtoon_data = {
+    "id": webtoon_id,
     "title": title_element.replace(":", ""),
     "genre": genre_element,
     "owner": row.data["owner"],
