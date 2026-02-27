@@ -29,7 +29,7 @@ def run_initial_scraper(webtoon_id):
     "protagonists": row.data["protagonists"],
     "days": None,
     "status": None,
-    "initial:": True,
+    "initial": True,
   }
   supabase.table("webtoons").update(webtoon_data).eq("id", webtoon_id).execute()
 
