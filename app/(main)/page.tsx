@@ -3,10 +3,11 @@ import Graph from "@/components/Graph";
 import { useState, useEffect } from "react";
 import { Toon } from "@/types/toon";
 import { Comp } from "@/types/comp";
-import { supabase } from "@/lib/supabaseClient";
 import { median, condenseValue, calcMedianGrowth, calcMedianGrowthTimeline } from "@/utils/calculations";
 import { ICONS, STATUS_COLORS, STATUS_BADGE_COLORS } from "@/utils/constants";
 import Link from "next/link";
+import { getWebtoons } from "@/lib/data/webtoonQueries";
+import { getCompleted } from "@/lib/data/completedQueries";
 
 function calcSubChange(pastSubscribers: number, latestSubscribers: number) {
   return latestSubscribers - pastSubscribers;
@@ -37,12 +38,13 @@ export default function Home() {
 
   const [webtoons, setWebtoons] = useState<Toon[]>([]);
   const [completed, setCompleted] = useState<Comp[]>([]);
+
   useEffect(() => {
     const fetchData = async () => {
-      const { data: webtoons } = await supabase.from("webtoons").select("*");
-      setWebtoons(webtoons ?? []);
-      const { data: completed } = await supabase.from("completed").select("*");
-      setCompleted(completed ?? []);
+      const webtoonData = await getWebtoons();
+      setWebtoons(webtoonData);
+      const completedData = await getCompleted();
+      setCompleted(completedData);
     };
     fetchData();
   }, []);
@@ -155,7 +157,6 @@ export default function Home() {
               <tr>
                 <th className="w-15.5">#</th>
                 <th className={`text-left cursor-pointer ${sortKey === "series" ? "text-primary" : "underline"}`} onClick={() => setSortKey("series")}>Series</th>
-                <th className="text-left">Genre</th>
                 <th className="text-left">Status</th>
                 <th className="text-left">Owner</th>
                 <th className={`text-right cursor-pointer ${sortKey === "subs" ? "text-primary" : "underline"}`} onClick={() => setSortKey("subs")}>Subs</th>
@@ -171,7 +172,6 @@ export default function Home() {
                   <tr key={w.id} className="border-t border-slate-200">
                     <td className="text-center font-bold font-mono">{index + 1}</td>
                     <td className="text-left font-semibold"><div className="line-clamp-2">{w.title}</div></td>
-                    <td className="text-left text-xs font-semibold whitespace-nowrap"><span className="border px-2.5 py-0.5 rounded-xl inline-block">{w.genre}</span></td>
                     <td className="text-left"><span className={`text-xs font-bold px-2 py-1 rounded-full ${STATUS_COLORS[w.status]} ${STATUS_BADGE_COLORS[w.status]}`}>{w.status && w.status.toUpperCase()}</span></td>
                     <td className="text-left font-semibold"><div className="flex items-center gap-1"><Icon className="h-4 w-auto" />{w.owner}</div></td>
                     <td className="text-right font-mono font-bold">{latestSubs !== -1 ? condenseValue(latestSubs) : ""}</td>
@@ -188,7 +188,7 @@ export default function Home() {
           <h2>{g.title}</h2>
           <i>{g.tagline}</i>
           <div className="mt-4 h-75">
-            {g.data.length > 0 ? <Graph data={g.data} /> : <div className="border border-dashed h-full rounded-2xl flex items-center justify-center"><p>Not enough data to generate graph.</p></div>}
+            {g.data.length > 1 ? <Graph data={g.data} /> : <div className="border border-dashed h-full rounded-2xl flex items-center justify-center"><p>Not enough data to generate graph.</p></div>}
           </div>
         </section>
       )}

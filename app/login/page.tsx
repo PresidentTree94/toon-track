@@ -6,7 +6,7 @@ export default function Login() {
 
   const [password, setPassword] = useState("");
 
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
+  const handleSubmit: React.SubmitEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     if (password === process.env.NEXT_PUBLIC_SITE_PASSWORD) {
       document.cookie = "auth=true; path=/";

@@ -1,31 +1,39 @@
 "use client";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Comp } from "@/types/comp";
 import { ICONS } from "@/utils/constants";
 import Modal from "./Modal";
-import { supabase } from "@/lib/supabaseClient";
+import FormField from "./FormField";
+import { useForm } from "@presidenttree94/form-utils";
+import { updateCompletedById } from "@/lib/data/completedQueries";
 
 export default function Completed({ data }:Readonly<{ data: Comp; }>) {
 
   const Icon = ICONS[data.owner];
   const [open, setOpen] = useState(false);
-  const [thumbnail, setThumbnail] = useState(data.thumbnail);
-  const [authors, setAuthors] = useState(data.authors);
-  const [protagonists, setProtagonists] = useState(data.protagonists);
-  const [reminder, setReminder] = useState<string>(data.reminder);
+  const completedForm = useForm(
+    {
+      thumbnail: data.thumbnail,
+      authors: data.authors,
+      protagonists: data.protagonists,
+      reminder: data.reminder
+    },
+    {
+      thumbnail: { label: "Thumbnail Link", type: "url" },
+      authors: { label: "Author(s)" },
+      protagonists: { label: "Protagonist(s)" },
+      reminder: { label: "Reminder", options: ["", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"] }
+    }
+  );
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const { data: completed } = await supabase.from("completed").update({
-      thumbnail: thumbnail.trim() || data.thumbnail,
-      authors: authors.trim() || data.authors,
-      protagonists: protagonists.trim() || data.protagonists,
-      reminder: reminder
-    }).eq("id", data.id).select().single();
-    setThumbnail(completed?.thumbnail);
-    setAuthors(completed?.authors);
-    setProtagonists(completed?.protagonists);
-    setReminder(completed?.reminder);
+    await updateCompletedById(data.id, {
+      thumbnail: completedForm.form.thumbnail.trim() || data.thumbnail,
+      authors: completedForm.form.authors.trim() || data.authors,
+      protagonists: completedForm.form.protagonists.trim() || data.protagonists,
+      reminder: completedForm.form.reminder
+    });
     setOpen(false);
   }
 
@@ -51,23 +59,9 @@ export default function Completed({ data }:Readonly<{ data: Comp; }>) {
         </div>
       </div>
       <Modal heading="Completed Details" open={open} setOpen={setOpen} handleSubmit={handleSubmit}>
-        <label>Thumbnail Link:</label>
-        <input type="url" className="border bg-slate-50 border-slate-200 shadow-sm px-3 py-1 text-emph rounded-full outline-none focus:border-primary" value={thumbnail} onChange={(e) => setThumbnail(e.target.value)} />
-        <label>Author(s):</label>
-        <input type="text" className="border bg-slate-50 border-slate-200 shadow-sm px-3 py-1 text-emph rounded-full outline-none focus:border-primary" value={authors} onChange={(e) => setAuthors(e.target.value)} />
-        <label>Protagonist(s):</label>
-        <input type="text" className="border bg-slate-50 border-slate-200 shadow-sm px-3 py-1 text-emph rounded-full outline-none focus:border-primary" value={protagonists} onChange={(e) => setProtagonists(e.target.value)} />
-        <label>Reminder:</label>
-        <select className="border bg-slate-50 border-slate-200 shadow-sm px-3 py-1 text-emph rounded-full outline-none focus:border-primary appearance-none" value={reminder} onChange={(e) => setReminder(e.target.value)}>
-          <option value=""></option>
-          <option value="Sunday">Sunday</option>
-          <option value="Monday">Monday</option>
-          <option value="Tuesday">Tuesday</option>
-          <option value="Wednesday">Wednesday</option>
-          <option value="Thursday">Thursday</option>
-          <option value="Friday">Friday</option>
-          <option value="Saturday">Saturday</option>
-        </select>
+        {Object.values(completedForm.fields).map((field) => (
+          <FormField key={field.label} field={field} />
+        ))}
       </Modal>
     </>
   );

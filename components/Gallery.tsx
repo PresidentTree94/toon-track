@@ -1,6 +1,7 @@
 import { Toon } from "@/types/toon";
 import { Comp } from "@/types/comp";
 import { Search, Funnel } from "lucide-react";
+import { BoundField } from "@presidenttree94/form-utils";
 
 export default function Gallery<T extends Toon | Comp>({
   title, sub, data, filtered, searchFilters, otherFilters, itemComponent: ItemComponent
@@ -9,8 +10,8 @@ export default function Gallery<T extends Toon | Comp>({
   sub: string;
   data: T[];
   filtered: T[];
-  searchFilters: Record<string, any>;
-  otherFilters: Record<string, any>;
+  searchFilters: { search: string; setSearch: (search: string) => void };
+  otherFilters: Record<string, BoundField<any, any>>;
   itemComponent?: React.ComponentType<{data: T}>;
 }>) {
 
@@ -34,12 +35,11 @@ export default function Gallery<T extends Toon | Comp>({
               {Object.entries(otherFilters).map(([key, f]) => (
                 <fieldset key={key}>
                   <legend>{f.label}</legend>
-                  {f.options.map((option: string, idx: number) => (
-                    <label key={idx}>
-                      <input type="radio" value={option} checked={f.value === option} onChange={() => f.setValue(option)} />
-                      {option}
-                    </label>
-                  ))}
+                  <select value={f.value} onChange={(e) => f.setValue(e.target.value)} className="border p-1">
+                    {f.options?.map((option: string) => (
+                      <option key={option} value={option}>{option}</option>
+                    ))}
+                  </select>
                 </fieldset>
               ))}
             </div>

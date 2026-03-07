@@ -2,59 +2,67 @@
 import { User, SwatchBook, BookOpen, Calendar, Users, TrendingUp, X, SquarePen } from "lucide-react";
 import Graph from "@/components/Graph";
 import { redirect, useParams } from "next/navigation";
-import { supabase } from "@/lib/supabaseClient";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Toon } from "@/types/toon";
 import { condenseValue, calcMedianGrowth, calcMedianGrowthTimeline } from "@/utils/calculations";
 import { ICONS, STATUS_COLORS, STATUS_BADGE_COLORS } from "@/utils/constants";
 import Modal from "@/components/Modal";
+import FormField from "@/components/FormField";
+import { getWebtoonById, updateWebtoonById, deleteWebtoonById } from "@/lib/data/webtoonQueries";
+import { useForm } from "@presidenttree94/form-utils";
 
 export default function Detail() {
 
   const { slug } = useParams();
-  console.log("Slug: ", slug);
   const [open, setOpen] = useState(false);
   const [deleteCheck, setDeleteCheck] = useState(false);
 
-  const [thumbnail, setThumbnail] = useState("");
-  const [authors, setAuthors] = useState("");
-  const [protagonists, setProtagonists] = useState("");
+  const detailForm = useForm(
+    {
+      thumbnail: "",
+      authors: "",
+      protagonists: ""
+    },
+    {
+      thumbnail: { label: "Thumbnail Link", type: "url" },
+      authors: { label: "Author(s)" },
+      protagonists: { label: "Protagonist(s)" }
+    }
+  );
 
   const [webtoon, setWebtoon] = useState<Toon>();
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await supabase .from("webtoons").select("*").eq("id", slug).single();
-      setWebtoon(data);
+      const webtoonData = await getWebtoonById(Number(slug));
+      setWebtoon(webtoonData);
     };
     fetchData();
   }, [slug]);
   useEffect(() => {
   if (webtoon) {
-    setThumbnail(webtoon.thumbnail ?? "");
-    setAuthors(webtoon.authors ?? "");
-    setProtagonists(webtoon.protagonists ?? "");
+    detailForm.patch({
+      thumbnail: webtoon.thumbnail ?? "",
+      authors: webtoon.authors ?? "",
+      protagonists: webtoon.protagonists ?? ""
+    });
   }
 }, [webtoon]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const { data } = await supabase.from("webtoons").update({
-      thumbnail: thumbnail.trim() || webtoon?.thumbnail,
-      authors: authors.trim() || webtoon?.authors,
-      protagonists: protagonists.trim() || webtoon?.protagonists
-    }).eq("id", webtoon?.id).select().single();
-    setWebtoon(data ?? undefined);
-    setThumbnail(data?.thumbnail);
-    setAuthors(data.authors);
-    setProtagonists(data.protagonists);
+    const webtoonData = await updateWebtoonById(Number(slug), {
+      thumbnail: detailForm.form.thumbnail.trim() || webtoon?.thumbnail,
+      authors: detailForm.form.authors.trim() || webtoon?.authors,
+      protagonists: detailForm.form.protagonists.trim() || webtoon?.protagonists
+    });
+    setWebtoon(webtoonData);
     setDeleteCheck(false);
     setOpen(false);
   }
 
   const updateOwner = async (owner: string) => {
-    const { data, error } = await supabase.from("webtoons").update({ owner, owner_time: new Date().toISOString() }).eq("id", webtoon?.id).select().single();
-    console.log("Update result: ", data, error);
-    setWebtoon(data ?? undefined);
+    const webtoonData = await updateWebtoonById(Number(slug), { owner, owner_time: new Date().toISOString() });
+    setWebtoon(webtoonData);
   }
 
   const deleteWebtoon = async () => {
@@ -62,7 +70,7 @@ export default function Detail() {
       setDeleteCheck(true);
       return;
     }
-    await supabase.from("webtoons").delete().eq("id", webtoon?.id);
+    await deleteWebtoonById(Number(slug));
     redirect("/library");
   }
 
@@ -139,12 +147,9 @@ export default function Detail() {
         </section>
       </article>
       <Modal heading="Edit Webtoon Details" open={open} setOpen={setOpen} handleSubmit={handleSubmit}>
-        <label>Thumbnail Link:</label>
-        <input type="url" className="border bg-slate-50 border-slate-200 shadow-sm px-3 py-1 text-emph rounded-full outline-none focus:border-primary" value={thumbnail} onChange={(e) => setThumbnail(e.target.value)} />
-        <label>Author(s):</label>
-        <input type="text" className="border bg-slate-50 border-slate-200 shadow-sm px-3 py-1 text-emph rounded-full outline-none focus:border-primary" value={authors} onChange={(e) => setAuthors(e.target.value)} />
-        <label>Protagonist(s):</label>
-        <input type="text" className="border bg-slate-50 border-slate-200 shadow-sm px-3 py-1 text-emph rounded-full outline-none focus:border-primary" value={protagonists} onChange={(e) => setProtagonists(e.target.value)} />
+        {Object.values(detailForm.fields).map((field) => (
+          <FormField key={field.label} field={field} />
+        ))}
         <button type="button" className={`col-span-full border text-emph rounded-2xl py-2 flex items-center justify-center cursor-pointer ${deleteCheck ? `${STATUS_COLORS["Hiatus"]} ${STATUS_BADGE_COLORS["Hiatus"]}` : "hover:bg-slate-100"}`} onClick={deleteWebtoon}><X className="h-4.5 w-auto" /></button>
       </Modal>
     </>

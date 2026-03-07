@@ -5,7 +5,7 @@ export default function Modal({
   heading: string;
   open: boolean;
   setOpen: (open: boolean) => void;
-  handleSubmit: (e: React.FormEvent) => void;
+  handleSubmit: (e: React.SubmitEvent<HTMLFormElement>) => void;
 }>) {
   return (
     <div className={`fixed inset-0 bg-black/50 z-3 ${open ? "flex" : "hidden"} justify-center items-center`}>

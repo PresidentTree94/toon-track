@@ -2,19 +2,32 @@
 import { BookHeart, LayoutDashboard, Library, Archive, Settings, Plus } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import React, { useState } from "react";
 import Modal from "./Modal";
+import FormField from "./FormField";
+import { createWebtoon } from "@/lib/data/webtoonQueries";
+import { useForm } from "@presidenttree94/form-utils";
 
 export default function Navbar() {
 
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const [toon, setToon] = useState("");
-  const [thumbnail, setThumbnail] = useState("");
-  const [authors, setAuthors] = useState("");
-  const [protagonists, setProtagonists] = useState("");
-  const [owner, setOwner] = useState("");
+  const webtoonForm = useForm(
+    {
+      toon: "",
+      thumbnail: "",
+      authors: "",
+      protagonists: "",
+      owner: ""
+    },
+    {
+      toon: { label: "Webtoon Link", type: "url", required: true },
+      thumbnail: { label: "Thumbnail Link", type: "url" },
+      authors: { label: "Author(s)" },
+      protagonists: { label: "Protagonist(s)" },
+      owner: { label: "Owner", required: true, options: ["", "Karly", "Rachelle", "Shared"] }
+    }
+  );
 
   const links = [
     {label: "Dashboard", icon: LayoutDashboard, link: "/"},
@@ -22,14 +35,15 @@ export default function Navbar() {
     {label: "Archive", icon: Archive, link: "/archive"},
   ];
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await supabase.from("webtoons").insert({ toon: toon.trim(), thumbnail: thumbnail.trim() || null, authors: authors.trim(), protagonists: protagonists.trim(), owner: owner });
-    setToon("");
-    setThumbnail("");
-    setAuthors("");
-    setProtagonists("");
-    setOwner("");
+    await createWebtoon({
+      toon: webtoonForm.form.toon.trim(),
+      thumbnail: webtoonForm.form.thumbnail.trim() || null,
+      authors: webtoonForm.form.authors.trim(),
+      protagonists: webtoonForm.form.protagonists.trim(),
+      owner: webtoonForm.form.owner
+    });
     setOpen(false);
   }
 
@@ -53,21 +67,9 @@ export default function Navbar() {
         </div>
       </header>
       <Modal heading="Add Webtoon to Tracker" open={open} setOpen={setOpen} handleSubmit={handleSubmit}>
-        <label>Webtoon Link:</label>
-        <input required type="url" className="border bg-slate-50 border-slate-200 shadow-sm px-3 py-1 text-emph rounded-full outline-none focus:border-primary" value={toon} onChange={(e) => setToon(e.target.value)} />
-        <label>Thumbnail Link:</label>
-        <input type="url" className="border bg-slate-50 border-slate-200 shadow-sm px-3 py-1 text-emph rounded-full outline-none focus:border-primary" value={thumbnail} onChange={(e) => setThumbnail(e.target.value)} />
-        <label>Author(s):</label>
-        <input type="text" className="border bg-slate-50 border-slate-200 shadow-sm px-3 py-1 text-emph rounded-full outline-none focus:border-primary" value={authors} onChange={(e) => setAuthors(e.target.value)} />
-        <label>Protagonist(s):</label>
-        <input type="text" className="border bg-slate-50 border-slate-200 shadow-sm px-3 py-1 text-emph rounded-full outline-none focus:border-primary" value={protagonists} onChange={(e) => setProtagonists(e.target.value)} />
-        <label>Owner:</label>
-        <select required className="border bg-slate-50 border-slate-200 shadow-sm px-3 py-1 text-emph rounded-full outline-none focus:border-primary appearance-none" value={owner} onChange={(e) => setOwner(e.target.value)}>
-          <option value="" disabled>Select owner</option>
-          <option value="Karly">Karly</option>
-          <option value="Rachelle">Rachelle</option>
-          <option value="Shared">Shared</option>
-        </select>
+        {Object.values(webtoonForm.fields).map((field) => (
+          <FormField key={field.label} field={field} />
+        ))}
       </Modal>
     </>
   );
