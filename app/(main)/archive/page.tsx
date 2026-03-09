@@ -36,12 +36,12 @@ export default function Archive() {
       if (archiveForm.form.sortBy === "Title") return a.title.localeCompare(b.title);
       if (archiveForm.form.sortBy === "Timestamp") return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
       return 0;
-    });
+  });
 
-  const filters = buildFormElements(archiveForm.form, archiveForm.update, {
-    sortBy: { label: "Sort By", type: "select", options: ["Timestamp", "Title"] },
-    owner: { label: "Owner", type: "select", options: ["All", "Karly", "Rachelle", "Shared"] },
-    genre: { label: "Genre", type: "select", options: genres }
+  const archiveFilters = buildFormElements(archiveForm.form, archiveForm.update, {
+    sortBy: { label: "Sort By", options: ["Timestamp", "Title"] },
+    owner: { label: "Owner", options: ["All", "Karly", "Rachelle", "Shared"] },
+    genre: { label: "Genre", options: genres }
   });
 
   return (
@@ -51,7 +51,7 @@ export default function Archive() {
       data={webtoons} 
       filtered={filtered} 
       searchFilters={{ search, setSearch }}
-      otherFilters={filters}
+      otherFilters={archiveFilters}
       itemComponent={Completed}
     />
   );

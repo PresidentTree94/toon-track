@@ -67,8 +67,8 @@ export default function Navbar() {
         </div>
       </header>
       <Modal heading="Add Webtoon to Tracker" open={open} setOpen={setOpen} handleSubmit={handleSubmit}>
-        {Object.values(webtoonForm.fields).map((field) => (
-          <FormField key={field.label} field={field} />
+        {Object.entries(webtoonForm.elements).map(([key, field]) => (
+          <FormField key={key} field={field} />
         ))}
       </Modal>
     </>

@@ -46,15 +46,15 @@ export default function Library() {
       if (libraryForm.form.sortBy === "Subscribers") return bSubs - aSubs;
       if (libraryForm.form.sortBy === "Growth") return bGrowth - aGrowth;
       return 0;
-    });
+  });
 
-    const filters = buildFormElements(libraryForm.form, libraryForm.update, {
-      sortBy: { label: "Sort By", options: ["Title", "Subscribers", "Growth"] },
-      owner: { label: "Owner", options: ["All", "Karly", "Rachelle", "Shared"] },
-      status: { label: "Status", options: ["All", "Ongoing", "Hiatus"] },
-      genre: { label: "Genre", options: genres },
-      day: { label: "Day", options: ["All", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] }
-    });
+  const libraryFilters = buildFormElements(libraryForm.form, libraryForm.update, {
+    sortBy: { label: "Sort By", options: ["Title", "Subscribers", "Growth"] },
+    owner: { label: "Owner", options: ["All", "Karly", "Rachelle", "Shared"] },
+    status: { label: "Status", options: ["All", "Ongoing", "Hiatus"] },
+    genre: { label: "Genre", options: genres },
+    day: { label: "Day", options: ["All", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] }
+  });
 
   return (
     <Gallery
@@ -63,7 +63,7 @@ export default function Library() {
       data={webtoons}
       filtered={filtered}
       searchFilters={{ search, setSearch }}
-      otherFilters={filters}
+      otherFilters={libraryFilters}
       itemComponent={Webtoon}
     />
   );

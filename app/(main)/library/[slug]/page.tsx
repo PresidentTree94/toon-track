@@ -40,7 +40,7 @@ export default function Detail() {
   }, [slug]);
   useEffect(() => {
   if (webtoon) {
-    detailForm.patch({
+    detailForm.updateMany({
       thumbnail: webtoon.thumbnail ?? "",
       authors: webtoon.authors ?? "",
       protagonists: webtoon.protagonists ?? ""
@@ -147,8 +147,8 @@ export default function Detail() {
         </section>
       </article>
       <Modal heading="Edit Webtoon Details" open={open} setOpen={setOpen} handleSubmit={handleSubmit}>
-        {Object.values(detailForm.fields).map((field) => (
-          <FormField key={field.label} field={field} />
+        {Object.entries(detailForm.elements).map(([key, field]) => (
+          <FormField key={key} field={field} />
         ))}
         <button type="button" className={`col-span-full border text-emph rounded-2xl py-2 flex items-center justify-center cursor-pointer ${deleteCheck ? `${STATUS_COLORS["Hiatus"]} ${STATUS_BADGE_COLORS["Hiatus"]}` : "hover:bg-slate-100"}`} onClick={deleteWebtoon}><X className="h-4.5 w-auto" /></button>
       </Modal>

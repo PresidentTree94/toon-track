@@ -59,8 +59,8 @@ export default function Completed({ data }:Readonly<{ data: Comp; }>) {
         </div>
       </div>
       <Modal heading="Completed Details" open={open} setOpen={setOpen} handleSubmit={handleSubmit}>
-        {Object.values(completedForm.fields).map((field) => (
-          <FormField key={field.label} field={field} />
+        {Object.entries(completedForm.elements).map(([key, field]) => (
+          <FormField key={key} field={field} />
         ))}
       </Modal>
     </>
