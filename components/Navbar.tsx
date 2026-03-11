@@ -25,7 +25,7 @@ export default function Navbar() {
       thumbnail: { label: "Thumbnail Link", type: "url" },
       authors: { label: "Author(s)" },
       protagonists: { label: "Protagonist(s)" },
-      owner: { label: "Owner", required: true, options: ["", "Karly", "Rachelle", "Shared"] }
+      owner: { label: "Owner", required: true, options: ["Karly", "Rachelle", "Shared"], defaultOption: "Select Owner" }
     }
   );
 

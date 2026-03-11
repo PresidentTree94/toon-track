@@ -20,13 +20,13 @@ export default function Archive() {
   const [search, setSearch] = useState("");
   const archiveForm = useFormState({
     sortBy: "Timestamp",
-    owner: "All",
+    owner: [] as string[],
     genre: "All"
   });
 
   const preFiltered = webtoons
   .filter(item => item.title.toLowerCase().includes(search.toLowerCase()) || item.protagonists.toLowerCase().includes(search.toLowerCase()))
-  .filter(item => archiveForm.form.owner === "All" ? true : item.owner === archiveForm.form.owner);
+  .filter(item => archiveForm.form.owner.length === 0 || archiveForm.form.owner.includes(item.owner));
 
   const genres = ["All", ...[...new Set(preFiltered.map(item => item.genre))].sort()];
 
@@ -40,7 +40,7 @@ export default function Archive() {
 
   const archiveFilters = buildFormElements(archiveForm.form, archiveForm.update, {
     sortBy: { label: "Sort By", options: ["Timestamp", "Title"] },
-    owner: { label: "Owner", options: ["All", "Karly", "Rachelle", "Shared"] },
+    owner: { label: "Owner", options: ["Karly", "Rachelle", "Shared"], multi: true },
     genre: { label: "Genre", options: genres }
   });
 

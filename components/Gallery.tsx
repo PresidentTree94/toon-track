@@ -3,7 +3,7 @@ import { Comp } from "@/types/comp";
 import { Search, Funnel } from "lucide-react";
 import { FormElement } from "@presidenttree94/form-utils";
 
-export default function Gallery<Value, T extends Toon | Comp>({
+export default function Gallery<T extends Toon | Comp>({
   title, sub, data, filtered, searchFilters, otherFilters, itemComponent: ItemComponent
 }:Readonly<{
   title: string;
@@ -11,7 +11,7 @@ export default function Gallery<Value, T extends Toon | Comp>({
   data: T[];
   filtered: T[];
   searchFilters: { search: string; setSearch: (search: string) => void };
-  otherFilters: Record<string, FormElement<Value>> | undefined;
+  otherFilters: Record<string, FormElement<string | string[]>> | undefined;
   itemComponent?: React.ComponentType<{data: T}>;
 }>) {
 
@@ -35,7 +35,7 @@ export default function Gallery<Value, T extends Toon | Comp>({
               {otherFilters && Object.entries(otherFilters).map(([key, f]) => (
                 <fieldset key={key}>
                   <legend>{f.label}</legend>
-                  <select value={String(f.value)} onChange={(e) => f.setValue(e.target.value)} className="border p-1">
+                  <select multiple={f.multi} size={f.multi ? 3 : undefined} value={f.value} onChange={(e) => f.setValue(f.multi ? Array.from(e.target.selectedOptions, o => o.value) : e.target.value)} className="border p-1">
                     {f.options?.map((option) => {
                       const optionString = String(option);
                       return (<option key={optionString} value={optionString}>{optionString}</option>);

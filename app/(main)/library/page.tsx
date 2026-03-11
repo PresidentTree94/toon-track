@@ -21,7 +21,7 @@ export default function Library() {
   const [search, setSearch] = useState("");
   const libraryForm = useFormState({
     sortBy: "Title",
-    owner: "All",
+    owner: [] as string[],
     status: "All",
     genre: "All",
     day: "All"
@@ -29,7 +29,7 @@ export default function Library() {
 
   const preFiltered = webtoons
   .filter(item => item.title.toLowerCase().includes(search.toLowerCase()) || item.protagonists.toLowerCase().includes(search.toLowerCase()))
-  .filter(item => libraryForm.form.owner === "All" ? true : item.owner === libraryForm.form.owner)
+  .filter(item => libraryForm.form.owner.length === 0 || libraryForm.form.owner.includes(item.owner))
   .filter(item => libraryForm.form.status === "All" ? true : item.status === libraryForm.form.status)
   .filter(item => libraryForm.form.day === "All" ? true : item.days.includes(libraryForm.form.day));
 
@@ -50,7 +50,7 @@ export default function Library() {
 
   const libraryFilters = buildFormElements(libraryForm.form, libraryForm.update, {
     sortBy: { label: "Sort By", options: ["Title", "Subscribers", "Growth"] },
-    owner: { label: "Owner", options: ["All", "Karly", "Rachelle", "Shared"] },
+    owner: { label: "Owner", options: ["Karly", "Rachelle", "Shared"], multi: true },
     status: { label: "Status", options: ["All", "Ongoing", "Hiatus"] },
     genre: { label: "Genre", options: genres },
     day: { label: "Day", options: ["All", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] }

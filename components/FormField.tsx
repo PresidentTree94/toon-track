@@ -8,6 +8,7 @@ export default function FormField<Value>({ field }: { field: FormElement<Value> 
       <label>{field.label}:</label>
       {field.options ?
         <select className={`${className} appearance-none`} value={String(field.value)} onChange={(e) => field.setValue(e.target.value)} required={field.required}>
+          {field.defaultOption && <option value={undefined}>{field.defaultOption}</option>}
           {field.options.map(option => {
             const optionString = String(option);
             return (<option key={optionString} value={optionString}>{optionString}</option>);
