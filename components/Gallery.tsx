@@ -36,9 +36,8 @@ export default function Gallery<T extends Toon | Comp>({
                 <fieldset key={key}>
                   <legend>{f.label}</legend>
                   <select multiple={f.multi} size={f.multi ? 3 : undefined} value={f.value} onChange={(e) => f.setValue(f.multi ? Array.from(e.target.selectedOptions, o => o.value) : e.target.value)} className="border p-1">
-                    {f.options?.map((option) => {
-                      const optionString = String(option);
-                      return (<option key={optionString} value={optionString}>{optionString}</option>);
+                    {f.options?.map((option: string) => {
+                      return (<option key={option} value={option}>{option}</option>);
                     })}
                   </select>
                 </fieldset>

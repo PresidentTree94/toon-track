@@ -8,7 +8,7 @@ import { condenseValue, calcMedianGrowth, calcMedianGrowthTimeline } from "@/uti
 import { ICONS, STATUS_COLORS, STATUS_BADGE_COLORS } from "@/utils/constants";
 import Modal from "@/components/Modal";
 import FormField from "@/components/FormField";
-import { getWebtoonById, updateWebtoonById, deleteWebtoonById } from "@/lib/data/webtoonQueries";
+import { getWebtoonById, updateWebtoonById, deleteWebtoonById, deleteWebtoonFromReports } from "@/lib/data/webtoonQueries";
 import { useForm } from "@presidenttree94/form-utils";
 
 export default function Detail() {
@@ -71,6 +71,7 @@ export default function Detail() {
       return;
     }
     await deleteWebtoonById(Number(slug));
+    await deleteWebtoonFromReports();
     redirect("/library");
   }
 

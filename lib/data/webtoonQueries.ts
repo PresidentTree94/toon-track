@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabaseClient";
+import { getCompleted } from "./completedQueries";
 
 export async function getWebtoons() {
   const { data, error } = await supabase.from("webtoons").select("*");
@@ -43,4 +44,18 @@ export async function deleteWebtoonById(id: number) {
     return null;
   }
   return true;
+}
+
+export async function deleteWebtoonFromReports() {
+  const webtoonData = await getWebtoons();
+  const completedData = await getCompleted();
+  const { data } = await supabase.from("reports").select("*");
+  const validTitles = new Set([...webtoonData.map(w => w.title), ...completedData.map(c => c.title)]);
+
+  if (data) {
+    for (const report of data) {
+      const cleanedSnapshot = report.snapshot.filter((item: any) => validTitles.has(item.title));
+      await supabase.from("reports").update({ snapshot: cleanedSnapshot }).eq("timestamp", report.timestamp);
+    }
+  }
 }
