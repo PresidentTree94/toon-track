@@ -1,7 +1,7 @@
 "use client";
 import { getMessagingInstance } from "@/lib/firebaseClient";
 import { getToken } from "firebase/messaging";
-import { supabase } from "@/lib/supabaseServer";
+import { createServerSupabase } from "@/lib/supabaseServer";
 
 export default function RegisterNotifications({ device }:Readonly<{ device: string }>) {
 
@@ -16,6 +16,7 @@ export default function RegisterNotifications({ device }:Readonly<{ device: stri
       const token = await getToken(messaging, { vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY! });
       if (!token) return;
       
+      const supabase = await createServerSupabase();
       await supabase.from("subscriptions").upsert({ device, token });
       console.log(`Registered device: ${device}`);
     } catch (err) {
