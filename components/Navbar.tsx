@@ -5,7 +5,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import Modal from "./Modal";
 import FormField from "./FormField";
-import { createWebtoon } from "@/lib/data/webtoonQueries";
+import { createWebtoon } from "@/lib/data/webtoonBrowserQueries";
 import { useForm } from "@presidenttree94/form-utils";
 
 export default function Navbar() {

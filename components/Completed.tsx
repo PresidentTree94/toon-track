@@ -5,7 +5,7 @@ import { ICONS } from "@/utils/constants";
 import Modal from "./Modal";
 import FormField from "./FormField";
 import { useForm } from "@presidenttree94/form-utils";
-import { updateCompletedById } from "@/lib/data/completedQueries";
+import { updateCompletedById } from "@/lib/data/completedBrowserQueries";
 
 export default function Completed({ data }:Readonly<{ data: Comp; }>) {
 

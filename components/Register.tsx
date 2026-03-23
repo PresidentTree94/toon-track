@@ -1,7 +1,7 @@
 "use client";
 import { getMessagingInstance } from "@/lib/firebaseClient";
 import { getToken } from "firebase/messaging";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/lib/supabaseServer";
 
 export default function RegisterNotifications({ device }:Readonly<{ device: string }>) {
 
