@@ -39,7 +39,7 @@ export default function Navbar() {
     e.preventDefault();
     await createWebtoon({
       toon: webtoonForm.form.toon.trim(),
-      thumbnail: webtoonForm.form.thumbnail.trim() || null,
+      thumbnail: webtoonForm.form.thumbnail.trim() || "",
       authors: webtoonForm.form.authors.trim(),
       protagonists: webtoonForm.form.protagonists.trim(),
       owner: webtoonForm.form.owner

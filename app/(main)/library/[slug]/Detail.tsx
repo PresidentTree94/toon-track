@@ -65,7 +65,7 @@ export default function Detail({ webtoonData }: { webtoonData: Toon }) {
       <article className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-8">
         <section className="space-y-6">
           <div className="overflow-hidden aspect-143/200 rounded-2xl">
-            <img src={webtoon.thumbnail ?? `https://placehold.co/143x200?text=${webtoon.id}`} className="object-cover h-full w-full" />
+            <img src={webtoon.thumbnail || `https://placehold.co/143x200?text=${webtoon.id}`} className="object-cover h-full w-full" />
           </div>
           <div className="bg-card p-6 shadow-sm rounded-2xl @container">
             <h2 className="text-center @2xs:text-left">{webtoon.title}</h2>
