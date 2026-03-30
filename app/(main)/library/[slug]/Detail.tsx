@@ -38,14 +38,14 @@ export default function Detail({ webtoonData }: { webtoonData: Toon }) {
       authors: detailForm.form.authors.trim() || webtoon.authors,
       protagonists: detailForm.form.protagonists.trim() || webtoon.protagonists
     });
-    setWebtoon(webtoonData);
+    setWebtoon({ ...webtoon, ...webtoonData });
     setDeleteCheck(false);
     setOpen(false);
   }
 
   const updateOwner = async (owner: string) => {
     const webtoonData = await updateWebtoonById(webtoon.id, { owner, owner_time: new Date().toISOString() });
-    setWebtoon(webtoonData);
+    setWebtoon({ ...webtoon, ...webtoonData });
   }
 
   const deleteWebtoon = async () => {
