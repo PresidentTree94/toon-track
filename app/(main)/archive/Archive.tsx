@@ -15,7 +15,11 @@ export default function Archive({ completedData }: { completedData: Comp[] }) {
   });
 
   const preFiltered = completedData
-  .filter(item => item.title.toLowerCase().includes(search.toLowerCase()) || item.protagonists.toLowerCase().includes(search.toLowerCase()))
+  .filter(item =>
+    item.title.toLowerCase().includes(search.toLowerCase()) ||
+    item.protagonists.toLowerCase().includes(search.toLowerCase()) ||
+    item.authors.toLowerCase().includes(search.toLowerCase())
+  )
   .filter(item => archiveForm.form.owner.length === 0 || archiveForm.form.owner.includes(item.owner));
 
   const genres = ["All", ...[...new Set(preFiltered.map(item => item.genre))].sort()];

@@ -18,7 +18,11 @@ export default function Library({ webtoonsData }: { webtoonsData: Toon[] }) {
   });
 
   const preFiltered = webtoonsData
-  .filter(item => item.title.toLowerCase().includes(search.toLowerCase()) || item.protagonists.toLowerCase().includes(search.toLowerCase()))
+  .filter(item =>
+    item.title.toLowerCase().includes(search.toLowerCase()) ||
+    item.protagonists.toLowerCase().includes(search.toLowerCase()) ||
+    item.authors.toLowerCase().includes(search.toLowerCase())
+  )
   .filter(item => libraryForm.form.owner.length === 0 || libraryForm.form.owner.includes(item.owner))
   .filter(item => libraryForm.form.status === "All" ? true : item.status === libraryForm.form.status)
   .filter(item => libraryForm.form.day === "All" ? true : item.days.includes(libraryForm.form.day));

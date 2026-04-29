@@ -18,4 +18,5 @@ export type Toon = {
   timestamp: string;
   owner_time: string;
   status_time: string;
+  initial: boolean;
 };

@@ -27,7 +27,7 @@ export default function Gallery<T extends Toon | Comp>({
         <div className="flex items-center gap-3 text-sm">
           <div className="flex items-center gap-2 bg-card px-3 py-2 shadow-sm rounded-full flex-1 md:flex-none md:w-64 border border-transparent focus-within:border-primary">
             <Search className="h-4 w-auto" />
-            <input type="text" placeholder="Search titles and protagonists..." value={search} onChange={(e) => setSearch(e.target.value)} className="flex-1 outline-none placeholder:text-base text-emph" />
+            <input type="text" placeholder="Search Webtoon info..." value={search} onChange={(e) => setSearch(e.target.value)} className="flex-1 outline-none placeholder:text-base text-emph" />
           </div>
           <details className="relative group">
             <summary className="flex items-center gap-2 px-4 py-2 bg-card font-medium text-emph rounded-full shadow-sm cursor-pointer border border-transparent group-open:border-primary"><Funnel className="h-4 w-auto" /><span className="hidden sm:inline">Filter & Sort</span></summary>
