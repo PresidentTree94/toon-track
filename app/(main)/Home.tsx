@@ -122,7 +122,7 @@ export default function Home({ webtoonsData, completedData }: { webtoonsData: To
               </details>}
             </li>
           ))}
-          {pendingData > 0 && <li>{pendingData} Webtoon{pendingData === 1 ? "" : "s"} pending validation.</li>}
+          {pendingData > 0 && <li>{pendingData} Webtoon{pendingData === 1 ? " is" : "s are"} pending validation.</li>}
         </ul>
       </section>}
       <section>
