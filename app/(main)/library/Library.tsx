@@ -28,7 +28,7 @@ export default function Library({ webtoonsData }: { webtoonsData: Toon[] }) {
   .filter(item => libraryForm.form.owner.length === 0 || libraryForm.form.owner.includes(item.owner))
   .filter(item => libraryForm.form.status === "All" ? true : item.status === libraryForm.form.status)
   .filter(item => libraryForm.form.day === "All" ? true : item.days.includes(libraryForm.form.day))
-  .filter(item => libraryForm.form.tags.length === 0 || libraryForm.form.tags.some(tag => item.tags.includes(tag)));
+  .filter(item => libraryForm.form.tags.length === 0 || libraryForm.form.tags.every(tag => item.tags.includes(tag)));
 
   const genres = ["All", ...[...new Set(preFiltered.map(item => item.genre))].sort()];
 

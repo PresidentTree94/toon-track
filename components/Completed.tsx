@@ -47,10 +47,10 @@ export default function Completed({ data }:Readonly<{ data: Comp; }>) {
         <div className="relative overflow-hidden aspect-143/200">
           <img src={data.thumbnail || `https://placehold.co/143x200?text=${data.id}`} className="object-cover h-full w-full group-hover:scale-105 transition-transform duration-500" />
           <div className="absolute inset-0 bg-linear-to-t from-black/85 to-transparent p-4 flex flex-col justify-between gap-2">
-            <div className="self-end flex gap-2">
+            <div className="self-end flex gap-2 text-primary">
               {data.tags.map(tag => {
                 const Icon = WEBTOON_TAG_MARKERS[tag];
-                return Icon ? <Icon key={tag} className="h-6 text-white" /> : null;
+                return Icon ? <Icon key={tag} className="h-6" /> : null;
               })}
             </div>
             <div className="space-y-2">

@@ -70,10 +70,10 @@ export default function Detail({ webtoonData }: { webtoonData: Toon }) {
         <section className="space-y-6">
           <div className="overflow-hidden aspect-143/200 rounded-2xl relative">
             <img src={webtoon.thumbnail || `https://placehold.co/143x200?text=${webtoon.id}`} className="object-cover h-full w-full" />
-            <div className="absolute flex gap-2 top-4 right-4">
+            <div className="absolute flex gap-2 top-4 right-4 text-primary">
               {webtoon.tags.map(tag => {
                 const Icon = WEBTOON_TAG_MARKERS[tag];
-                return Icon ? <Icon key={tag} className="h-6 text-white" /> : null;
+                return Icon ? <Icon key={tag} className="h-6" /> : null;
               })}
             </div>
           </div>

@@ -23,7 +23,7 @@ export default function Archive({ completedData }: { completedData: Comp[] }) {
     item.authors.toLowerCase().includes(search.toLowerCase())
   )
   .filter(item => archiveForm.form.owner.length === 0 || archiveForm.form.owner.includes(item.owner))
-  .filter(item => archiveForm.form.tags.length === 0 || archiveForm.form.tags.some(tag => item.tags.includes(tag)));
+  .filter(item => archiveForm.form.tags.length === 0 || archiveForm.form.tags.every(tag => item.tags.includes(tag)));
 
   const genres = ["All", ...[...new Set(preFiltered.map(item => item.genre))].sort()];
 

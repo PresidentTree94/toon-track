@@ -5,12 +5,12 @@ import { WEBTOON_TAG_MARKERS } from "@/utils/constants";
 export default function Settings({ webtoonsData }: { webtoonsData: any[] }) {
 
   const tags = [
-    { icon: WEBTOON_TAG_MARKERS["Ancient"], label: "Ancient", count: 0 },
-    { icon: WEBTOON_TAG_MARKERS["Medieval"], label: "Medieval", count: 0 },
+    { icon: WEBTOON_TAG_MARKERS["Ancient"], label: "Ancient", count: webtoonsData.filter(w => w.tags.includes("Ancient")).length },
+    { icon: WEBTOON_TAG_MARKERS["Medieval"], label: "Medieval", count: webtoonsData.filter(w => w.tags.includes("Medieval")).length },
     { icon: WEBTOON_TAG_MARKERS["Modern"], label: "Modern", count: webtoonsData.filter(w => w.tags.includes("Modern")).length },
-    { icon: WEBTOON_TAG_MARKERS["Regression"], label: "Regression", count: 0 },
-    { icon: WEBTOON_TAG_MARKERS["Progression"], label: "Progression", count: 0 },
-    { icon: WEBTOON_TAG_MARKERS["Transmigration"], label: "Transmigration", count: 0 }
+    { icon: WEBTOON_TAG_MARKERS["Regression"], label: "Regression", count: webtoonsData.filter(w => w.tags.includes("Regression")).length },
+    { icon: WEBTOON_TAG_MARKERS["Progression"], label: "Progression", count: webtoonsData.filter(w => w.tags.includes("Progression")).length },
+    { icon: WEBTOON_TAG_MARKERS["Transmigration"], label: "Transmigration", count: webtoonsData.filter(w => w.tags.includes("Transmigration")).length }
   ];
 
   return (
