@@ -26,6 +26,7 @@ def run_check_status(soup, row, url):
       "toon": url,
       "authors": row["authors"],
       "protagonists": row["protagonists"],
+      "tags": row["tags"]
     }
     supabase.table("completed").insert(completed_data).execute()
     supabase.table("webtoons").delete().eq("id", row["id"]).execute()

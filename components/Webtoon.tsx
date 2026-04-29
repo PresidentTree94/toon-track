@@ -2,16 +2,24 @@ import { Users, BookOpen, HeartHandshake, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import { Toon } from "@/types/toon";
 import { calcMedianGrowth, condenseValue } from "@/utils/calculations";
-import { STATUS_COLORS } from "@/utils/constants";
+import { STATUS_COLORS, WEBTOON_TAG_MARKERS } from "@/utils/constants";
 
 export default function Webtoon({ data }:Readonly<{ data: Toon; }>) {
   return (
     <Link href={`/library/${data.id}`} className="bg-card shadow-sm rounded-2xl overflow-hidden hover:-translate-y-1 hover:shadow-xl transition-all duration-300 group">
       <div className="relative overflow-hidden aspect-143/200">
         <img src={data.thumbnail ?? `https://placehold.co/143x200?text=${data.id}`} className="object-cover h-full w-full group-hover:scale-105 transition-transform duration-500" />
-        <div className="absolute inset-0 bg-linear-to-t from-black/85 to-transparent p-4 flex flex-col justify-end items-start gap-2">
-          <span className="text-primary bg-primary/20 text-xs font-semibold uppercase px-2.5 py-0.5 backdrop-blur-md tracking-wider rounded-full border-primary/25">{data.genre}</span>
+        <div className="absolute inset-0 bg-linear-to-t from-black/85 to-transparent p-4 flex flex-col justify-between gap-2">
+        <div className="self-end flex gap-2">
+          {data.tags.map(tag => {
+            const Icon = WEBTOON_TAG_MARKERS[tag];
+            return Icon ? <Icon key={tag} className="h-6 text-white" /> : null;
+          })}
+        </div>
+        <div className="space-y-2">
+          <span className="inline-block text-primary bg-primary/20 text-xs font-semibold uppercase px-2.5 py-0.5 backdrop-blur-md tracking-wider rounded-full border-primary/25">{data.genre}</span>
           <h2 className="text-white">{data.title}</h2>
+        </div>
         </div>
       </div>
       <div className="p-4 text-sm space-y-3">

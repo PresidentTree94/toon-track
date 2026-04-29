@@ -7,6 +7,7 @@ import Modal from "./Modal";
 import FormField from "./FormField";
 import { createWebtoon } from "@/lib/data/webtoonBrowserQueries";
 import { useForm } from "@presidenttree94/form-utils";
+import { WEBTOON_TAG_MARKERS } from "@/utils/constants";
 
 export default function Navbar() {
 
@@ -18,14 +19,16 @@ export default function Navbar() {
       thumbnail: "",
       authors: "",
       protagonists: "",
-      owner: ""
+      owner: "",
+      tags: [] as string[]
     },
     {
       toon: { label: "Webtoon Link", type: "url", required: true },
       thumbnail: { label: "Thumbnail Link", type: "url" },
       authors: { label: "Author(s)" },
       protagonists: { label: "Protagonist(s)" },
-      owner: { label: "Owner", required: true, options: ["Karly", "Rachelle", "Shared"], defaultOption: "Select Owner" }
+      owner: { label: "Owner", required: true, options: ["Karly", "Rachelle", "Shared"], defaultOption: "Select Owner" },
+      tags: { label: "Tags", options: Object.keys(WEBTOON_TAG_MARKERS), multi: true }
     }
   );
 
@@ -42,7 +45,8 @@ export default function Navbar() {
       thumbnail: webtoonForm.form.thumbnail.trim() || "",
       authors: webtoonForm.form.authors.trim(),
       protagonists: webtoonForm.form.protagonists.trim(),
-      owner: webtoonForm.form.owner
+      owner: webtoonForm.form.owner,
+      tags: webtoonForm.form.tags
     });
     setOpen(false);
   }

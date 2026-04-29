@@ -9,4 +9,5 @@ export type Comp = {
   thumbnail: string;
   timestamp: string;
   reminder: ("" | "Sunday" | "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday");
+  tags: string[];
 }

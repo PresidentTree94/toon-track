@@ -11,6 +11,7 @@ import FormField from "@/components/FormField";
 import { updateWebtoonById, deleteWebtoonById } from "@/lib/data/webtoonBrowserQueries";
 import { deleteReportsAction } from "@/lib/data/webtoonServerActions";
 import { useForm } from "@presidenttree94/form-utils";
+import { WEBTOON_TAG_MARKERS } from "@/utils/constants";
 
 export default function Detail({ webtoonData }: { webtoonData: Toon }) {
 
@@ -22,12 +23,14 @@ export default function Detail({ webtoonData }: { webtoonData: Toon }) {
     {
       thumbnail: webtoon.thumbnail,
       authors: webtoon.authors,
-      protagonists: webtoon.protagonists
+      protagonists: webtoon.protagonists,
+      tags: webtoon.tags
     },
     {
       thumbnail: { label: "Thumbnail Link", type: "url" },
       authors: { label: "Author(s)" },
-      protagonists: { label: "Protagonist(s)" }
+      protagonists: { label: "Protagonist(s)" },
+      tags: { label: "Tags", options: Object.keys(WEBTOON_TAG_MARKERS), multi: true }
     }
   );
 
@@ -36,7 +39,8 @@ export default function Detail({ webtoonData }: { webtoonData: Toon }) {
     const webtoonData = await updateWebtoonById(webtoon.id, {
       thumbnail: detailForm.form.thumbnail.trim() || webtoon.thumbnail,
       authors: detailForm.form.authors.trim() || webtoon.authors,
-      protagonists: detailForm.form.protagonists.trim() || webtoon.protagonists
+      protagonists: detailForm.form.protagonists.trim() || webtoon.protagonists,
+      tags: detailForm.form.tags || webtoon.tags
     });
     setWebtoon({ ...webtoon, ...webtoonData });
     setDeleteCheck(false);
@@ -64,8 +68,14 @@ export default function Detail({ webtoonData }: { webtoonData: Toon }) {
     <>
       <article className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-8">
         <section className="space-y-6">
-          <div className="overflow-hidden aspect-143/200 rounded-2xl">
+          <div className="overflow-hidden aspect-143/200 rounded-2xl relative">
             <img src={webtoon.thumbnail || `https://placehold.co/143x200?text=${webtoon.id}`} className="object-cover h-full w-full" />
+            <div className="absolute flex gap-2 top-4 right-4">
+              {webtoon.tags.map(tag => {
+                const Icon = WEBTOON_TAG_MARKERS[tag];
+                return Icon ? <Icon key={tag} className="h-6 text-white" /> : null;
+              })}
+            </div>
           </div>
           <div className="bg-card p-6 shadow-sm rounded-2xl @container">
             <h2 className="text-center @2xs:text-left">{webtoon.title}</h2>

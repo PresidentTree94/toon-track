@@ -4,6 +4,7 @@ import { Comp } from "@/types/comp";
 import Gallery from "@/components/Gallery";
 import Completed from "@/components/Completed";
 import { useFormState, buildFormElements } from "@presidenttree94/form-utils";
+import { WEBTOON_TAG_MARKERS } from "@/utils/constants";
 
 export default function Archive({ completedData }: { completedData: Comp[] }) {
 
@@ -11,7 +12,8 @@ export default function Archive({ completedData }: { completedData: Comp[] }) {
   const archiveForm = useFormState({
     sortBy: "Timestamp",
     owner: [] as string[],
-    genre: "All"
+    genre: "All",
+    tags: [] as string[]
   });
 
   const preFiltered = completedData
@@ -20,7 +22,8 @@ export default function Archive({ completedData }: { completedData: Comp[] }) {
     item.protagonists.toLowerCase().includes(search.toLowerCase()) ||
     item.authors.toLowerCase().includes(search.toLowerCase())
   )
-  .filter(item => archiveForm.form.owner.length === 0 || archiveForm.form.owner.includes(item.owner));
+  .filter(item => archiveForm.form.owner.length === 0 || archiveForm.form.owner.includes(item.owner))
+  .filter(item => archiveForm.form.tags.length === 0 || archiveForm.form.tags.some(tag => item.tags.includes(tag)));
 
   const genres = ["All", ...[...new Set(preFiltered.map(item => item.genre))].sort()];
 
@@ -35,7 +38,8 @@ export default function Archive({ completedData }: { completedData: Comp[] }) {
   const archiveFilters = buildFormElements(archiveForm.form, archiveForm.update, {
     sortBy: { label: "Sort By", options: ["Timestamp", "Title"] },
     owner: { label: "Owner", options: ["Karly", "Rachelle", "Shared"], multi: true },
-    genre: { label: "Genre", options: genres }
+    genre: { label: "Genre", options: genres },
+    tags: { label: "Tags", options: Object.keys(WEBTOON_TAG_MARKERS), multi: true }
   });
 
   return (

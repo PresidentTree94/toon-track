@@ -1,14 +1,13 @@
-"use client";
-import RegisterNotifications from "@/components/Register";
+import Settings from "./Settings";
+import { getWebtoons } from "@/lib/data/webtoonServerQueries";
+import { getCompleted } from "@/lib/data/completedServerQueries";
 
-export default function Settings() {
+export default async function SettingsPage() {
+  const webtoonsData = await getWebtoons();
+  const verifiedWebtoons = webtoonsData.filter(item => item.initial);
+  const completedData = await getCompleted();
+  const allWebtoons = [...verifiedWebtoons, ...completedData];
   return (
-    <>
-      <h1>Settings</h1>
-      <article className="flex flex-col items-start gap-4">
-        <RegisterNotifications device="Karly" />
-        <RegisterNotifications device="Rachelle" />
-      </article>
-    </>
+    <Settings webtoonsData={allWebtoons} />
   );
 }
