@@ -24,12 +24,16 @@ export default function Detail({ webtoonData }: { webtoonData: Toon }) {
       thumbnail: webtoon.thumbnail,
       authors: webtoon.authors,
       protagonists: webtoon.protagonists,
-      tags: webtoon.tags
+      status: webtoon.status,
+      manualUpdates: webtoon.manual_updates ? "TRUE": "FALSE",
+      tags: webtoon.tags,
     },
     {
       thumbnail: { label: "Thumbnail Link", type: "url" },
       authors: { label: "Author(s)" },
       protagonists: { label: "Protagonist(s)" },
+      status: { label: "Status", options: ["Ongoing", "Hiatus"] },
+      manualUpdates: { label: "Manual", options: ["TRUE", "FALSE"] },
       tags: { label: "Tags", options: Object.keys(WEBTOON_TAG_MARKERS), multi: true }
     }
   );
@@ -38,9 +42,12 @@ export default function Detail({ webtoonData }: { webtoonData: Toon }) {
     e.preventDefault();
     const webtoonData = await updateWebtoonById(webtoon.id, {
       thumbnail: detailForm.form.thumbnail.trim() || webtoon.thumbnail,
-      authors: detailForm.form.authors.trim() || webtoon.authors,
-      protagonists: detailForm.form.protagonists.trim() || webtoon.protagonists,
-      tags: detailForm.form.tags || webtoon.tags
+      authors: detailForm.form.authors.trim(),
+      protagonists: detailForm.form.protagonists.trim(),
+      status: detailForm.form.status.trim(),
+      manual_updates: detailForm.form.manualUpdates === "TRUE" ? true : false,
+      status_time: (detailForm.form.manualUpdates === "TRUE" && !webtoon.manual_updates) || (detailForm.form.manualUpdates === "FALSE" && webtoon.manual_updates) ? null : webtoon.status_time,
+      tags: detailForm.form.tags
     });
     setWebtoon({ ...webtoon, ...webtoonData });
     setDeleteCheck(false);

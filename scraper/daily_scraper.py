@@ -7,7 +7,7 @@ from send_push import send_push
 
 def run_daily_scraper():
   today = datetime.now().strftime("%a")
-  database = supabase.table("webtoons").select("*").ilike("days", f"%{today}%").execute()
+  database = supabase.table("webtoons").select("*").eq("manual_updates", False).or_(f"days.ilike.%{today}%,days.ilike.%Daily%").execute()
 
   for row in database.data:
     url = row["toon"]

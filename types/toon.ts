@@ -20,4 +20,5 @@ export type Toon = {
   status_time: string;
   initial: boolean;
   tags: string[];
+  manual_updates: boolean;
 };
