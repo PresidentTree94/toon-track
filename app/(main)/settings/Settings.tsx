@@ -5,12 +5,42 @@ import { WEBTOON_TAG_MARKERS } from "@/utils/constants";
 export default function Settings({ webtoonsData }: { webtoonsData: any[] }) {
 
   const tags = [
-    { icon: WEBTOON_TAG_MARKERS["Ancient"], label: "Ancient", count: webtoonsData.filter(w => w.tags.includes("Ancient")).length },
-    { icon: WEBTOON_TAG_MARKERS["Medieval"], label: "Medieval", count: webtoonsData.filter(w => w.tags.includes("Medieval")).length },
-    { icon: WEBTOON_TAG_MARKERS["Modern"], label: "Modern", count: webtoonsData.filter(w => w.tags.includes("Modern")).length },
-    { icon: WEBTOON_TAG_MARKERS["Regression"], label: "Regression", count: webtoonsData.filter(w => w.tags.includes("Regression")).length },
-    { icon: WEBTOON_TAG_MARKERS["Progression"], label: "Progression", count: webtoonsData.filter(w => w.tags.includes("Progression")).length },
-    { icon: WEBTOON_TAG_MARKERS["Transmigration"], label: "Transmigration", count: webtoonsData.filter(w => w.tags.includes("Transmigration")).length }
+    {
+      icon: WEBTOON_TAG_MARKERS["Ancient"],
+      label: "Ancient",
+      description: "Story occurs before medieval times.",
+      count: webtoonsData.filter(w => w.tags.includes("Ancient")).length
+    },
+    {
+      icon: WEBTOON_TAG_MARKERS["Medieval"],
+      label: "Medieval",
+      description: "Story occurs in medieval times.",
+      count: webtoonsData.filter(w => w.tags.includes("Medieval")).length
+    },
+    {
+      icon: WEBTOON_TAG_MARKERS["Modern"],
+      label: "Modern",
+      description: "Story occurs in modern times.",
+      count: webtoonsData.filter(w => w.tags.includes("Modern")).length
+    },
+    {
+      icon: WEBTOON_TAG_MARKERS["Regression"],
+      label: "Regression",
+      description: "MC returns to the past after death.",
+      count: webtoonsData.filter(w => w.tags.includes("Regression")).length
+    },
+    {
+      icon: WEBTOON_TAG_MARKERS["Progression"],
+      label: "Progression",
+      description: "MC transmigrates in the future.",
+      count: webtoonsData.filter(w => w.tags.includes("Progression")).length
+    },
+    {
+      icon: WEBTOON_TAG_MARKERS["Transmigration"],
+      label: "Transmigration",
+      description: "MC awakens as another character.",
+      count: webtoonsData.filter(w => w.tags.includes("Transmigration")).length
+    }
   ];
 
   return (
@@ -21,12 +51,13 @@ export default function Settings({ webtoonsData }: { webtoonsData: any[] }) {
         <RegisterNotifications device="Rachelle" />
       </div>
       <h2>Webtoon Tag Key</h2>
-      <div className="rounded-xl mt-4 shadow border border-slate-200 overflow-hidden w-fit mx-auto md:mx-0">
-        <table className="bg-card/50 text-sm">
+      <div className="rounded-xl mt-4 shadow border border-slate-200 overflow-auto w-full max-w-fit">
+        <table className="bg-card/50 text-sm w-full">
           <thead className="bg-slate-100 uppercase">
             <tr>
               <th className="text-center">Icon</th>
               <th className="text-left">Tag</th>
+              <th className="text-left">Description</th>
               <th className="text-right">Count</th>
             </tr>
           </thead>
@@ -35,6 +66,7 @@ export default function Settings({ webtoonsData }: { webtoonsData: any[] }) {
               <tr key={index} className="border-t border-slate-200">
                 <td><tag.icon className="w-5 mx-auto" /></td>
                 <td className="text-left">{tag.label}</td>
+                <td className="text-left font-medium">{tag.description}</td>
                 <td className="text-right font-mono">{tag.count}</td>
               </tr>
             ))}
