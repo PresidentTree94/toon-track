@@ -40,6 +40,24 @@ export default function Settings({ webtoonsData }: { webtoonsData: any[] }) {
       label: "Transmigration",
       description: "MC awakens as another character.",
       count: webtoonsData.filter(w => w.tags.includes("Transmigration")).length
+    },
+    {
+      icon: WEBTOON_TAG_MARKERS["Male MC"],
+      label: "Male MC",
+      description: "MC is male.",
+      count: webtoonsData.filter(w => w.tags.includes("Male MC")).length
+    },
+    {
+      icon: WEBTOON_TAG_MARKERS["Female MC"],
+      label: "Female MC",
+      description: "MC is female.",
+      count: webtoonsData.filter(w => w.tags.includes("Female MC")).length
+    },
+    {
+      icon: WEBTOON_TAG_MARKERS["Non-binary MC"],
+      label: "Non-binary MC",
+      description: "MC is non-binary.",
+      count: webtoonsData.filter(w => w.tags.includes("Non-binary MC")).length
     }
   ];
 
