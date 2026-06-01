@@ -21,11 +21,14 @@ def run_monthly_scraper():
       subscriber_count = int(subscriber_element.replace(",", ""))
 
     existing_data = row["data"]
+    if any(entry["month"] == formatted for entry in existing_data): # skip if entry exists
+      continue
     existing_data.append({"month": formatted, "value": subscriber_count})
     supabase.table("webtoons").update({"data": existing_data}).eq("id", row["id"]).execute()
     snapshot.append({"title": row["title"], "value": subscriber_count})
   
-  supabase.table("reports").insert({"timestamp": formatted, "snapshot": snapshot}).execute()
+  if snapshot:
+    supabase.table("reports").insert({"timestamp": formatted, "snapshot": snapshot}).execute()
     
 if __name__ == "__main__":
   run_monthly_scraper()
