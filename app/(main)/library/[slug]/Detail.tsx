@@ -76,7 +76,7 @@ export default function Detail({ webtoonData }: { webtoonData: Toon }) {
       <article className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-8">
         <section className="space-y-6">
           <div className="overflow-hidden aspect-143/200 rounded-2xl relative">
-            <img src={webtoon.thumbnail || `https://placehold.co/143x200?text=${webtoon.id}`} className="object-cover h-full w-full" />
+            <img src={webtoon.thumbnail ?? `https://placehold.co/143x200?text=${webtoon.id}`} className="object-cover h-full w-full" />
             <div className="absolute flex gap-2 top-4 right-4 text-primary">
               {webtoon.tags.map(tag => {
                 const Icon = WEBTOON_TAG_MARKERS[tag];
@@ -133,7 +133,7 @@ export default function Detail({ webtoonData }: { webtoonData: Toon }) {
               <div className="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center"><TrendingUp className="text-green-500" /></div>
               <div className="flex-1">
                 <p className="text-sm font-medium">Latest Growth</p>
-                <h2>{webtoon && webtoon.data.length > 1 ? calcMedianGrowth(webtoon.data[webtoon.data.length - 2].value, webtoon.data[webtoon.data.length - 1].value) + "%": 0}</h2>
+                <h2>{webtoon && webtoon.data.length > 1 ? condenseValue(calcMedianGrowth(webtoon.data[webtoon.data.length - 2].value, webtoon.data[webtoon.data.length - 1].value)) + "%": 0}</h2>
               </div>
             </div>
           </div>

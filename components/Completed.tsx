@@ -1,12 +1,11 @@
 "use client";
 import React, { useState } from "react";
 import { Comp } from "@/types/comp";
-import { ICONS } from "@/utils/constants";
+import { ICONS, WEBTOON_TAG_MARKERS } from "@/utils/constants";
 import Modal from "./Modal";
 import FormField from "./FormField";
 import { useForm } from "@presidenttree94/form-utils";
 import { updateCompletedById } from "@/lib/data/completedBrowserQueries";
-import { WEBTOON_TAG_MARKERS } from "@/utils/constants";
 
 export default function Completed({ data }:Readonly<{ data: Comp; }>) {
 
