@@ -12,6 +12,7 @@ import { updateWebtoonById, deleteWebtoonById } from "@/lib/data/webtoonBrowserQ
 import { deleteReportsAction } from "@/lib/data/webtoonServerActions";
 import { useForm } from "@presidenttree94/form-utils";
 import { WEBTOON_TAG_MARKERS } from "@/utils/constants";
+import Image from "next/image";
 
 export default function Detail({ webtoonData }: { webtoonData: Toon }) {
 
@@ -76,7 +77,7 @@ export default function Detail({ webtoonData }: { webtoonData: Toon }) {
       <article className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-8">
         <section className="space-y-6">
           <div className="overflow-hidden aspect-143/200 rounded-2xl relative">
-            <img src={webtoon.thumbnail ?? `https://placehold.co/143x200?text=${webtoon.id}`} className="object-cover h-full w-full" />
+            <Image src={webtoon.thumbnail ?? `https://placehold.co/143x200?text=${webtoon.id}`} alt={webtoon.title} fill sizes="100%" className="object-cover" />
             <div className="absolute flex gap-2 top-4 right-4 text-primary">
               {webtoon.tags.map(tag => {
                 const Icon = WEBTOON_TAG_MARKERS[tag];

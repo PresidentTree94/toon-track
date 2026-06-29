@@ -1,5 +1,6 @@
 import { Users, BookOpen, HeartHandshake, TrendingUp } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { Toon } from "@/types/toon";
 import { calcMedianGrowth, condenseValue } from "@/utils/calculations";
 import { STATUS_COLORS, WEBTOON_TAG_MARKERS } from "@/utils/constants";
@@ -8,7 +9,7 @@ export default function Webtoon({ data }:Readonly<{ data: Toon; }>) {
   return (
     <Link href={`/library/${data.id}`} className="bg-card shadow-sm rounded-2xl overflow-hidden hover:-translate-y-1 hover:shadow-xl transition-all duration-300 group">
       <div className="relative overflow-hidden aspect-143/200">
-        <img src={data.thumbnail ?? `https://placehold.co/143x200?text=${data.id}`} className="object-cover h-full w-full group-hover:scale-105 transition-transform duration-500" />
+        <Image src={data.thumbnail ?? `https://placehold.co/143x200?text=${data.id}`} alt={data.title} fill sizes="100%" className="object-cover group-hover:scale-105 transition-transform duration-500" />
         <div className="absolute inset-0 bg-linear-to-t from-black/85 to-transparent p-4 flex flex-col justify-between gap-2">
         <div className="self-end flex gap-2 text-primary">
           {data.tags.map(tag => {

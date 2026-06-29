@@ -6,6 +6,7 @@ import Modal from "./Modal";
 import FormField from "./FormField";
 import { useForm } from "@presidenttree94/form-utils";
 import { updateCompletedById } from "@/lib/data/completedBrowserQueries";
+import Image from "next/image";
 
 export default function Completed({ data }:Readonly<{ data: Comp; }>) {
 
@@ -44,7 +45,7 @@ export default function Completed({ data }:Readonly<{ data: Comp; }>) {
     <>
       <div className="bg-card shadow-sm rounded-2xl overflow-hidden hover:-translate-y-1 hover:shadow-xl transition-all duration-300 group cursor-pointer flex flex-col" onClick={() => setOpen(true)}>
         <div className="relative overflow-hidden aspect-143/200">
-          <img src={data.thumbnail || `https://placehold.co/143x200?text=${data.id}`} className="object-cover h-full w-full group-hover:scale-105 transition-transform duration-500" />
+          <Image src={data.thumbnail ?? `https://placehold.co/143x200?text=${data.id}`} alt={data.title} fill sizes="100%" className="object-cover group-hover:scale-105 transition-transform duration-500" />
           <div className="absolute inset-0 bg-linear-to-t from-black/85 to-transparent p-4 flex flex-col justify-between gap-2">
             <div className="self-end flex gap-2 text-primary">
               {data.tags.map(tag => {
