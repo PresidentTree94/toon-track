@@ -1,6 +1,7 @@
 "use client";
 import RegisterNotifications from "@/components/Register";
 import { WEBTOON_TAG_MARKERS } from "@/utils/constants";
+import Table from "@/components/Table";
 
 export default function Settings({ webtoonsData }: { webtoonsData: any[] }) {
 
@@ -69,28 +70,25 @@ export default function Settings({ webtoonsData }: { webtoonsData: any[] }) {
         <RegisterNotifications device="Rachelle" />
       </div>
       <h2>Webtoon Tag Key</h2>
-      <div className="rounded-xl mt-4 shadow border border-slate-200 overflow-auto w-full max-w-fit">
-        <table className="bg-card/50 text-sm w-full">
-          <thead className="bg-slate-100 uppercase">
-            <tr>
-              <th className="text-center">Icon</th>
-              <th className="text-left">Tag</th>
-              <th className="text-left">Description</th>
-              <th className="text-right">Count</th>
+      <Table
+        className="max-w-fit"
+        headings={<>
+          <th className="text-center">Icon</th>
+          <th className="text-left">Tag</th>
+          <th className="text-left">Description</th>
+          <th className="text-right">Count</th>
+        </>}
+        body={<tbody className="font-semibold">
+          {tags.map((tag, index) => (
+            <tr key={index} className="border-t border-slate-200">
+              <td><tag.icon className="w-5 mx-auto" /></td>
+              <td className="text-left">{tag.label}</td>
+              <td className="text-left font-medium">{tag.description}</td>
+              <td className="text-right font-mono">{tag.count}</td>
             </tr>
-          </thead>
-          <tbody className="font-semibold">
-            {tags.map((tag, index) => (
-              <tr key={index} className="border-t border-slate-200">
-                <td><tag.icon className="w-5 mx-auto" /></td>
-                <td className="text-left">{tag.label}</td>
-                <td className="text-left font-medium">{tag.description}</td>
-                <td className="text-right font-mono">{tag.count}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>}
+      />
     </article>
   );
 }

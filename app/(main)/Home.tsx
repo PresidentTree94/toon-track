@@ -7,6 +7,7 @@ import * as calc from "@/utils/calculations";
 import { ICONS, STATUS_COLORS, STATUS_BADGE_COLORS } from "@/utils/constants";
 import Notices from "@/components/Notices";
 import Cards from "@/components/Cards";
+import Table from "@/components/Table";
 import Graph from "@/components/Graph";
 
 export default function Home({ webtoonsData, completedData }: { webtoonsData: Toon[], completedData: Comp[] }) {
@@ -42,7 +43,7 @@ export default function Home({ webtoonsData, completedData }: { webtoonsData: To
           <h1>Dashboard</h1>
           <h4 className="mt-1">Your Webtoons analytics overview</h4>
         </div>
-        <button className="bg-primary text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg shadow-primary/20 cursor-pointer">Generate Report</button>
+        <Link href="/reports" className="bg-primary text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg shadow-primary/20">View Past Data</Link>
       </section>
       <Notices
         webtoonsData={webtoonsData}
@@ -54,39 +55,35 @@ export default function Home({ webtoonsData, completedData }: { webtoonsData: To
       <section>
         <h2>Series Ranking</h2>
         <p>As of {firstOfMonth}</p>
-        <div className="relative w-full overflow-auto rounded-xl mt-4 shadow border border-slate-200">
-          <table className="text-sm w-full bg-card/50">
-            <thead className="bg-slate-100 uppercase">
-              <tr>
-                <th className="w-15.5">#</th>
-                <th className={`text-left cursor-pointer ${sortKey === "series" ? "text-primary" : "underline"}`} onClick={() => setSortKey("series")}>Series</th>
-                <th className="text-left">Status</th>
-                <th className="text-left">Owner</th>
-                <th className={`text-right cursor-pointer ${sortKey === "subs" ? "text-primary" : "underline"}`} onClick={() => setSortKey("subs")}>Subs</th>
-                <th className={`text-right cursor-pointer ${sortKey === "growth" ? "text-primary" : "underline"}`} onClick={() => setSortKey("growth")}>Growth</th>
-              </tr>
-            </thead>
-            <tbody className="text-emph">
-              {sortedWebtoons.map((w, index) => {
-                const Icon = ICONS[w.owner];
-                const latestSubs = w.data.length > 0 ? w.data[w.data.length - 1].value : -1;
-                const latestGrowth = w.data.length > 1 ? calc.calcMedianGrowth(w.data[w.data.length - 2].value, latestSubs) : -1;
-                return (
-                  <tr key={w.id} className="border-t border-slate-200">
-                    <td className="text-center font-bold font-mono">{index + 1}</td>
-                    <td className="text-left font-semibold">
-                      <Link href={`/library/${w.id}`}><span className="line-clamp-2">{w.title}</span></Link>
-                    </td>
-                    <td className="text-left"><span className={`text-xs font-bold px-2 py-1 rounded-full ${STATUS_COLORS[w.status]} ${STATUS_BADGE_COLORS[w.status]}`}>{w.status && w.status.toUpperCase()}</span></td>
-                    <td className="text-left font-semibold"><div className="flex items-center gap-1"><Icon className="h-4 w-auto" />{w.owner}</div></td>
-                    <td className="text-right font-mono font-bold">{latestSubs !== -1 ? calc.condenseValue(latestSubs) : ""}</td>
-                    <td className="text-right text-green-500 font-bold">{latestGrowth !== -1 ? calc.condenseValue(latestGrowth) : ""}%</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+        <Table
+          headings={<>
+            <th className="w-15.5">#</th>
+            <th className={`text-left cursor-pointer ${sortKey === "series" ? "text-primary" : "underline"}`} onClick={() => setSortKey("series")}>Series</th>
+            <th className="text-left">Status</th>
+            <th className="text-left">Owner</th>
+            <th className={`text-right cursor-pointer ${sortKey === "subs" ? "text-primary" : "underline"}`} onClick={() => setSortKey("subs")}>Subs</th>
+            <th className={`text-right cursor-pointer ${sortKey === "growth" ? "text-primary" : "underline"}`} onClick={() => setSortKey("growth")}>Growth</th>
+          </>}
+          body={<tbody className="text-emph">
+            {sortedWebtoons.map((w, index) => {
+              const Icon = ICONS[w.owner];
+              const latestSubs = w.data.length > 0 ? w.data[w.data.length - 1].value : -1;
+              const latestGrowth = w.data.length > 1 ? calc.calcMedianGrowth(w.data[w.data.length - 2].value, latestSubs) : -1;
+              return (
+                <tr key={w.id} className="border-t border-slate-200">
+                  <td className="text-center font-bold font-mono">{index + 1}</td>
+                  <td className="text-left font-semibold">
+                    <Link href={`/library/${w.id}`}><span className="line-clamp-2">{w.title}</span></Link>
+                  </td>
+                  <td className="text-left"><span className={`text-xs font-bold px-2 py-1 rounded-full ${STATUS_COLORS[w.status]} ${STATUS_BADGE_COLORS[w.status]}`}>{w.status && w.status.toUpperCase()}</span></td>
+                  <td className="text-left font-semibold"><div className="flex items-center gap-1"><Icon className="h-4 w-auto" />{w.owner}</div></td>
+                  <td className="text-right font-mono font-bold">{latestSubs !== -1 ? calc.condenseValue(latestSubs) : ""}</td>
+                  <td className="text-right text-green-500 font-bold">{latestGrowth !== -1 ? calc.condenseValue(latestGrowth) : ""}%</td>
+                </tr>
+              );
+            })}
+          </tbody>}
+        />
       </section>
       {graphs.map((g, index) =>
         <section key={index}>

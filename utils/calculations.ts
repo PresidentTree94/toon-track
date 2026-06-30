@@ -7,12 +7,12 @@ export function median(values: number[]) {
 }
 
 export function condenseValue(value: number) {
-  if (value >= 1000000) {
+  if (Math.abs(value) >= 1000000) {
     return (value / 1000000).toFixed(1) + "M";
-  } else if (value >= 1000) {
+  } else if (Math.abs(value) >= 1000) {
     return (value / 1000).toFixed(1) + "k";
   } else {
-    return value > 0 && value < 1 ? value.toFixed(1) : value.toFixed(0);
+    return Math.abs(value) > 0 && Math.abs(value) < 1 ? value.toFixed(1) : value.toFixed(0);
   }
 }
 
@@ -54,4 +54,57 @@ export function calcSubChangeTimeline(database: Toon[]) {
     }
   }
   return Object.entries(monthlySubChanges).map(([month, values]) => ({month, value: median(values)}));
+}
+
+export function groupByTitle(data: { timestamp: string; snapshot: { title: string; value: number }[] }[]) {
+  const grouped: Record<string, { month: string; value: number }[]> = {};
+
+  for (const { timestamp, snapshot } of data) {
+    for (const { title, value } of snapshot) {
+      (grouped[title] ??= []).push({ month: timestamp, value });
+    }
+  }
+
+  return grouped;
+}
+
+export function getDataForMonth(growthData: Record<string, { month: string; growth: number }[]>, targetMonth: string) {
+  return Object.values(growthData)
+    .flatMap(entries => {
+      const found = entries.find(e => e.month === targetMonth);
+      return found ? [found.growth] : [];
+    });
+}
+
+export function buildGrowthMap(
+  data: Record<string, { month: string; value: number }[]>,
+  compute: (prev: { month: string; value: number } | null, curr: { month: string; value: number }) => number,
+  startIndex: number
+) {
+  const result: Record<string, { month: string; growth: number }[]> = {};
+
+  for (const title in data) {
+    const entries = data[title];
+
+    if (entries.length <= startIndex) {
+      result[title] = [];
+      continue;
+    }
+
+    const growth: { month: string; growth: number }[] = [];
+
+    for (let i = startIndex; i < entries.length; i++) {
+      const prev = startIndex === 0 ? null : entries[i - 1];
+      const curr = entries[i];
+
+      growth.push({
+        month: curr.month,
+        growth: compute(prev, curr),
+      });
+    }
+
+    result[title] = growth;
+  }
+
+  return result;
 }
