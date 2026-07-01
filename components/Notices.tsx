@@ -6,15 +6,22 @@ import { Comp } from "@/types/comp";
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
 const DAY_LIMIT = 5;
 
+function daysAgo(date: Date) {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const target = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  return Math.floor((today.getTime() - target.getTime()) / MS_PER_DAY);
+}
+
 export default function Notices({ webtoonsData, verifiedWebtoons, completedData, onAnyNotices }: {
   webtoonsData: Toon[]; verifiedWebtoons: Toon[]; completedData: Comp[], onAnyNotices: (value: boolean) => void;
 }) {
 
-  const KarlyWebtoons = verifiedWebtoons.filter(w => w.owner === "Karly" && Math.floor((Date.now() - new Date(w.timestamp).getTime()) / MS_PER_DAY) <= DAY_LIMIT);
-  const RachelleWebtoons = verifiedWebtoons.filter(w => w.owner === "Rachelle" && Math.floor((Date.now() - new Date(w.timestamp).getTime()) / MS_PER_DAY) <= DAY_LIMIT);
-  const changeOwnership = verifiedWebtoons.filter(w => Math.floor((Date.now() - new Date(w.owner_time).getTime()) / MS_PER_DAY) <= DAY_LIMIT);
-  const changeStatus = verifiedWebtoons.filter(w => w.status_time && Math.floor((Date.now() - new Date(w.status_time).getTime()) / MS_PER_DAY) <= DAY_LIMIT);
-  const completedRecently = completedData.filter(c => Math.floor((Date.now() - new Date(c.timestamp).getTime()) / MS_PER_DAY) <= DAY_LIMIT);
+  const KarlyWebtoons = verifiedWebtoons.filter(w => w.owner === "Karly" && daysAgo(new Date(w.timestamp)) <= DAY_LIMIT);
+  const RachelleWebtoons = verifiedWebtoons.filter(w => w.owner === "Rachelle" && daysAgo(new Date(w.timestamp)) <= DAY_LIMIT);
+  const changeOwnership = verifiedWebtoons.filter(w => daysAgo(new Date(w.owner_time)) <= DAY_LIMIT);
+  const changeStatus = verifiedWebtoons.filter(w => w.status_time && daysAgo(new Date(w.status_time)) <= DAY_LIMIT);
+  const completedRecently = completedData.filter(c => daysAgo(new Date(c.timestamp)) <= DAY_LIMIT);
   const missingData = [...verifiedWebtoons.filter(w => !w.genre || !w.thumbnail), ...completedData.filter(c => !c.genre || !c.thumbnail)];
   const pendingData = webtoonsData.filter(item => !item.initial);
   const anyNotices = KarlyWebtoons.length + RachelleWebtoons.length + changeOwnership.length + changeStatus.length + completedRecently.length + missingData.length + pendingData.length > 0;
