@@ -45,13 +45,3 @@ export async function getReports() {
   }
   return data;
 }
-
-export async function getWebtoonProtagonistsByTitle(title: string) {
-  const supabase = await createServerSupabase();
-  const { data, error } = await supabase.from("webtoons").select("protagonists").eq("title", title).single();
-  if (error) {
-    console.error(`Error fetching webtoon with title ${title}:`, error);
-    return null;
-  }
-  return data;
-}
