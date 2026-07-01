@@ -4,7 +4,7 @@ import { Toon } from "@/types/toon";
 import * as calc from "@/utils/calculations";
 import Table from "@/components/Table";
 import Card from "@/components/Card";
-import { Check } from "lucide-react";
+import { useSorter } from "@/hooks/useSorter";
 
 function getHighestEntry(data: Record<string, { month: string; growth: number }[]>) {
   let highest: { title: string; month: string; growth: number } | null = null;
@@ -29,34 +29,41 @@ export default function Reports({ webtoons, reports }: {
   webtoons: Toon[], reports: { timestamp: string; snapshot: { title: string; value: number }[] }[]
 }) {
 
-  const [timestamp, setTimestamp] = useState<string>(reports[0].timestamp);
+  const [timestamp, setTimestamp] = useState<string>(reports[reports.length - 1].timestamp);
 
   const grouped = calc.groupByTitle(reports);
   const groupedByPercentGrowth = calc.buildGrowthMap(grouped, (prev, curr) => calc.calcMedianGrowth(prev!.value, curr.value), 1);
   const groupedBySubs = calc.buildGrowthMap(grouped, (_, curr) => curr.value, 0);
   const groupedBySubChange = calc.buildGrowthMap(grouped, (prev, curr) => calc.calcSubChange(prev!.value, curr.value), 1);
 
+  const { sortedWebtoons, sortKey, setSortKey } = useSorter(
+    reports.find(r => r.timestamp === timestamp)?.snapshot ?? [],
+    s => s.title,
+    s => s.value,
+    s => groupedByPercentGrowth[s.title]?.find(item => item.month === timestamp)?.growth ?? -Infinity
+  );
+
   const highestPercentGrowth = getHighestEntry(groupedByPercentGrowth);
   const highestSubs = getHighestEntry(groupedBySubs);
   const highestSubChange = getHighestEntry(groupedBySubChange);
 
   const cards = [
-      {
-        heading: "Highest Growth",
-        value: calc.condenseValue(highestPercentGrowth.growth) + "%",
-        subheading: `${getProtagonist(webtoons, highestPercentGrowth.title)} for ${highestPercentGrowth.month}`
-      },
-      {
-        heading: "Highest Subs",
-        value: calc.condenseValue(highestSubs.growth),
-        subheading: `${getProtagonist(webtoons, highestSubs.title)} for ${highestSubs.month}`
-      },
-      {
-        heading: "Highest Sub Change",
-        value: calc.condenseValue(highestSubChange.growth),
-        subheading: `${getProtagonist(webtoons, highestSubChange.title)} for ${highestSubChange.month}`
-      }
-    ];
+    {
+      heading: "Highest Growth",
+      value: calc.condenseValue(highestPercentGrowth.growth) + "%",
+      subheading: `${getProtagonist(webtoons, highestPercentGrowth.title)} for ${highestPercentGrowth.month}`
+    },
+    {
+      heading: "Highest Subs",
+      value: calc.condenseValue(highestSubs.growth),
+      subheading: `${getProtagonist(webtoons, highestSubs.title)} for ${highestSubs.month}`
+    },
+    {
+      heading: "Highest Sub Change",
+      value: calc.condenseValue(highestSubChange.growth),
+      subheading: `${getProtagonist(webtoons, highestSubChange.title)} for ${highestSubChange.month}`
+    }
+  ];
 
   return (
     <article className="space-y-8">
@@ -106,21 +113,19 @@ export default function Reports({ webtoons, reports }: {
       <Table
         headings={<>
           <th className="w-15.5">#</th>
-          <th className="text-left">Series</th>
-          <th>New</th>
-          <th className="text-right">Subs</th>
+          <th className={`text-left cursor-pointer ${sortKey === "series" ? "text-primary" : "underline"}`} onClick={() => setSortKey("series")}>Series</th>
+          <th className={`text-right cursor-pointer ${sortKey === "subs" ? "text-primary" : "underline"}`} onClick={() => setSortKey("subs")}>Subs</th>
+          <th className={`text-right cursor-pointer ${sortKey === "growth" ? "text-primary" : "underline"}`} onClick={() => setSortKey("growth")}>Growth</th>
         </>}
         body={<tbody>
-          {reports.find(r => r.timestamp === timestamp)?.snapshot.sort((a, b) => b.value - a.value).map((s, index) => {
-            const currentIndex = reports.findIndex(r => r.timestamp === timestamp);
-            const prevReport = currentIndex > 0 ? reports[currentIndex - 1] : null;
-            const existedLastMonth = prevReport ? prevReport.snapshot.some(p => p.title === s.title) : true;
+          {sortedWebtoons.map((s, index) => {
+            const hasGrowth = groupedByPercentGrowth[s.title]?.find(item => item.month === timestamp)?.growth ?? -1;
             return (
-              <tr className="border-t border-slate-200">
+              <tr key={index} className="border-t border-slate-200">
                 <td className="text-center font-bold font-mono">{index + 1}</td>
                 <td className="text-left font-medium">{s.title}</td>
-                <td className="flex items-center justify-center">{!existedLastMonth && <Check className="text-green-500 h-4 w-auto" />}</td>
                 <td className="text-right font-mono font-semibold">{calc.condenseValue(s.value)}</td>
+                <td className="text-right text-green-500 font-semibold">{hasGrowth !== -1 ? hasGrowth.toFixed(1) : ""}%</td>
               </tr>
           )})}
         </tbody>}

@@ -9,6 +9,7 @@ import Notices from "@/components/Notices";
 import Cards from "@/components/Cards";
 import Table from "@/components/Table";
 import Graph from "@/components/Graph";
+import { useSorter } from "@/hooks/useSorter";
 
 export default function Home({ webtoonsData, completedData }: { webtoonsData: Toon[], completedData: Comp[] }) {
 
@@ -18,17 +19,16 @@ export default function Home({ webtoonsData, completedData }: { webtoonsData: To
 
   const firstOfMonth = new Date(new Date().setDate(1)).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' });
 
-  const [sortKey, setSortKey] = useState<"series" |"subs" | "growth">("subs");
-  const sortedWebtoons = [...verifiedWebtoons].sort((a, b) => {
-    const aSubs = a.data[a.data.length - 1] ? a.data[a.data.length - 1].value : 0;
-    const bSubs = b.data[b.data.length - 1] ? b.data[b.data.length - 1].value : 0;
-    const aGrowth = a.data[a.data.length - 2] ? calc.calcMedianGrowth(a.data[a.data.length - 2].value, aSubs) : -Infinity;
-    const bGrowth = b.data[b.data.length - 2] ? calc.calcMedianGrowth(b.data[b.data.length - 2].value, bSubs) : -Infinity;
-    if (sortKey === "series") return a.title.localeCompare(b.title);
-    if (sortKey === "subs") return bSubs - aSubs;
-    if (sortKey === "growth") return bGrowth - aGrowth;
-    return 0;
-  });
+  const { sortedWebtoons, sortKey, setSortKey } = useSorter(
+    verifiedWebtoons,
+    (w: { title: string }) => w.title,
+    (w: { data: { month: string; value: number; }[] }) => w.data.at(-1)?.value ?? 0,
+    (w: { data: { month: string; value: number; }[] }) => {
+      const prev = w.data.at(-2);
+      const subs = w.data.at(-1)?.value ?? 0;
+      return prev ? calc.calcMedianGrowth(prev.value, subs) : -Infinity;
+    }
+  );
 
   const graphs = [
     {title: "Median Growth Timeline", tagline: "How much a typical series is growing", data: calc.calcMedianGrowthTimeline(verifiedWebtoons)},

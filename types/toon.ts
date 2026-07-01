@@ -1,8 +1,3 @@
-type Update = {
-  month: string;
-  value: number;
-};
-
 export type Toon = {
   id: number;
   title: string;
@@ -14,7 +9,7 @@ export type Toon = {
   days: string;
   toon: string;
   thumbnail: string;
-  data: Update[];
+  data: { month: string; value: number; }[];
   timestamp: string;
   owner_time: string;
   status_time: string;
