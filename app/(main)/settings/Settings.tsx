@@ -71,7 +71,7 @@ export default function Settings({ webtoonsData }: { webtoonsData: any[] }) {
       </div>
       <h2>Webtoon Tag Key</h2>
       <Table
-        className="max-w-fit"
+        className="max-w-fit mx-auto"
         headings={<>
           <th className="text-center">Icon</th>
           <th className="text-left">Tag</th>

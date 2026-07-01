@@ -67,13 +67,13 @@ export default function Reports({ webtoons, reports }: {
 
   return (
     <article className="space-y-8">
-      <h1>Reports</h1>
+      <h1 className="text-center sm:text-left">Reports</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {cards.map((c, index) => (
           <Card key={index} data={c} />
         ))}
       </div>
-      <h2>Snapshots</h2>
+      <h2 className="text-center sm:text-left">Snapshots</h2>
       <Table
         headings={<>
           <th className="text-left">Timestamp</th>
@@ -102,7 +102,7 @@ export default function Reports({ webtoons, reports }: {
           })}
         </tbody>}
       />
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <h2>Breakdown</h2>
         <select value={timestamp} onChange={(e) => setTimestamp(e.target.value)} className="border bg-card border-slate-200 shadow-sm px-3 py-1 text-emph rounded-full outline-none focus:border-primary">
           {reports.map((r, index) => (
