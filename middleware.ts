@@ -16,6 +16,13 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  if (
+    pathname.startsWith("/api/daily_scraper") ||
+    pathname.startsWith("/api/monthly_scraper")
+  ) {
+    return NextResponse.next();
+  }
+
   const auth = request.cookies.get("auth");
   if (!auth) {
     return NextResponse.redirect(new URL("/login", request.url));
