@@ -43,3 +43,4 @@ next-env.d.ts
 # firebase service account
 scraper/firebase-service-account.json
 *.json
+!vercel.json
