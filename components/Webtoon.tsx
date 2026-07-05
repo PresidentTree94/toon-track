@@ -26,7 +26,7 @@ export default function Webtoon({ data }:Readonly<{ data: Toon; }>) {
       <div className="p-4 text-sm space-y-3">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2"><Users className="h-4 w-auto" />Subscribers</div>
-          <span className="text-lg font-bold font-mono text-emph">{data.data.length > 0 ? condenseValue(data.data[data.data.length - 1].value) : 0}</span>
+          <span className="text-lg font-bold font-mono text-emph">{data.data.length > 0 ? condenseValue(data.data[data.data.length - 1].value) : ""}</span>
         </div>
         <div className="flex justify-between">
           <div className="flex items-center gap-2"><BookOpen className="h-4 w-auto" />Status</div>
@@ -38,7 +38,7 @@ export default function Webtoon({ data }:Readonly<{ data: Toon; }>) {
         </div>
         <div className="border border-slate-200 p-2 rounded-xl flex items-center gap-2">
           <TrendingUp className="h-4 w-auto text-green-500" />
-          <span className="font-bold text-green-500">{data.data.length > 1 ? condenseValue(calcMedianGrowth(data.data[data.data.length - 2].value, data.data[data.data.length - 1].value)) : 0}%</span>
+          <span className="font-bold text-green-500">{data.data.length > 1 ? condenseValue(calcMedianGrowth(data.data[data.data.length - 2].value, data.data[data.data.length - 1].value)) : ""}%</span>
           growth this month
         </div>
       </div>
