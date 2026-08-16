@@ -13,6 +13,11 @@ function daysAgo(date: Date) {
   return Math.floor((today.getTime() - target.getTime()) / MS_PER_DAY);
 }
 
+function joinWithAnd(arr: string[]) {
+  if (arr.length === 2) return arr.join(" and ");
+  return arr.slice(0, -1).join(", ") + ", and " + arr[arr.length - 1];
+}
+
 export default function Notices({ webtoonsData, verifiedWebtoons, completedData, onAnyNotices }: {
   webtoonsData: Toon[]; verifiedWebtoons: Toon[]; completedData: Comp[], onAnyNotices: (value: boolean) => void;
 }) {
@@ -38,11 +43,6 @@ export default function Notices({ webtoonsData, verifiedWebtoons, completedData,
     {notice: completedRecently, prefix: "", suffix: `${completedRecently.length === 1 ? " was" : " were"} archived.`},
     {notice: missingData, prefix: "", suffix: `${missingData.length === 1 ? " is" : " are"} missing data.`},
   ];
-
-  function joinWithAnd(arr: string[]) {
-    if (arr.length === 2) return arr.join(" and ");
-    return arr.slice(0, -1).join(", ") + ", and " + arr[arr.length - 1];
-  }
 
   return (
     <>

@@ -9,7 +9,7 @@ import { WEBTOON_TAG_MARKERS } from "@/utils/constants";
 export default function Archive({ completedData }: { completedData: Comp[] }) {
 
   const [search, setSearch] = useState("");
-  const archiveForm = useFormState({
+  const { form, update } = useFormState({
     sortBy: "Timestamp",
     owner: [] as string[],
     genre: "All",
@@ -22,20 +22,20 @@ export default function Archive({ completedData }: { completedData: Comp[] }) {
     item.protagonists.toLowerCase().includes(search.toLowerCase()) ||
     item.authors.toLowerCase().includes(search.toLowerCase())
   )
-  .filter(item => archiveForm.form.owner.length === 0 || archiveForm.form.owner.includes(item.owner))
-  .filter(item => archiveForm.form.tags.length === 0 || archiveForm.form.tags.every(tag => item.tags.includes(tag)));
+  .filter(item => form.owner.length === 0 || form.owner.includes(item.owner))
+  .filter(item => form.tags.length === 0 || form.tags.every(tag => item.tags.includes(tag)));
 
   const genres = ["All", ...[...new Set(preFiltered.map(item => item.genre))].sort()];
 
   const filtered = preFiltered
-    .filter(item => archiveForm.form.genre === "All" ? true : item.genre === archiveForm.form.genre)
+    .filter(item => form.genre === "All" ? true : item.genre === form.genre)
     .sort((a, b) => { 
-      if (archiveForm.form.sortBy === "Title") return a.title.localeCompare(b.title);
-      if (archiveForm.form.sortBy === "Timestamp") return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+      if (form.sortBy === "Title") return a.title.localeCompare(b.title);
+      if (form.sortBy === "Timestamp") return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
       return 0;
   });
 
-  const archiveFilters = buildFormElements(archiveForm.form, archiveForm.update, {
+  const archiveFilters = buildFormElements(form, update, {
     sortBy: { label: "Sort By", options: ["Timestamp", "Title"] },
     owner: { label: "Owner", options: ["Karly", "Rachelle", "Shared"], multi: true },
     genre: { label: "Genre", options: genres },

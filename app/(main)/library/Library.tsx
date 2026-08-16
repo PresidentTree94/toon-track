@@ -10,7 +10,7 @@ import { WEBTOON_TAG_MARKERS } from "@/utils/constants";
 export default function Library({ webtoonsData }: { webtoonsData: Toon[] }) {
 
   const [search, setSearch] = useState("");
-  const libraryForm = useFormState({
+  const { form, update } = useFormState({
     sortBy: "Title",
     owner: [] as string[],
     status: "All",
@@ -25,27 +25,27 @@ export default function Library({ webtoonsData }: { webtoonsData: Toon[] }) {
     item.protagonists.toLowerCase().includes(search.toLowerCase()) ||
     item.authors.toLowerCase().includes(search.toLowerCase())
   )
-  .filter(item => libraryForm.form.owner.length === 0 || libraryForm.form.owner.includes(item.owner))
-  .filter(item => libraryForm.form.status === "All" ? true : item.status === libraryForm.form.status)
-  .filter(item => libraryForm.form.day === "All" ? true : item.days.includes(libraryForm.form.day))
-  .filter(item => libraryForm.form.tags.length === 0 || libraryForm.form.tags.every(tag => item.tags.includes(tag)));
+  .filter(item => form.owner.length === 0 || form.owner.includes(item.owner))
+  .filter(item => form.status === "All" ? true : item.status === form.status)
+  .filter(item => form.day === "All" ? true : item.days.includes(form.day))
+  .filter(item => form.tags.length === 0 || form.tags.every(tag => item.tags.includes(tag)));
 
   const genres = ["All", ...[...new Set(preFiltered.map(item => item.genre))].sort()];
 
   const filtered = preFiltered
-    .filter(item => libraryForm.form.genre === "All" ? true : item.genre === libraryForm.form.genre)
+    .filter(item => form.genre === "All" ? true : item.genre === form.genre)
     .sort((a, b) => {
       const aSubs = a.data[a.data.length - 1] ? a.data[a.data.length - 1].value : 0;
       const bSubs = b.data[b.data.length - 1] ? b.data[b.data.length - 1].value : 0;
       const aGrowth = a.data[a.data.length - 2] ? calcMedianGrowth(a.data[a.data.length - 2].value, aSubs) : -Infinity;
       const bGrowth = b.data[b.data.length - 2] ? calcMedianGrowth(b.data[b.data.length - 2].value, bSubs) : -Infinity;
-      if (libraryForm.form.sortBy === "Title") return a.title.localeCompare(b.title);
-      if (libraryForm.form.sortBy === "Subscribers") return bSubs - aSubs;
-      if (libraryForm.form.sortBy === "Growth") return bGrowth - aGrowth;
+      if (form.sortBy === "Title") return a.title.localeCompare(b.title);
+      if (form.sortBy === "Subscribers") return bSubs - aSubs;
+      if (form.sortBy === "Growth") return bGrowth - aGrowth;
       return 0;
   });
 
-  const libraryFilters = buildFormElements(libraryForm.form, libraryForm.update, {
+  const libraryFilters = buildFormElements(form, update, {
     sortBy: { label: "Sort By", options: ["Title", "Subscribers", "Growth"] },
     owner: { label: "Owner", options: ["Karly", "Rachelle", "Shared"], multi: true },
     status: { label: "Status", options: ["All", "Ongoing", "Hiatus"] },

@@ -20,7 +20,7 @@ export default function Detail({ webtoonData }: { webtoonData: Toon }) {
   const [open, setOpen] = useState(false);
   const [deleteCheck, setDeleteCheck] = useState(false);
 
-  const detailForm = useForm(
+  const { form, elements } = useForm(
     {
       thumbnail: webtoon.thumbnail,
       authors: webtoon.authors,
@@ -42,13 +42,13 @@ export default function Detail({ webtoonData }: { webtoonData: Toon }) {
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     const webtoonData = await updateWebtoonById(webtoon.id, {
-      thumbnail: detailForm.form.thumbnail.trim() || webtoon.thumbnail,
-      authors: detailForm.form.authors.trim(),
-      protagonists: detailForm.form.protagonists.trim(),
-      status: detailForm.form.status.trim(),
-      manual_updates: detailForm.form.manualUpdates === "TRUE" ? true : false,
-      status_time: (detailForm.form.manualUpdates === "TRUE" && !webtoon.manual_updates) || (detailForm.form.manualUpdates === "FALSE" && webtoon.manual_updates) ? null : webtoon.status_time,
-      tags: detailForm.form.tags
+      thumbnail: form.thumbnail.trim() || webtoon.thumbnail,
+      authors: form.authors.trim(),
+      protagonists: form.protagonists.trim(),
+      status: form.status.trim(),
+      manual_updates: form.manualUpdates === "TRUE" ? true : false,
+      status_time: (form.manualUpdates === "TRUE" && !webtoon.manual_updates) || (form.manualUpdates === "FALSE" && webtoon.manual_updates) ? null : webtoon.status_time,
+      tags: form.tags
     });
     setWebtoon({ ...webtoon, ...webtoonData });
     setDeleteCheck(false);
@@ -149,7 +149,7 @@ export default function Detail({ webtoonData }: { webtoonData: Toon }) {
         </section>
       </article>
       <Modal heading="Edit Webtoon Details" open={open} setOpen={setOpen} handleSubmit={handleSubmit}>
-        {Object.entries(detailForm.elements).map(([key, field]) => (
+        {Object.entries(elements).map(([key, field]) => (
           <FormField key={key} field={field} />
         ))}
         <button type="button" className={`col-span-full border text-emph rounded-2xl py-2 flex items-center justify-center cursor-pointer ${deleteCheck ? `${STATUS_COLORS["Hiatus"]} ${STATUS_BADGE_COLORS["Hiatus"]}` : "hover:bg-slate-100"}`} onClick={deleteWebtoon}><X className="h-4.5 w-auto" /></button>

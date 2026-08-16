@@ -14,9 +14,7 @@ import { useSorter } from "@/hooks/useSorter";
 export default function Home({ webtoonsData, completedData }: { webtoonsData: Toon[], completedData: Comp[] }) {
 
   const verifiedWebtoons = webtoonsData.filter(item => item.initial);
-  
   const [anyNotices, setAnyNotices] = useState(false);
-
   const firstOfMonth = new Date(new Date().setDate(1)).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' });
 
   const { sortedWebtoons, sortKey, setSortKey } = useSorter(
