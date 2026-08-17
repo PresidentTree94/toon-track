@@ -32,6 +32,9 @@ Filters: sort by timestamp or title, filter by owner and genre.
 ### Settings (`/settings`)
 Allows each user to register their device for push notifications via Firebase Cloud Messaging. Clicking a button requests notification permissions and stores the FCM token in Supabase.
 
+### Reports (`/reports`)
+An archieve of past cumulative subscriber activity. It showcases the top recorded Webtoons as cards and organizes monthly shapshots and data breakdowns in tables. The user can view previous breakdowns by using the dropdown associated with the table. 
+
 ### Authentication
 The site is password-protected using cookie-based auth. The middleware (`middleware.ts`) redirects all unauthenticated requests to `/login`, where the user enters a shared password. On success, an `auth` cookie is set.
 
@@ -52,7 +55,7 @@ The site is password-protected using cookie-based auth. The middleware (`middlew
   - `reports` — Monthly subscriber snapshots across all series.
 
 ### Scrapers (Python)
-A suite of Python scripts in `scraper/` that pull data from Webtoons using BeautifulSoup:
+A suite of Python scripts in `scraper/` that pull data from Webtoons using BeautifulSoup. Most are placed in `api/` for Vercel cron jobs:
 
 - **`initial_scraper.py`** — Runs when a new Webtoon is added. Scrapes the title, genre, status, and update days from the Webtoon URL and backfills the database entry. Triggered via webhook.
 - **`daily_scraper.py`** — Checks status changes (ongoing ↔ hiatus ↔ completed) for series that update on the current day. Sends push notifications afterward. Runs every day via GitHub Actions.
