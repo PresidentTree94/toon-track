@@ -55,25 +55,18 @@ The site is password-protected using cookie-based auth. The middleware (`middlew
   - `reports` — Monthly subscriber snapshots across all series.
 
 ### Scrapers (Python)
-A suite of Python scripts in `scraper/` that pull data from Webtoons using BeautifulSoup. Most are placed in `api/` for Vercel cron jobs:
+A suite of Python scripts that pull data from Webtoons using BeautifulSoup. Files for initial scraping are in `/scraper` for manual GitHub Actions, while the rest are in `/api` for Vercel cron jobs: 
 
-- **`initial_scraper.py`** — Runs when a new Webtoon is added. Scrapes the title, genre, status, and update days from the Webtoon URL and backfills the database entry. Triggered via webhook.
-- **`daily_scraper.py`** — Checks status changes (ongoing ↔ hiatus ↔ completed) for series that update on the current day. Sends push notifications afterward. Runs every day via GitHub Actions.
-- **`monthly_scraper.py`** — Scrapes current subscriber counts for all tracked series and appends a new data point. Also saves a full snapshot to the `reports` table. Runs on the 1st of every month via GitHub Actions.
-- **`fallback_scraper.py`** — Re-runs initial scraping for any series that failed initial setup (`initial = false`). Manual trigger via GitHub Actions.
-- **`check_status.py`** — Shared helper that determines a series' status (Ongoing/Hiatus/Completed) by parsing page elements. If a series is completed, it auto-archives it by moving it from `webtoons` to `completed`.
-- **`webhook_server.py`** — A FastAPI endpoint (`POST /webhook`) that listens for Supabase insert events and triggers the initial scraper for newly added Webtoons.
+- **`initial_scraper.py`** — Runs when a new Webtoon is added. Scrapes the title, genre, status, and update days from the Webtoon URL and backfills the database entry. Formerly triggered via webhook.
+- **`daily_scraper.py`** — Checks status changes (ongoing, hiatus, completed) for series that update on the current day. Sends push notifications afterward. Runs every morning.
+- **`monthly_scraper.py`** — Scrapes current subscriber counts for all tracked series and logs them to the database. Also saves a full snapshot to the `reports` table. Runs on the 1st of every month.
+- **`fallback_scraper.py`** — Re-runs initial scraping for any series that failed initial setup (`initial = false`). Manual trigger.
+- **`check_status.py`** — Shared helper that determines a series' status by parsing page elements. If a series is completed, it auto-archives it by moving it from `webtoons` to `completed`.
 - **`send_push.py`** — Sends Firebase Cloud Messaging push notifications to each user with a count of completed Webtoons they should catch up on that day (based on reminder days). Called by the daily scraper.
 
 ### Push Notifications
 - **Firebase Cloud Messaging** handles delivery. The frontend registers device tokens, and the backend sends data messages via the Firebase Admin SDK.
 - A service worker (`public/firebase-messaging-sw.js`) displays background notifications.
-
-### CI/CD
-GitHub Actions workflows in `.github/workflows/` automate the scrapers:
-- `daily.yml` — Runs `daily_scraper.py` every day on a cron schedule.
-- `monthly.yml` — Runs `monthly_scraper.py` on the 1st of each month.
-- `fallback.yml` — Manual-only workflow for re-running failed initial scrapes.
 
 ## Data Model
 
