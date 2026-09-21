@@ -1,10 +1,10 @@
-import { createServerSupabase } from '@/lib/supabaseServer'
+import { createClient } from "../supabaseServer";
 
 export async function getCompleted() {
-  const supabase = await createServerSupabase();
+  const supabase = await createClient();
   const { data, error } = await supabase.from("completed").select("*");
   if (error) {
-    console.error("Error fetching completed webtoons:", error);
+    console.error(error);
     return [];
   }
   return data;

@@ -1,6 +1,10 @@
-import { TreeDeciduous, Snail, HeartHandshake, Tent, Castle, Smartphone, History, FastForward, BookUser, Mars, Venus, NonBinary, LucideIcon } from "lucide-react";
+export const OWNER_ICONS: Record<string, string> = {
+  "Karly": "ri-tree-line text-amber-600",
+  "Rachelle": "ri-cup-line text-rose-600",
+  "Shared": "ri-service-line text-emerald-600"
+}
 
-export const ICONS: Record<string, LucideIcon> = {
+/*export const ICONS: Record<string, LucideIcon> = {
   "Karly": TreeDeciduous,
   "Rachelle": Snail,
   "Shared": HeartHandshake
@@ -28,4 +32,4 @@ export const WEBTOON_TAG_MARKERS: Record<string, LucideIcon> = {
   "Male MC": Mars,
   "Female MC": Venus,
   "Non-binary MC": NonBinary
-}
+}*/

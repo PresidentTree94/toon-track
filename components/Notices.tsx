@@ -50,7 +50,7 @@ export default function Notices({ verifiedWebtoons, completedData, pendingData }
           n.notice.length > 0 && <li key={index}>
             {n.notice.length === 1 ? <>
               {n.prefix}
-              <Link href={completedData.some(c => c.title === n.notice[0].title) ? "/archive" : `/library/${n.notice[0].id}`} className="underline">1 Webtoon</Link>
+              <Link href={completedData.some(c => c.title === n.notice[0].title) ? "/archive" : `/library/${n.notice[0].id}`} className="underline hover:text-primary-seven">1 Webtoon</Link>
               {n.suffix}
             </> :
             <details className="space-y-1">
@@ -61,8 +61,8 @@ export default function Notices({ verifiedWebtoons, completedData, pendingData }
             </details>}
           </li>
         ))}
-        {pendingData.length > 0 && <li className="flex items-center gap-1.5 text-accent-seven">
-          <i className="ri-error-warning-line text-accent-six"></i>
+        {pendingData.length > 0 && <li className="flex items-center gap-1.5 text-amber-700">
+          <i className="ri-error-warning-line text-amber-600"></i>
           {pendingData.length === 1 ? 
               <>{pendingData[0].protagonists.split(", ")[0].split(" ")[0]}'s is pending validation.</> :
               <>{joinWithAnd(pendingData.map(p => p.protagonists.split(", ")[0].split(" ")[0] + "'s"))} are pending validation.</>
