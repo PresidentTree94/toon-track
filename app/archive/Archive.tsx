@@ -4,6 +4,7 @@ import { Comp } from "@/types/comp";
 import { OWNER_ICONS } from "@/utils/constants";
 import Gallery from "@/components/Gallery";
 import { useForm } from "@presidenttree94/form-utils";
+import Status from "@/components/Status";
 
 export default function ArchiveClient({ completedData }: { completedData: Comp[] }) {
 
@@ -11,9 +12,11 @@ export default function ArchiveClient({ completedData }: { completedData: Comp[]
   const { form, elements } = useForm({
     owner: [] as string[],
     genre: "All",
+    tags: [] as string[]
   }, {
     owner: { label: "Owner", options: ["Karly", "Rachelle", "Shared"], multi: true },
     genre: { label: "Genre", options: ["All", ...[...new Set(completedData.map(item => item.genre))].sort()] },
+    tags: { label: "Tags", options: [], multi: true }
   });
 
   const filteredData = completedData
@@ -31,7 +34,7 @@ export default function ArchiveClient({ completedData }: { completedData: Comp[]
           <div className="relative aspect-2/3 overflow-hidden">
             <img src={c.thumbnail || `https://placehold.co/143x200?text=${c.title.replaceAll(" ", "+")}`} alt={c.title} className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300" />
             <div className="absolute inset-0 bg-linear-to-t from-black/85 to-transparent p-4 flex flex-col justify-between gap-2">
-              <span className="self-end text-xs font-bold px-2 py-1 rounded-full uppercase text-rose-700 bg-rose-400">Completed</span>
+              <Status status="Completed" className="self-end" />
               <h3 className="text-white font-bold text-2xl line-clamp-4">{c.title}</h3>
             </div>
           </div>

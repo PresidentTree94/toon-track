@@ -18,7 +18,7 @@ export default function Gallery<T extends Toon | Comp>({ title, subtitle, totalD
   const { search, setSearch, elements } = filters;
 
   return (
-    <main className="max-w-[1400px] mx-auto pt-24 px-8 pb-16 space-y-8">
+    <main>
       <section className="flex flex-col md:flex-row justify-between items-center md:items-end text-center md:text-left gap-8">
         <div>
           <h1 className="text-4xl">{title}</h1>

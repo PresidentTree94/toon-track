@@ -14,6 +14,10 @@ body {
   font-family: var(--font-plus-jakarta-sans);
 }
 
+main {
+  @apply max-w-[1400px] mx-auto pt-24 px-8 pb-16 space-y-8;
+}
+
 h1 {
   @apply font-extrabold;
 }

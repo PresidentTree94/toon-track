@@ -6,6 +6,7 @@ import * as calc from "@/utils/calculations";
 import Notices from "@/components/Notices";
 import { useSorter } from "@/hooks/useSorter";
 import { OWNER_ICONS } from "@/utils/constants";
+import Status from "@/components/Status";
 
 export default function HomeClient({ webtoonsData, completedData }: { webtoonsData: Toon[]; completedData: Comp[]; }) {
 
@@ -16,10 +17,10 @@ export default function HomeClient({ webtoonsData, completedData }: { webtoonsDa
   const growthThreshold = verifiedWebtoons.filter(item => item.data.length > 1);
   const subThreshold = verifiedWebtoons.filter(item => item.data.length > 0);
   const medianGrowth = calc.median(growthThreshold.map(item =>
-    calc.calcMedianGrowth(item.data[item.data.length - 2].value, item.data[item.data.length - 1].value)));
-  const medianSubs = calc.median(subThreshold.map(item => item.data[item.data.length - 1].value));
+    calc.calcMedianGrowth(item.data.at(-2)!.value, item.data.at(-1)!.value)));
+  const medianSubs = calc.median(subThreshold.map(item => item.data.at(-1)!.value));
   const medianSubChange = calc.median(growthThreshold.map(item =>
-    calc.calcSubChange(item.data[item.data.length - 2].value, item.data[item.data.length - 1].value)));
+    calc.calcSubChange(item.data.at(-2)!.value, item.data.at(-1)!.value)));
   const hiatus = verifiedWebtoons.filter(item => item.status === "Hiatus").length;
   const ongoing = verifiedWebtoons.length - hiatus;
 
@@ -42,7 +43,7 @@ export default function HomeClient({ webtoonsData, completedData }: { webtoonsDa
   );
 
   return (
-    <main className="max-w-[1400px] mx-auto pt-24 px-8 pb-16 space-y-8">
+    <main>
       <section className="flex flex-col sm:flex-row justify-between items-center text-center sm:text-left gap-4">
         <div>
           <h1 className="text-4xl">Dashboard</h1>
@@ -88,15 +89,15 @@ export default function HomeClient({ webtoonsData, completedData }: { webtoonsDa
             </thead>
             <tbody>
               {sortedWebtoons.map((w, index) => {
-                const latestSubs = w.data.length > 0 ? w.data[w.data.length - 1].value : -1;
-                const latestGrowth = w.data.length > 1 ? calc.calcMedianGrowth(w.data[w.data.length - 2].value, latestSubs) : -1;
+                const latestSubs = w.data.length > 0 ? w.data.at(-1)!.value : -1;
+                const latestGrowth = w.data.length > 1 ? calc.calcMedianGrowth(w.data.at(-2)!.value, latestSubs) : -1;
                 const growthColor = latestGrowth > 0.05 ? "text-emerald-500" : latestGrowth < 0 ? "text-rose-600" : "text-slate-400";
                 console.log(w.title, latestGrowth);
                 return (
                   <tr key={w.id} className="border-t border-slate-100 hover:bg-slate-50/60">
                     <td className="text-center font-bold font-mono text-slate-500">{index + 1}</td>
                     <td className="font-semibold"><Link href={`/library/${w.id}`}><span className="line-clamp-1">{w.title}</span></Link></td>
-                    <td><span className={`text-xs font-bold px-2 py-1 rounded-full uppercase ${w.status === "Ongoing" ? "text-emerald-600 bg-emerald-500/10" : "text-amber-600 bg-amber-500/10"}`}>{w.status}</span></td>
+                    <td><Status status={w.status} /></td>
                     <td className="font-semibold">
                       <div className="flex items-center gap-1.5">
                         <i className={OWNER_ICONS[w.owner]}></i>
