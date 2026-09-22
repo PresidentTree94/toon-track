@@ -10,5 +10,4 @@ export type Comp = {
   timestamp: string;
   reminder: ("" | "Sunday" | "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday");
   tags: number[];
-  tropes: number[];
 }

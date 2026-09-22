@@ -43,19 +43,19 @@ export default function HomeClient({ webtoonsData, completedData }: { webtoonsDa
 
   return (
     <main className="max-w-[1400px] mx-auto pt-24 px-8 pb-16 space-y-8">
-      <section className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <section className="flex flex-col sm:flex-row justify-between items-center text-center sm:text-left gap-4">
         <div>
           <h1 className="text-4xl">Dashboard</h1>
           <p className="mt-1 text-slate-500">Your Webtoons analytics overview</p>
         </div>
-        <button className="bg-primary-five hover:bg-primary-six text-white px-5 py-2.5 rounded-full text-sm font-bold flex items-center gap-2"><i className="ri-history-line"></i>View Past Data</button>
+        <button className="bg-primary-five hover:bg-primary-six text-white px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2"><i className="ri-history-line"></i>View Past Data</button>
       </section>
       <Notices verifiedWebtoons={verifiedWebtoons} completedData={completedData} pendingData={pendingWebtoons} />
       <section>
         <h2 className="text-xl">Statistics</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-4">
           {cards.map((card, index) => (
-            <div key={index} className="bg-white border border-slate-200 hover:border-primary-five/40 p-5 rounded-2xl">
+            <div key={index} className="bg-white border border-slate-200 hover:border-primary-five/40 p-5 rounded-2xl transition-colors">
               <div className="flex items-center justify-between">
                 <p className="text-slate-600 font-medium text-sm">{card.title}</p>
                 <i className={`${card.icon} text-lg text-primary-five`}></i>

@@ -15,6 +15,5 @@ export type Toon = {
   status_time: string;
   initial: boolean;
   tags: number[];
-  tropes: number[];
   manual_updates: boolean;
 };
