@@ -7,6 +7,7 @@ import Notices from "@/components/Notices";
 import { useSorter } from "@/hooks/useSorter";
 import { OWNER_ICONS } from "@/utils/constants";
 import Status from "@/components/Status";
+import Card from "@/components/Card";
 
 export default function HomeClient({ webtoonsData, completedData }: { webtoonsData: Toon[]; completedData: Comp[]; }) {
 
@@ -33,9 +34,9 @@ export default function HomeClient({ webtoonsData, completedData }: { webtoonsDa
 
   const { sortedWebtoons, sortKey, setSortKey } = useSorter(
     verifiedWebtoons,
-    (w: { title: string }) => w.title,
-    (w: { data: { month: string; value: number; }[] }) => w.data.at(-1)?.value ?? 0,
-    (w: { data: { month: string; value: number; }[] }) => {
+    w => w.title,
+    w => w.data.at(-1)?.value ?? 0,
+    w => {
       const prev = w.data.at(-2);
       const subs = w.data.at(-1)?.value ?? 0;
       return prev ? calc.calcMedianGrowth(prev.value, subs) : -Infinity;
@@ -49,21 +50,14 @@ export default function HomeClient({ webtoonsData, completedData }: { webtoonsDa
           <h1 className="text-4xl">Dashboard</h1>
           <p className="mt-1 text-slate-500">Your Webtoons analytics overview</p>
         </div>
-        <button className="bg-primary-five hover:bg-primary-six text-white px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2"><i className="ri-history-line"></i>View Past Data</button>
+        <Link href="/reports" className="bg-primary-five hover:bg-primary-six text-white px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2"><i className="ri-history-line"></i>View Past Data</Link>
       </section>
       <Notices verifiedWebtoons={verifiedWebtoons} completedData={completedData} pendingData={pendingWebtoons} />
       <section>
-        <h2 className="text-xl">Statistics</h2>
+        <h2 className="text-xl">Live Statistics</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-4">
-          {cards.map((card, index) => (
-            <div key={index} className="bg-white border border-slate-200 hover:border-primary-five/40 p-5 rounded-2xl transition-colors">
-              <div className="flex items-center justify-between">
-                <p className="text-slate-600 font-medium text-sm">{card.title}</p>
-                <i className={`${card.icon} text-lg text-primary-five`}></i>
-              </div>
-              <h3 className="text-3xl font-extrabold mt-1 mb-2">{card.value}</h3>
-              <p className="text-xs text-slate-500">{card.subtitle}</p>
-            </div>
+          {cards.map((c, index) => (
+            <Card key={index} data={c} />
           ))}
         </div>
       </section>
@@ -92,7 +86,6 @@ export default function HomeClient({ webtoonsData, completedData }: { webtoonsDa
                 const latestSubs = w.data.length > 0 ? w.data.at(-1)!.value : -1;
                 const latestGrowth = w.data.length > 1 ? calc.calcMedianGrowth(w.data.at(-2)!.value, latestSubs) : -1;
                 const growthColor = latestGrowth > 0.05 ? "text-emerald-500" : latestGrowth < 0 ? "text-rose-600" : "text-slate-400";
-                console.log(w.title, latestGrowth);
                 return (
                   <tr key={w.id} className="border-t border-slate-100 hover:bg-slate-50/60">
                     <td className="text-center font-bold font-mono text-slate-500">{index + 1}</td>
