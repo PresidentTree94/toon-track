@@ -19,9 +19,9 @@ export default function ReportClient({ reportData }: { reportData: { timestamp: 
   const medianSubChange = calc.median(intersection.map(item => calc.calcSubChange(item.value, selectedReport.snapshot.find(s => s.title === item.title)?.value ?? -1)));
 
   const cards: { title: string; subtitle: string; value: string; icon: string; }[] = [
-    { title: "Median Growth", subtitle: `subtitle`, value: `${lastReport ? calc.condenseValue(medianGrowth) : 0}%`, icon: "ri-line-chart-line" },
-    { title: "Median Subs", subtitle: `subtitle`, value: calc.condenseValue(medianSubs), icon: "ri-user-heart-line" },
-    { title: "Sub Change", subtitle: `subtitle`, value: lastReport ? calc.condenseValue(medianSubChange) : "0", icon: "ri-exchange-line" },
+    { title: "Median Growth", subtitle: `from ${intersection.length}/${selectedReport.snapshot.length} Webtoons`, value: `${lastReport ? calc.condenseValue(medianGrowth) : 0}%`, icon: "ri-line-chart-line" },
+    { title: "Median Subs", subtitle: `from ${selectedReport.snapshot.length}/${selectedReport.snapshot.length} Webtoons`, value: calc.condenseValue(medianSubs), icon: "ri-user-heart-line" },
+    { title: "Sub Change", subtitle: `from ${intersection.length}/${selectedReport.snapshot.length} Webtoons`, value: lastReport ? calc.condenseValue(medianSubChange) : "0", icon: "ri-exchange-line" },
   ];
 
   const { sortedWebtoons, sortKey, setSortKey } = useSorter(
@@ -82,7 +82,7 @@ export default function ReportClient({ reportData }: { reportData: { timestamp: 
           <Table
             columns={[
               { label: "#" },
-              { label: "Series", align: "left", sortable: true },
+              { label: "Series", align: "left", width: "min-w-3xs", sortable: true },
               { label: "Subs", align: "right", sortable: true },
               { label: "Growth", align: "right", sortable: true }
             ]}

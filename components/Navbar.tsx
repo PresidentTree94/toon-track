@@ -44,7 +44,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="bg-white/80 backdrop-blur-xl fixed inset-x-0 top-0 border-b border-slate-200 z-2">
+      <header className="bg-white/80 backdrop-blur-xl fixed inset-x-0 bottom-0 sm:top-0 sm:bottom-auto border-b border-slate-200 z-2">
         <div className="grid grid-cols-[1fr_2fr_1fr] sm:grid-cols-[auto_auto_auto] sm:items-center justify-between sm:gap-3 h-16 sm:px-8 max-w-[1400px] mx-auto">
           <Link href="/" className="flex sm:items-center gap-2 text-xl sm:text-lg">
             <div className={`${pathname === "/" ? "bg-primary-five text-white" : "sm:bg-primary-five text-primary-five sm:text-white"} w-full sm:w-8 sm:h-8 sm:rounded-lg flex justify-center items-center`}>

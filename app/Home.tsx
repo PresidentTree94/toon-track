@@ -73,7 +73,7 @@ export default function HomeClient({ webtoonsData, completedData }: { webtoonsDa
         <Table
           columns={[
             { label: "#" },
-            { label: "Series", align: "left", sortable: true },
+            { label: "Series", align: "left", width: "min-w-3xs", sortable: true },
             { label: "Status", align: "left" },
             { label: "Owner", align: "left" },
             { label: "Subs", align: "right", sortable: true },

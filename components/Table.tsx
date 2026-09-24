@@ -1,6 +1,7 @@
 type Column = {
   label: string;
   align?: "left" | "right";
+  width?: string;
   sortable?: boolean;
 }
 
@@ -21,6 +22,7 @@ export default function Table({ columns, rows, sortKey, setSortKey }: {
                   key={key}
                   className={`
                     ${c.align === "right" ? "text-right" : "text-left"} 
+                    ${c.width} 
                     ${c.sortable ? "cursor-pointer" : ""} 
                     ${sortKey === key ? "text-primary-five" : c.sortable ? "underline" : ""}
                   `}

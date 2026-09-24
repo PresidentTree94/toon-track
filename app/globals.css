@@ -15,7 +15,7 @@ body {
 }
 
 main {
-  @apply max-w-[1400px] mx-auto pt-24 px-8 pb-16 space-y-8;
+  @apply max-w-[1400px] mx-auto pt-8 sm:pt-24 px-8 pb-24 sm:pb-8 space-y-8;
 }
 
 h1 {
