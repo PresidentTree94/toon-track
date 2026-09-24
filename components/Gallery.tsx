@@ -1,8 +1,9 @@
 import { Toon } from "@/types/toon";
 import { Comp } from "@/types/comp";
+import { Trope } from "@/types/trope";
 import { FormElement } from "@presidenttree94/form-utils";
 
-export default function Gallery<T extends Toon | Comp>({ title, subtitle, totalData, filteredData, filters, children }: {
+export default function Gallery<T extends Toon | Comp>({ title, subtitle, totalData, filteredData, filters, tropesData, children }: {
   title: string;
   subtitle: string;
   totalData: T[];
@@ -12,6 +13,7 @@ export default function Gallery<T extends Toon | Comp>({ title, subtitle, totalD
     setSearch: (search: string) => void;
     elements: Record<string, FormElement<string | string[]>>;
   };
+  tropesData: Trope[];
   children: React.ReactNode;
 }) {
 
@@ -29,7 +31,7 @@ export default function Gallery<T extends Toon | Comp>({ title, subtitle, totalD
             <i className="ri-search-line"></i>
             <input type="text" placeholder="Search..." className="outline-none flex-1" value={search} onChange={(e) => setSearch(e.target.value)} />
           </div>
-          <details className="relative group">
+          <details className="relative group text-left">
             <summary className="bg-white border border-slate-200 text-slate-600 hover:border-primary-five/40 group-open:border-primary-five/40 px-4 py-2 rounded-full text-sm font-semibold flex items-center gap-2 cursor-pointer"><i className="ri-filter-line"></i>Filter</summary>
             <div className="absolute top-11.5 right-0 bg-white border border-slate-200 p-4 rounded-xl z-1 min-w-60 space-y-2">
               {Object.entries(elements).map(([key, field]) => (
@@ -37,7 +39,7 @@ export default function Gallery<T extends Toon | Comp>({ title, subtitle, totalD
                   <legend className="text-sm font-semibold">{field.label}</legend>
                   <select multiple={field.multi} size={1} value={field.value} onChange={(e) => field.setValue(field.multi ? Array.from(e.target.selectedOptions, o => o.value) : e.target.value)}>
                     {field.options?.map(o => (
-                      <option key={o} value={o}>{o}</option>
+                      <option key={o} value={o}>{field.label === "Tags" ? tropesData.find(t => t._id === o)?.title : o}</option>
                     ))}
                   </select>
                 </fieldset>

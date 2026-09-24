@@ -5,26 +5,30 @@ import { usePathname } from "next/navigation";
 import { useForm } from "@presidenttree94/form-utils";
 import { createWebtoon } from "@/lib/data/clientQueries";
 import Modal from "./Modal";
+import { Trope } from "@/types/trope";
 
 const nav = [
   { text: "Library", icon: "ri-book-shelf-line" },
-  { text: "Archive", icon: "ri-archive-line" }
+  { text: "Archive", icon: "ri-archive-line" },
+  { text: "Glossary", icon: "ri-book-2-line" }
 ];
 
-export default function Navbar() {
+export default function Navbar({ tropesData }: { tropesData: Trope[] }) {
 
   const { form, elements } = useForm({
     toon: "",
     thumbnail: "",
     authors: "",
     protagonists: "",
-    owner: ""
+    owner: "",
+    tags: [] as string[]
   }, {
     toon: { label: "Webtoon Link", type: "url", required: true },
     thumbnail: { label: "Thumbnail Link", type: "url" },
     authors: { label: "Author(s)" },
     protagonists: { label: "Protagonist(s)" },
-    owner: { label: "Owner", options: ["Karly", "Rachelle", "Shared"], defaultOption: "Select Owner", required: true }
+    owner: { label: "Owner", options: ["Karly", "Rachelle", "Shared"], defaultOption: "Select Owner", required: true },
+    tags: { label: "Tags", options: tropesData.map(t => t._id), multi: true }
   });
 
   const pathname = usePathname();
@@ -37,7 +41,8 @@ export default function Navbar() {
       thumbnail: form.thumbnail.trim() || "",
       authors: form.authors.trim(),
       protagonists: form.protagonists.trim(),
-      owner: form.owner
+      owner: form.owner,
+      tags: form.tags
     });
     setOpen(false);
   }
@@ -45,14 +50,14 @@ export default function Navbar() {
   return (
     <>
       <header className="bg-white/80 backdrop-blur-xl fixed inset-x-0 bottom-0 sm:top-0 sm:bottom-auto border-b border-slate-200 z-2">
-        <div className="grid grid-cols-[1fr_2fr_1fr] sm:grid-cols-[auto_auto_auto] sm:items-center justify-between sm:gap-3 h-16 sm:px-8 max-w-[1400px] mx-auto">
+        <div className="grid grid-cols-[1fr_3fr_1fr] sm:grid-cols-[auto_auto_auto] sm:items-center justify-between sm:gap-3 h-16 sm:px-8 max-w-[1400px] mx-auto">
           <Link href="/" className="flex sm:items-center gap-2 text-xl sm:text-lg">
             <div className={`${pathname === "/" ? "bg-primary-five text-white" : "sm:bg-primary-five text-primary-five sm:text-white"} w-full sm:w-8 sm:h-8 sm:rounded-lg flex justify-center items-center`}>
               <i className="ri-book-open-line"></i>
             </div>
             <h3 className="font-bold hidden sm:block">ToonTrack</h3>
           </Link>
-          <nav className="grid grid-cols-2 sm:grid-cols-[auto_auto] sm:gap-1 text-xl sm:text-sm sm:font-medium">
+          <nav className="grid grid-cols-3 sm:grid-cols-[auto_auto_auto] sm:gap-1 text-xl sm:text-sm sm:font-medium">
             {nav.map((n, index) => {
               const link = "/" + n.text.toLowerCase();
               return (
@@ -69,6 +74,7 @@ export default function Navbar() {
         title="Add Webtoon"
         elements={elements}
         handleSubmit={handleSubmit}
+        tropesData={tropesData}
       />
     </>
   );

@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Toon } from "@/types/toon";
+import { Trope } from "@/types/trope";
 import { calcMedianGrowth, condenseValue } from "@/utils/calculations";
 import Status from "@/components/Status";
 import { OWNER_ICONS } from "@/utils/constants";
@@ -9,7 +10,7 @@ import Modal from "@/components/Modal";
 import { updateWebtoonById, deleteWebtoonById } from "@/lib/data/clientQueries";
 import { redirect } from "next/navigation";
 
-export default function DetailClient({ webtoonsData, slug }: { webtoonsData: Toon[]; slug: number; }) {
+export default function DetailClient({ webtoonsData, tropesData, slug }: { webtoonsData: Toon[]; tropesData: Trope[]; slug: number; }) {
 
   const [open, setOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<number | null>(null)
@@ -35,6 +36,7 @@ export default function DetailClient({ webtoonsData, slug }: { webtoonsData: Too
     owner: owner,
     status: status,
     manualUpdates: manual_updates ? "TRUE": "FALSE",
+    tags: tags
   }, {
     thumbnail: { label: "Thumbnail Link", type: "url" },
     authors: { label: "Author(s)" },
@@ -42,6 +44,7 @@ export default function DetailClient({ webtoonsData, slug }: { webtoonsData: Too
     owner: { label: "Owner", options: ["Karly", "Rachelle", "Shared"] },
     status: { label: "Status", options: ["Ongoing", "Hiatus"] },
     manualUpdates: { label: "Manual", options: ["TRUE", "FALSE"] },
+    tags: { label: "Tags", options: tropesData.map(t => t._id), multi: true }
   });
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -55,6 +58,7 @@ export default function DetailClient({ webtoonsData, slug }: { webtoonsData: Too
       status: form.status,
       manual_updates: form.manualUpdates === "TRUE" ? true : false,
       status_time: (form.manualUpdates === "TRUE" && !manual_updates) || (form.manualUpdates === "FALSE" && manual_updates) ? null : status_time,
+      tags: form.tags
     });
     setOpen(false);
   }
@@ -97,9 +101,9 @@ export default function DetailClient({ webtoonsData, slug }: { webtoonsData: Too
             </div>
             <div className="bg-white border border-slate-200 rounded-2xl p-4">
               <h2 className="text-sm uppercase text-slate-500">Tags & Tropes</h2>
-              <div className="flex gap-2 text-xs font-semibold mt-2">
+              <div className="flex flex-wrap gap-2 text-xs font-semibold mt-2">
                 {tags.sort().map((t, index) => (
-                  <span key={index} className="bg-slate-100 text-slate-600 rounded-full px-3 py-1.5">{t}</span>
+                  <span key={index} className="bg-slate-100 text-slate-600 rounded-full px-3 py-1.5">{tropesData.find(d => d._id === t)?.title}</span>
                 ))}
               </div>
             </div>
@@ -136,6 +140,7 @@ export default function DetailClient({ webtoonsData, slug }: { webtoonsData: Too
         confirmDelete={confirmDelete}
         setConfirmDelete={setConfirmDelete}
         handleDelete={handleDelete}
+        tropesData={tropesData}
       />
     </>
   );

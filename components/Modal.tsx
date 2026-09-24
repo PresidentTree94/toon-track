@@ -1,7 +1,8 @@
 import React from "react";
 import { FormElement } from "@presidenttree94/form-utils";
+import { Trope } from "@/types/trope";
 
-export default function Modal({ open, setOpen, title, elements, handleSubmit, confirmDelete, setConfirmDelete, handleDelete }: {
+export default function Modal({ open, setOpen, title, elements, handleSubmit, confirmDelete, setConfirmDelete, handleDelete, tropesData }: {
   open: boolean;
   setOpen: (open: boolean) => void;
   title: string;
@@ -10,6 +11,7 @@ export default function Modal({ open, setOpen, title, elements, handleSubmit, co
   confirmDelete?: number | null;
   setConfirmDelete?: (confirmDelete: number | null) => void;
   handleDelete?: () => void;
+  tropesData: Trope[];
 }) {
   return (
     <div className={`fixed inset-0 bg-black/50 z-3 ${open ? "flex" : "hidden"} justify-center items-center p-8`}>
@@ -23,7 +25,7 @@ export default function Modal({ open, setOpen, title, elements, handleSubmit, co
                 <select required={field.required} multiple={field.multi} size={1} value={field.value} onChange={(e) => field.setValue(field.multi ? Array.from(e.target.selectedOptions, o => o.value) : e.target.value)}>
                   {field.defaultOption && <option value="" disabled>{field.defaultOption}</option>}
                   {field.options?.map(o => (
-                    <option key={o} value={o}>{o}</option>
+                    <option key={o} value={o}>{field.label === "Tags" ? tropesData.find(t => t._id === o)?.title : o}</option>
                   ))}
                 </select>
               : <input type={field.type ? field.type : "text"} required={field.required} value={field.value} onChange={(e) => field.setValue(e.target.value)} className="formInput outline-none" />}

@@ -14,6 +14,6 @@ export type Toon = {
   owner_time: string;
   status_time: string;
   initial: boolean;
-  tags: number[];
+  tags: string[];
   manual_updates: boolean;
 };
