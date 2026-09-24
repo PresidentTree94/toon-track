@@ -13,7 +13,7 @@ import { redirect } from "next/navigation";
 export default function DetailClient({ webtoonsData, tropesData, slug }: { webtoonsData: Toon[]; tropesData: Trope[]; slug: number; }) {
 
   const [open, setOpen] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState<number | null>(null)
+  const [confirmDelete, setConfirmDelete] = useState<boolean>(false)
   const webtoon = webtoonsData.find(item => item.id === slug);
   if (!webtoon) return;
   const { id, title, owner, thumbnail, genre, status, tags, authors, protagonists, days, data, manual_updates, status_time, owner_time } = webtoon;
@@ -65,11 +65,11 @@ export default function DetailClient({ webtoonsData, tropesData, slug }: { webto
 
   const handleDelete = async () => {
     if (confirmDelete) {
-      await deleteWebtoonById(confirmDelete);
-      setConfirmDelete(null);
+      await deleteWebtoonById(webtoon);
+      setConfirmDelete(false);
       redirect("/library");
     } else {
-      setConfirmDelete(id);
+      setConfirmDelete(true);
     }
   }
 
@@ -102,7 +102,7 @@ export default function DetailClient({ webtoonsData, tropesData, slug }: { webto
             <div className="bg-white border border-slate-200 rounded-2xl p-4">
               <h2 className="text-sm uppercase text-slate-500">Tags & Tropes</h2>
               <div className="flex flex-wrap gap-2 text-xs font-semibold mt-2">
-                {tags.sort().map((t, index) => (
+                {tags.map((t, index) => (
                   <span key={index} className="bg-slate-100 text-slate-600 rounded-full px-3 py-1.5">{tropesData.find(d => d._id === t)?.title}</span>
                 ))}
               </div>

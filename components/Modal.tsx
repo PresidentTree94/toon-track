@@ -8,8 +8,8 @@ export default function Modal({ open, setOpen, title, elements, handleSubmit, co
   title: string;
   elements: Record<string, FormElement<string | string[]>>;
   handleSubmit: (e: React.SubmitEvent<HTMLFormElement>) => void;
-  confirmDelete?: number | null;
-  setConfirmDelete?: (confirmDelete: number | null) => void;
+  confirmDelete?: boolean;
+  setConfirmDelete?: (confirmDelete: boolean) => void;
   handleDelete?: () => void;
   tropesData: Trope[];
 }) {
@@ -34,7 +34,7 @@ export default function Modal({ open, setOpen, title, elements, handleSubmit, co
           <div className="grid grid-cols-2 col-span-full gap-4 mt-4">
             <button type="submit" className={`greenButton cursor-pointer ${handleDelete ? "col-span-full" : ""}`}>Submit</button>
             {handleDelete && <button type="button" className={`${confirmDelete ? "text-rose-600 bg-rose-500/25 border-rose-500" : "text-amber-600 bg-amber-500/25 border-amber-500"} border rounded-full text-sm font-bold px-4 py-2 cursor-pointer`} onClick={() => handleDelete()}>Delete</button>}
-            <button type="button" className="border border-slate-200 text-slate-700 px-4 py-2 rounded-full text-sm font-bold hover:bg-slate-50 cursor-pointer" onClick={() => {setOpen(false); if (setConfirmDelete) setConfirmDelete(null);}}>Close</button>
+            <button type="button" className="border border-slate-200 text-slate-700 px-4 py-2 rounded-full text-sm font-bold hover:bg-slate-50 cursor-pointer" onClick={() => {setOpen(false); if (setConfirmDelete) setConfirmDelete(false);}}>Close</button>
           </div>
         </form>
       </div>
