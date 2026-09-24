@@ -30,7 +30,7 @@ export default function ArchiveClient({ completedData, tropesData }: { completed
   return (
     <Gallery title="Archive" subtitle="completed" totalData={completedData} filteredData={filteredData} filters={{ search, setSearch, elements }} tropesData={tropesData}>
       {filteredData.map(c => (
-        <Completed key={c.id} data={c} />
+        <Completed key={c.id} data={c} tropesData={tropesData} />
       ))}
     </Gallery>
   );

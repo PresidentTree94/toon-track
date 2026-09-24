@@ -6,22 +6,25 @@ import { OWNER_ICONS } from "@/utils/constants";
 import { useForm } from "@presidenttree94/form-utils";
 import Modal from "./Modal";
 import { updateCompletedById } from "@/lib/data/clientQueries";
+import { Trope } from "@/types/trope";
 
-export default function Completed({ data }: { data: Comp }) {
+export default function Completed({ data, tropesData }: { data: Comp; tropesData: Trope[]; }) {
 
-  const { id, thumbnail, authors, title, genre, timestamp, protagonists, owner, reminder } = data;
+  const { id, thumbnail, authors, title, genre, timestamp, protagonists, owner, reminder, tags } = data;
   const [open, setOpen] = useState(false);
   
   const { form, elements } = useForm({
     thumbnail: thumbnail,
     authors: authors,
     protagonists: protagonists,
-    reminder: reminder
+    reminder: reminder,
+    tags: tags
   }, {
     thumbnail: { label: "Thumbnail Link", type: "url" },
     authors: { label: "Author(s)" },
     protagonists: { label: "Protagonist(s)" },
-    reminder: { label: "Reminder", options: ["", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"] }
+    reminder: { label: "Reminder", options: ["", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"] },
+    tags: { label: "Tags", options: tropesData.map(t => t._id), multi: true }
   });
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -31,6 +34,7 @@ export default function Completed({ data }: { data: Comp }) {
       authors: form.authors.trim(),
       protagonists: form.protagonists.trim(),
       reminder: form.reminder,
+      tags: form.tags
     });
     setOpen(false);
   }
@@ -61,6 +65,7 @@ export default function Completed({ data }: { data: Comp }) {
         title="Edit Completed"
         elements={elements}
         handleSubmit={handleSubmit}
+        tropesData={tropesData}
       />
     </>
   );
