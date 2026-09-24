@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Comp } from "@/types/comp";
 import Status from "./Status";
 import { OWNER_ICONS } from "@/utils/constants";
@@ -10,6 +11,7 @@ import { Trope } from "@/types/trope";
 
 export default function Completed({ data, tropesData }: { data: Comp; tropesData: Trope[]; }) {
 
+  const router = useRouter();
   const { id, thumbnail, authors, title, genre, timestamp, protagonists, owner, reminder, tags } = data;
   const [open, setOpen] = useState(false);
   
@@ -37,6 +39,7 @@ export default function Completed({ data, tropesData }: { data: Comp; tropesData
       tags: form.tags
     });
     setOpen(false);
+    router.refresh();
   }
 
   return (

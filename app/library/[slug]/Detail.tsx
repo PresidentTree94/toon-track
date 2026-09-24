@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Toon } from "@/types/toon";
 import { Trope } from "@/types/trope";
 import { calcMedianGrowth, condenseValue } from "@/utils/calculations";
@@ -12,6 +13,7 @@ import { redirect } from "next/navigation";
 
 export default function DetailClient({ webtoonsData, tropesData, slug }: { webtoonsData: Toon[]; tropesData: Trope[]; slug: number; }) {
 
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<boolean>(false)
   const webtoon = webtoonsData.find(item => item.id === slug);
@@ -61,6 +63,7 @@ export default function DetailClient({ webtoonsData, tropesData, slug }: { webto
       tags: form.tags
     });
     setOpen(false);
+    router.refresh();
   }
 
   const handleDelete = async () => {
