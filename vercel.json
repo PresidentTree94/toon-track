@@ -1,0 +1,6 @@
+{
+  "crons": [
+    { "path": "/api/daily_scraper.py", "schedule": "0 6 * * *" },
+    { "path": "/api/monthly_scraper.py", "schedule": "0 7 1 * *" }
+  ]
+}
