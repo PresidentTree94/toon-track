@@ -1,4 +1,4 @@
-import { getReports } from "@/lib/data/webtoonServerQueries";
+import { getReports } from "@/lib/data/serverQueries";
 import ReportClient from "./Reports";
 
 export default async function Reports() {

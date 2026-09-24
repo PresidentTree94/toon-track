@@ -16,13 +16,11 @@ export default function LibraryClient({ webtoonsData }: { webtoonsData: Toon[] }
     status: "All",
     genre: "All",
     day: "All",
-    tags: [] as string[]
   }, {
     owner: { label: "Owner", options: ["Karly", "Rachelle", "Shared"], multi: true },
     status: { label: "Status", options: ["All", "Ongoing", "Hiatus"] },
     genre: { label: "Genre", options: ["All", ...[...new Set(webtoonsData.map(item => item.genre))].sort()] },
     day: { label: "Day", options: ["All", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Random"] },
-    tags: { label: "Tags", options: [], multi: true }
   });
 
   const filteredData = webtoonsData

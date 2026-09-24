@@ -1,4 +1,4 @@
-import { getCompleted } from "@/lib/data/completedServerQueries";
+import { getCompleted } from "@/lib/data/serverQueries";
 import ArchiveClient from "./Archive";
 
 export default async function Archive() {

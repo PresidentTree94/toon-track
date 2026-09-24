@@ -35,7 +35,7 @@ export default function Gallery<T extends Toon | Comp>({ title, subtitle, totalD
               {Object.entries(elements).map(([key, field]) => (
                 <fieldset key={key} className="space-y-1">
                   <legend className="text-sm font-semibold">{field.label}</legend>
-                  <select multiple={field.multi} size={1} value={field.value} onChange={(e) => field.setValue(field.multi ? Array.from(e.target.selectedOptions, o => o.value) : e.target.value)} className="border border-slate-200 hover:border-primary-five/40 focus:border-primary-five/40 px-1 py-0.5 rounded-full w-full text-sm text-slate-600">
+                  <select multiple={field.multi} size={1} value={field.value} onChange={(e) => field.setValue(field.multi ? Array.from(e.target.selectedOptions, o => o.value) : e.target.value)}>
                     {field.options?.map(o => (
                       <option key={o} value={o}>{o}</option>
                     ))}

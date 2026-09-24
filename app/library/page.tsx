@@ -1,4 +1,4 @@
-import { getWebtoons } from "@/lib/data/webtoonServerQueries";
+import { getWebtoons } from "@/lib/data/serverQueries";
 import LibraryClient from "./Library";
 
 export default async function Library() {

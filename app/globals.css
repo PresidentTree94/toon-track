@@ -29,3 +29,11 @@ h2 {
 th, td {
   @apply p-3;
 }
+
+.formInput, select {
+  @apply bg-slate-50 border border-slate-200 hover:border-primary-five/40 focus:border-primary-five/40 px-2 py-1 rounded-full w-full text-sm;
+}
+
+.greenButton {
+  @apply bg-primary-five hover:bg-primary-six text-white px-4 py-2 rounded-full text-sm font-bold flex items-center justify-center gap-2;
+}

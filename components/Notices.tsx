@@ -18,9 +18,7 @@ function joinWithAnd(arr: string[]) {
 }
 
 export default function Notices({ verifiedWebtoons, completedData, pendingData }: {
-  verifiedWebtoons: Toon[];
-  completedData: Comp[];
-  pendingData: Toon[];
+  verifiedWebtoons: Toon[]; completedData: Comp[]; pendingData: Toon[];
 }) {
 
   const KarlyWebtoons = verifiedWebtoons.filter(w => w.owner === "Karly" && daysAgo(new Date(w.timestamp)) <= DAY_LIMIT);

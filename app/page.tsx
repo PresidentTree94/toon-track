@@ -1,5 +1,4 @@
-import { getWebtoons } from "@/lib/data/webtoonServerQueries";
-import { getCompleted } from "@/lib/data/completedServerQueries";
+import { getWebtoons, getCompleted } from "@/lib/data/serverQueries";
 import { Toon } from "@/types/toon";
 import { Comp } from "@/types/comp";
 import HomeClient from "./Home";

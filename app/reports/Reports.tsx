@@ -3,6 +3,7 @@ import { useState } from "react";
 import Card from "@/components/Card";
 import * as calc from "@/utils/calculations";
 import { useSorter } from "@/hooks/useSorter";
+import Table from "@/components/Table";
 
 export default function ReportClient({ reportData }: { reportData: { timestamp: string; snapshot: { title: string; value: number }[] }[];
 }) {
@@ -78,33 +79,31 @@ export default function ReportClient({ reportData }: { reportData: { timestamp: 
               <Card key={index} data={c} />
             ))}
           </div>
-          <div className="w-full overflow-auto rounded-2xl mt-4 border border-slate-200 bg-white">
-            <table className="w-full text-sm">
-              <thead className="bg-slate-50 text-slate-500 uppercase text-xs tracking-wide">
-                <tr>
-                  <th>#</th>
-                  <th className={`text-left min-w-3xs cursor-pointer ${sortKey === "series" ? "text-primary-five" : "underline"}`} onClick={() => setSortKey("series")} >Series</th>
-                  <th className={`text-right cursor-pointer ${sortKey === "subs" ? "text-primary-five" : "underline"}`} onClick={() => setSortKey("subs")}>Subs</th>
-                  <th className={`text-right cursor-pointer ${sortKey === "growth" ? "text-primary-five" : "underline"}`} onClick={() => setSortKey("growth")}>Growth</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sortedWebtoons.map((s, index) => {
-                  const previousValue = intersection.find(item => item.title === s.title)?.value;
-                  const latestGrowth = previousValue ? calc.calcMedianGrowth(previousValue, s.value) : -1;
-                  const growthColor = latestGrowth > 0.05 ? "text-emerald-500" : latestGrowth < 0 ? "text-rose-600" : "text-slate-400";
-                  return (
-                    <tr key={index} className="border-t border-slate-100 hover:bg-slate-50/60">
-                      <td className="text-center font-bold font-mono text-slate-500">{index + 1}</td>
-                      <td className="font-semibold"><span className="line-clamp-1">{s.title}</span></td>
-                      <td className="text-right font-mono font-bold">{calc.condenseValue(s.value)}</td>
-                      <td className={`text-right font-bold ${growthColor}`}>{latestGrowth !== -1 ? calc.condenseValue(latestGrowth) + "%" : "—"}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+          <Table
+            columns={[
+              { label: "#" },
+              { label: "Series", align: "left", sortable: true },
+              { label: "Subs", align: "right", sortable: true },
+              { label: "Growth", align: "right", sortable: true }
+            ]}
+            rows={<>
+              {sortedWebtoons.map((s, index) => {
+                const previousValue = intersection.find(item => item.title === s.title)?.value;
+                const latestGrowth = previousValue ? calc.calcMedianGrowth(previousValue, s.value) : -1;
+                const growthColor = latestGrowth > 0.05 ? "text-emerald-500" : latestGrowth < 0 ? "text-rose-600" : "text-slate-400";
+                return (
+                  <tr key={index} className="border-t border-slate-100 hover:bg-slate-50/60">
+                    <td className="text-center font-bold font-mono text-slate-500">{index + 1}</td>
+                    <td className="font-semibold"><span className="line-clamp-1">{s.title}</span></td>
+                    <td className="text-right font-mono font-bold">{calc.condenseValue(s.value)}</td>
+                    <td className={`text-right font-bold ${growthColor}`}>{latestGrowth !== -1 ? calc.condenseValue(latestGrowth) + "%" : "—"}</td>
+                  </tr>
+                );
+              })}
+            </>}
+            sortKey={sortKey}
+            setSortKey={setSortKey}
+          />
         </article>
       </section>
     </main>
