@@ -28,7 +28,7 @@ export default function GlossaryClient({ tropesData, examples }: { tropesData: T
           <input type="text" placeholder="Search..." className="outline-none flex-1" value={search} onChange={(e) => setSearch(e.target.value)} />
         </div>
       </section>
-      <section>
+      <section className="space-y-4">
         {filteredData.map((t, index) => {
           const relevantExamples = examples.filter(e => e.tags.includes(t._id));
           return (
