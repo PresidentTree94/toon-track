@@ -25,7 +25,8 @@ export default function ArchiveClient({ completedData, tropesData }: { completed
     item.protagonists.toLowerCase().includes(search.toLowerCase())
   )
   .filter(item => form.owner.length === 0 || form.owner.includes(item.owner))
-  .filter(item => form.genre === "All" ? true : item.genre === form.genre);
+  .filter(item => form.genre === "All" ? true : item.genre === form.genre)
+  .filter(item => form.tags.length === 0 || form.tags.every(tag => item.tags.includes(tag)));
 
   return (
     <Gallery title="Archive" subtitle="completed" totalData={completedData} filteredData={filteredData} filters={{ search, setSearch, elements }} tropesData={tropesData}>

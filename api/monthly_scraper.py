@@ -29,7 +29,7 @@ class handler(BaseHTTPRequestHandler):
 
 
 def run_monthly_scraper():
-  formatted = datetime.now(LOCAL_TZ).strftime("%b %y")
+  formatted = datetime.now(LOCAL_TZ).strftime("%B %Y")
   database = supabase.table("webtoons").select("*").execute()
   snapshot = []
 

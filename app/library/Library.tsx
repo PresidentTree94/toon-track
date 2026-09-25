@@ -35,7 +35,7 @@ export default function LibraryClient({ webtoonsData, tropesData }: { webtoonsDa
   .filter(item => form.status === "All" ? true : item.status === form.status)
   .filter(item => form.genre === "All" ? true : item.genre === form.genre)
   .filter(item => form.day === "All" ? true : item.days.includes(form.day))
-  .filter(item => form.tags.length === 0 || form.tags.some(tag => item.tags.includes(tag)));
+  .filter(item => form.tags.length === 0 || form.tags.every(tag => item.tags.includes(tag)));
 
   return (
     <Gallery title="Library" subtitle="active" totalData={webtoonsData} filteredData={filteredData} filters={{ search, setSearch, elements }} tropesData={tropesData}>

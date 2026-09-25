@@ -3,5 +3,5 @@ export type Trope = {
   title: string;
   description: any;
   references: { label: string; link: string; }[];
-  related: { id: string; title: string; }[];
+  related: { _id: string; title: string; }[];
 }

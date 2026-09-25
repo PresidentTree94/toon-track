@@ -3,10 +3,8 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { PortableText } from "next-sanity";
 import { Trope } from "@/types/trope";
-import { Toon } from "@/types/toon";
-import { Comp } from "@/types/comp";
 
-export default function GlossaryClient({ tropesData, examples }: { tropesData: Trope[]; examples: (Toon | Comp)[]; }) {
+export default function GlossaryClient({ tropesData }: { tropesData: Trope[] }) {
 
   const [search, setSearch] = useState("");
   const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -30,10 +28,9 @@ export default function GlossaryClient({ tropesData, examples }: { tropesData: T
       </section>
       <section className="space-y-4">
         {filteredData.map((t, index) => {
-          const relevantExamples = examples.filter(e => e.tags.includes(t._id));
           return (
-            <div key={t._id} className="bg-white border border-slate-200 rounded-2xl p-5 hover:border-primary-five/40 transition-colors" onClick={() => toggle(index)}>
-              <button className="flex items-center justify-between gap-4 w-full cursor-pointer">
+            <div key={t._id} className="bg-white border border-slate-200 rounded-2xl p-5 hover:border-primary-five/40 transition-colors">
+              <button className="flex items-center justify-between gap-4 w-full cursor-pointer" onClick={() => toggle(index)}>
                 <h2>{t.title}</h2>
                 <i className={`${openIndex === index ? "rotate-180" : ""} ri-arrow-down-s-line transition-transform text-xl text-slate-400`}></i>
               </button>
@@ -51,17 +48,8 @@ export default function GlossaryClient({ tropesData, examples }: { tropesData: T
                 {t.related && <p className="text-xs"><span className="font-semibold">Related: </span>
                   {t.related.map((r, index) => (
                     <React.Fragment key={index}>
-                      {r.title}
+                      <button className="text-primary-seven hover:text-primary-six cursor-pointer" onClick={() => toggle(filteredData.findIndex(f => f._id === r._id))}>{r.title}</button>
                       {index < t.related.length - 1 && ", "}
-                    </React.Fragment>
-                  ))}
-                </p>}
-                {relevantExamples.length > 0 && <p className="text-xs">
-                  <span className="font-semibold">Examples: </span>
-                  {relevantExamples.map((e, index) => (
-                    <React.Fragment key={index}>
-                      <Link key={index} href={"days" in e ? `/library/${e.id}` : "/archive"} className="text-primary-seven hover:text-primary-six">{e.title}</Link>
-                      {index < relevantExamples.length - 1 && ", "}
                     </React.Fragment>
                   ))}
                 </p>}
