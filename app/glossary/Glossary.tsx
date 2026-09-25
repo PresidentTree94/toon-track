@@ -18,10 +18,10 @@ export default function GlossaryClient({ tropesData, examples }: { tropesData: T
 
   return (
     <main>
-      <section className="flex items-end justify-between">
+      <section className="flex flex-col md:flex-row items-center md:items-end justify-between text-center md:text-left gap-8">
         <div>
           <h1 className="text-4xl">Trope Glossary</h1>
-          <p className="mt-1 text-slate-500">A dictionary of common webtoon tropes based on <a href="https://tvtropes.org/" target="_blank" rel="noopener noreferrer" className="underline">TV Tropes</a>.</p>
+          <p className="mt-1 text-slate-500">A dictionary of common webtoon tropes based on <a href="https://tvtropes.org/" target="_blank" rel="noopener noreferrer" className="underline text-primary-five hover:text-primary-six">TV Tropes</a>.</p>
         </div>
         <div className="bg-white border border-slate-200 focus-within:border-primary-five/40 rounded-full text-sm flex items-center gap-2 py-2 px-3 max-w-md w-full">
           <i className="ri-search-line"></i>
