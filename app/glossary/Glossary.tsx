@@ -29,12 +29,12 @@ export default function GlossaryClient({ tropesData }: { tropesData: Trope[] }) 
       <section className="space-y-4">
         {filteredData.map((t, index) => {
           return (
-            <div key={t._id} className="bg-white border border-slate-200 rounded-2xl p-5 hover:border-primary-five/40 transition-colors">
-              <button className="flex items-center justify-between gap-4 w-full cursor-pointer" onClick={() => toggle(index)}>
+            <div key={t._id} className="bg-white border border-slate-200 rounded-2xl hover:border-primary-five/40 transition-colors">
+              <button className="flex items-center justify-between gap-4 w-full cursor-pointer p-5" onClick={() => toggle(index)}>
                 <h2>{t.title}</h2>
                 <i className={`${openIndex === index ? "rotate-180" : ""} ri-arrow-down-s-line transition-transform text-xl text-slate-400`}></i>
               </button>
-              <div className={`text-slate-600 text-sm space-y-3 mt-5 ${openIndex === index ? "block" : "hidden"}`}>
+              <div className={`text-slate-600 text-sm space-y-3 pb-5 px-5 ${openIndex === index ? "block" : "hidden"}`}>
                 {t.description ? <PortableText value={t.description} /> : <p>Description goes here.</p>}
                 {t.references && <p className="text-xs">
                   <span className="font-semibold">References: </span>
