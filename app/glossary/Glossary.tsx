@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import Link from "next/link";
 import { PortableText } from "next-sanity";
 import { Trope } from "@/types/trope";
 
