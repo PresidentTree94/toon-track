@@ -34,7 +34,9 @@ export default function GlossaryClient({ tropesData }: { tropesData: Trope[] }) 
                 <i className={`${openIndex === index ? "rotate-180" : ""} ri-arrow-down-s-line transition-transform text-xl text-slate-400`}></i>
               </button>
               <div className={`text-slate-600 text-sm space-y-3 pb-5 px-5 ${openIndex === index ? "block" : "hidden"}`}>
-                {t.description ? <PortableText value={t.description} /> : <p>Description goes here.</p>}
+                <div className="portableText">
+                  {t.description ? <PortableText value={t.description} /> : <p>Description goes here.</p>}
+                </div>
                 {t.references && <p className="text-xs">
                   <span className="font-semibold">References: </span>
                   {t.references.map((r, index) => (
