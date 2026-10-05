@@ -2,8 +2,9 @@ import { Toon } from "@/types/toon";
 import { Comp } from "@/types/comp";
 import { Trope } from "@/types/trope";
 import { FormElement } from "@presidenttree94/form-utils";
+import { useRouter } from "next/navigation";
 
-export default function Gallery<T extends Toon | Comp>({ title, subtitle, totalData, filteredData, filters, tropesData, children }: {
+export default function Gallery<T extends Toon | Comp>({ title, subtitle, totalData, filteredData, filters, searchParams, tropesData, children }: {
   title: string;
   subtitle: string;
   totalData: T[];
@@ -13,11 +14,23 @@ export default function Gallery<T extends Toon | Comp>({ title, subtitle, totalD
     setSearch: (search: string) => void;
     elements: Record<string, FormElement<string | string[]>>;
   };
+  searchParams: URLSearchParams;
   tropesData: Trope[];
   children: React.ReactNode;
 }) {
 
   const { search, setSearch, elements } = filters;
+  const router = useRouter();
+  function updateParam(key: string, value: string | string[]) {
+    const params = new URLSearchParams(searchParams);
+    const serialized = Array.isArray(value) ? value.join(",") : value;
+    if (serialized && serialized !== "All") {
+      params.set(key, serialized);
+    } else {
+      params.delete(key);
+    }
+    router.replace(`?${params.toString()}`);
+  }
 
   return (
     <main>
@@ -29,7 +42,10 @@ export default function Gallery<T extends Toon | Comp>({ title, subtitle, totalD
         <div className="flex items-center gap-4 max-w-md w-full">
           <div className="bg-white border border-slate-200 focus-within:border-primary-five/40 rounded-full text-sm flex items-center gap-2 py-2 px-3 flex-1">
             <i className="ri-search-line"></i>
-            <input type="text" placeholder="Search..." className="outline-none flex-1" value={search} onChange={(e) => setSearch(e.target.value)} />
+            <input type="text" placeholder="Search..." className="outline-none flex-1" value={search} onChange={(e) => {
+              setSearch(e.target.value);
+              updateParam("search", e.target.value);
+            }} />
           </div>
           <details className="relative group text-left">
             <summary className="bg-white border border-slate-200 text-slate-600 hover:border-primary-five/40 group-open:border-primary-five/40 px-4 py-2 rounded-full text-sm font-semibold flex items-center gap-2 cursor-pointer"><i className="ri-filter-line"></i>Filter</summary>
@@ -37,7 +53,11 @@ export default function Gallery<T extends Toon | Comp>({ title, subtitle, totalD
               {Object.entries(elements).map(([key, field]) => (
                 <fieldset key={key} className="space-y-1">
                   <legend className="text-sm font-semibold">{field.label}</legend>
-                  <select multiple={field.multi} size={1} value={field.value} onChange={(e) => field.setValue(field.multi ? Array.from(e.target.selectedOptions, o => o.value) : e.target.value)}>
+                  <select multiple={field.multi} size={1} value={field.value} onChange={(e) => {
+                    const value = field.multi ? Array.from(e.target.selectedOptions, o => o.value) : e.target.value;
+                    field.setValue(value);
+                    updateParam(key, value);
+                  }}>
                     {field.options?.map(o => (
                       <option key={o} value={o}>{field.label === "Tags" ? tropesData.find(t => t._id === o)?.title : o}</option>
                     ))}

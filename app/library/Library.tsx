@@ -1,44 +1,53 @@
 "use client";
-import { useState } from "react";
 import { Toon } from "@/types/toon";
 import { Trope } from "@/types/trope";
 import { OWNER_ICONS } from "@/utils/constants";
 import { calcMedianGrowth, condenseValue } from "@/utils/calculations";
 import Gallery from "@/components/Gallery";
-import { useForm } from "@presidenttree94/form-utils";
 import Link from "next/link";
 import Status from "@/components/Status";
+import { useSearchParams } from "next/navigation";
+import { useGalleryFilters } from "@/hooks/useGalleryFilters";
 
 export default function LibraryClient({ webtoonsData, tropesData }: { webtoonsData: Toon[]; tropesData: Trope[]; }) {
 
-  const [search, setSearch] = useState("");
-  const { form, elements } = useForm({
-    owner: [] as string[],
-    status: "All",
-    genre: "All",
-    day: "All",
-    tags: [] as string[]
-  }, {
-    owner: { label: "Owner", options: ["Karly", "Rachelle", "Shared"], multi: true },
-    status: { label: "Status", options: ["All", "Ongoing", "Hiatus"] },
-    genre: { label: "Genre", options: ["All", ...[...new Set(webtoonsData.map(item => item.genre))].sort()] },
-    day: { label: "Day", options: ["All", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Random"] },
-    tags: { label: "Tags", options: tropesData.map(t => t._id), multi: true }
+  const searchParams = useSearchParams();
+  const { search, setSearch, elements, filteredData } = useGalleryFilters({
+    data: webtoonsData,
+    searchParams,
+    initialForm: {
+      owner: searchParams.get("owner")?.split(",") ?? [],
+      status: searchParams.get("status") ?? "All",
+      genre: searchParams.get("genre") ?? "All",
+      day: searchParams.get("day") ?? "All",
+      tags: searchParams.get("tags")?.split(",") ?? []
+    },
+    formConfig: {
+      owner: { label: "Owner", options: ["Karly", "Rachelle", "Shared"], multi: true },
+      status: { label: "Status", options: ["All", "Ongoing", "Hiatus"] },
+      genre: { label: "Genre", options: ["All", ...[...new Set(webtoonsData.map(item => item.genre))].sort()] },
+      day: { label: "Day", options: ["All", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Random"] },
+      tags: { label: "Tags", options: tropesData.map(t => t._id), multi: true }
+    },
+    filterFn: (item, form, search) =>
+      (item.title.toLowerCase().includes(search.toLowerCase()) || item.protagonists.toLowerCase().includes(search.toLowerCase())) &&
+      (form.owner.length === 0 || form.owner.includes(item.owner)) &&
+      (form.status === "All" ? true : item.status === form.status) &&
+      (form.genre === "All" ? true : item.genre === form.genre) &&
+      (form.day === "All" ? true : item.days.includes(form.day)) &&
+      (form.tags.length === 0 || form.tags.every((tag: string) => item.tags.includes(tag)))
   });
 
-  const filteredData = webtoonsData
-  .filter(item =>
-    item.title.toLowerCase().includes(search.toLowerCase()) ||
-    item.protagonists.toLowerCase().includes(search.toLowerCase())
-  )
-  .filter(item => form.owner.length === 0 || form.owner.includes(item.owner))
-  .filter(item => form.status === "All" ? true : item.status === form.status)
-  .filter(item => form.genre === "All" ? true : item.genre === form.genre)
-  .filter(item => form.day === "All" ? true : item.days.includes(form.day))
-  .filter(item => form.tags.length === 0 || form.tags.every(tag => item.tags.includes(tag)));
-
   return (
-    <Gallery title="Library" subtitle="active" totalData={webtoonsData} filteredData={filteredData} filters={{ search, setSearch, elements }} tropesData={tropesData}>
+    <Gallery
+      title="Library"
+      subtitle="active"
+      totalData={webtoonsData}
+      filteredData={filteredData}
+      filters={{ search, setSearch, elements }}
+      searchParams={searchParams}
+      tropesData={tropesData}
+    >
       {filteredData.map(w => {
         const latestSubs = w.data.length > 0 ? w.data.at(-1)!.value : -1;
         const latestGrowth = w.data.length > 1 ? calcMedianGrowth(w.data.at(-2)!.value, latestSubs) : -1;
